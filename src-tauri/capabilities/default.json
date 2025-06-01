@@ -7,26 +7,18 @@
     "core:default",
     "opener:default",
     "dialog:default",
-    {
-      "identifier": "fs:scope-config-recursive"
-    },
-    {
-      "identifier": "fs:scope-document-recursive"
-    },
-    {
-      "identifier": "fs:scope-download-recursive"
-    },
-    {
-      "identifier": "fs:create-app-specific-dirs"
-    },
-    {
-      "identifier": "fs:read-app-specific-dirs-recursive"
-    },
-    {
-      "identifier": "core:path:default"
-    },
-    {
-      "identifier": "core:path:allow-resolve-directory"
-    }
+    "fs:allow-exists",
+    "fs:allow-write",
+    "fs:allow-read",
+    "fs:allow-mkdir",
+    "fs:allow-watch",
+    "fs:allow-picture-read-recursive",
+    "fs:scope-config-recursive",
+    "fs:scope-document-recursive",
+    "fs:scope-download-recursive",
+    "fs:create-app-specific-dirs",
+    "core:path:allow-resolve-directory",
+    "fs:read-app-specific-dirs-recursive",
+    "core:path:default"
   ]
 }

@@ -7,6 +7,8 @@ import {
 } from "@tauri-apps/plugin-fs";
 import { ulid } from "ulid";
 
+import { appLocalDataDir } from "@tauri-apps/api/path";
+
 interface WatchNewScreenshotProps {
   // The source file path to copy from the root
   screenshotsDir: string;
@@ -17,11 +19,19 @@ interface WatchNewScreenshotProps {
 }
 
 const copyScreenshot = async ({
-  screenshotsDir: austoSaveFile,
+  screenshotsDir: screenshotFile,
   destinationDir,
   onCopy,
 }: WatchNewScreenshotProps): Promise<void> => {
-  if (!(await exists(destinationDir))) {
+  console.log("jmw starting....");
+  if (
+    !(await exists(destinationDir, {
+      baseDir: BaseDirectory.AppLocalData,
+    }))
+  ) {
+    console.log(`making ${destinationDir}`);
+    const appLocalData = await appLocalDataDir();
+    console.log(`appLocalData ${appLocalData}`);
     await mkdir(destinationDir, {
       baseDir: BaseDirectory.AppLocalData,
       recursive: true,
@@ -29,9 +39,10 @@ const copyScreenshot = async ({
   }
 
   const newScreenshotUlid = ulid();
-
+  const newFile = `${destinationDir}\\${newScreenshotUlid}.png`;
+  console.log(`Saving ${screenshotFile} to ${newFile}`);
   // Perform the copy operation
-  await copyFile(austoSaveFile, `destinationDir\\${newScreenshotUlid}`, {
+  await copyFile(screenshotFile, newFile, {
     toPathBaseDir: BaseDirectory.AppLocalData,
   });
 
@@ -40,11 +51,12 @@ const copyScreenshot = async ({
   }
 };
 
-export const watchNewAutoSave = async ({
+export const watchNewScreenshot = async ({
   screenshotsDir,
   destinationDir,
   onCopy,
 }: WatchNewScreenshotProps): Promise<void> => {
+  console.log("jmw watching screenshotsDir");
   await watch(
     screenshotsDir,
     (event) => {
@@ -53,7 +65,7 @@ export const watchNewAutoSave = async ({
         typeof event.type === "object" && "create" in event.type;
       if (isCreateEvent) {
         void copyScreenshot({
-          screenshotsDir,
+          screenshotsDir: event.paths[0],
           destinationDir,
           onCopy,
         });
@@ -62,6 +74,6 @@ export const watchNewAutoSave = async ({
     {
       baseDir: BaseDirectory.AppLog,
       delayMs: 1000, // Delay in milliseconds to wait for file changes
-    },
+    }
   );
 };

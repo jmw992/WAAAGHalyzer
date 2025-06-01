@@ -40,7 +40,7 @@ const asyncDirsUpdate = async ({
       (async () => {
         const dirRoot = await configDir();
         setGameDirectory(`${dirRoot}\\${DEFAULT_GAME_DIRECTORY}`);
-      })(),
+      })()
     );
   }
   if (screenshotsDirectory === "") {
@@ -48,7 +48,7 @@ const asyncDirsUpdate = async ({
       (async () => {
         const dirRoot = await pictureDir();
         setScreenshotsDirectory(`${dirRoot}\\${DEFAULT_SCREENSHOTS_DIRECTORY}`);
-      })(),
+      })()
     );
   }
   await Promise.all(promises);
@@ -63,10 +63,12 @@ export default function RootPage({
   useEffect(() => {
     // Set default from localStorage on first load
     const persistedState = getStorePersistedSettings();
+    persistedState.gameDirectory = "";
+    persistedState.screenshotsDirectory = "";
     setPersistedState(persistedState);
     if (
       persistedState.gameDirectory === "" ||
-      persistedState.screenshotsDirectory
+      persistedState.screenshotsDirectory === ""
     ) {
       // console.log();
       void asyncDirsUpdate({
