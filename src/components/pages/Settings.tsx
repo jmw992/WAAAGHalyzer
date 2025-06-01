@@ -1,11 +1,6 @@
 "use client";
 
-import { FolderInput } from "@/components/FolderInputDialog";
 import { SettingsForm } from "@/components/SettingsForm";
-import {
-  setGameDirectoryStore,
-  setScreenshotsDirectoryStore,
-} from "@/lib/persistStorage";
 import { useZustandStore } from "@/lib/useZustandStore";
 
 export default function Settings() {
