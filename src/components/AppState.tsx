@@ -1,8 +1,5 @@
 "use client";
-import History from "@/components/pages/History";
-import Home from "@/components/pages/Home";
-import Record from "@/components/pages/Record";
-import Settings from "@/components/pages/Settings";
+
 import {
   DEFAULT_GAME_DIRECTORY,
   DEFAULT_SCREENSHOTS_DIRECTORY,
@@ -49,7 +46,7 @@ const asyncDirsUpdate = async ({
   if (screenshotsDirectory === "") {
     promises.push(
       (async () => {
-        const dirRoot = await configDir();
+        const dirRoot = await pictureDir();
         setScreenshotsDirectory(`${dirRoot}\\${DEFAULT_SCREENSHOTS_DIRECTORY}`);
       })(),
     );
