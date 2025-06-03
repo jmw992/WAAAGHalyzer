@@ -4,10 +4,11 @@ import {
   exists,
   mkdir,
   watch,
+  type UnwatchFn,
 } from "@tauri-apps/plugin-fs";
 import { ulid } from "ulid";
 
-import { appLocalDataDir } from "@tauri-apps/api/path";
+import { appLocalDataDir, join } from "@tauri-apps/api/path";
 
 interface WatchNewScreenshotProps {
   // The source file path to copy from the root
@@ -23,15 +24,13 @@ const copyScreenshot = async ({
   destinationDir,
   onCopy,
 }: WatchNewScreenshotProps): Promise<void> => {
-  console.log("jmw starting....");
+  console.log("jmw starting copy....");
   if (
     !(await exists(destinationDir, {
       baseDir: BaseDirectory.AppLocalData,
     }))
   ) {
     console.log(`making ${destinationDir}`);
-    const appLocalData = await appLocalDataDir();
-    console.log(`appLocalData ${appLocalData}`);
     await mkdir(destinationDir, {
       baseDir: BaseDirectory.AppLocalData,
       recursive: true,
@@ -39,8 +38,8 @@ const copyScreenshot = async ({
   }
 
   const newScreenshotUlid = ulid();
-  const newFile = `${destinationDir}\\${newScreenshotUlid}.png`;
-  console.log(`Saving ${screenshotFile} to ${newFile}`);
+  const newFile = await join(destinationDir, `${newScreenshotUlid}.png`);
+
   // Perform the copy operation
   await copyFile(screenshotFile, newFile, {
     toPathBaseDir: BaseDirectory.AppLocalData,
@@ -55,25 +54,22 @@ export const watchNewScreenshot = async ({
   screenshotsDir,
   destinationDir,
   onCopy,
-}: WatchNewScreenshotProps): Promise<void> => {
-  console.log("jmw watching screenshotsDir");
-  await watch(
-    screenshotsDir,
-    (event) => {
-      console.log("app.log event", event);
-      const isCreateEvent =
-        typeof event.type === "object" && "create" in event.type;
-      if (isCreateEvent) {
-        void copyScreenshot({
-          screenshotsDir: event.paths[0],
-          destinationDir,
-          onCopy,
-        });
-      }
-    },
-    {
-      baseDir: BaseDirectory.AppLog,
-      delayMs: 1000, // Delay in milliseconds to wait for file changes
+}: WatchNewScreenshotProps): Promise<UnwatchFn> => {
+  const createdFiles = new Set<string>();
+  const unWatch = await watch(screenshotsDir, (event) => {
+    console.log("app.log event", event);
+    // return;
+    const isCreateEvent =
+      typeof event.type === "object" && "create" in event.type;
+    if (isCreateEvent && !createdFiles.has(event.paths[0])) {
+      createdFiles.add(event.paths[0]);
+      void copyScreenshot({
+        screenshotsDir: event.paths[0],
+        destinationDir,
+        onCopy,
+      });
     }
-  );
+  });
+  // unWatch();
+  return unWatch;
 };

@@ -15,7 +15,7 @@ export const FolderInput: React.FC<FolderInputProps> = ({
   onChange,
 }) => {
   const [displayFile, setDisplayFile] = useState(
-    inputPlaceholder ?? "total war warhammer 3"
+    inputPlaceholder ?? "total war warhammer 3",
   );
 
   const onClickAsync = async () => {
@@ -25,13 +25,15 @@ export const FolderInput: React.FC<FolderInputProps> = ({
     });
     console.log("Selected file:", file);
     if (typeof file === "string") {
+      console.log("jmw onClickAsync onChange", file);
       setDisplayFile(file);
-      // onChange(file);
+      onChange(file);
     }
   };
 
   const onClick = () => {
-    void onClickAsync();
+    console.log("jmw onClick started");
+    onClickAsync();
   };
 
   return (
@@ -43,14 +45,15 @@ export const FolderInput: React.FC<FolderInputProps> = ({
         alignItems: "center",
       }}
     >
-      <Button variant={"secondary"} size='sm' onClick={onClick}>
+      <Button variant={"secondary"} size="sm" onClick={onClick}>
         Select
       </Button>
       <Input
-        type='text'
+        type="text"
         value={displayFile}
         style={{ width: "100%", minWidth: 0 }}
         onChange={(e) => {
+          console.log("jmw Input onChange", e.target.value);
           setDisplayFile(e.target.value);
           onChange(e.target.value);
         }}

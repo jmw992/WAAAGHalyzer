@@ -20,6 +20,7 @@ export const SettingsForm = ({
 }: {
   initialState: PersistedState;
 }) => {
+  console.log("jmw double render???", initialState);
   const setPersistedState = useZustandStore((state) => state.setPersistedState);
 
   // Local state for form
@@ -29,19 +30,18 @@ export const SettingsForm = ({
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    console.log("jmw how is this triggered.");
-    e.preventDefault();
+  const handleSubmit = () => {
+    console.log("jmw handleSubmit", form);
+    // console.log("jmw how is this triggered.");
+    // e.preventDefault();
     setPersistedState(form);
     setStorePersistedSettings(form);
     toast.success("Settings saved successfully!");
   };
 
-  console.log("jmw form.game", form.game);
-
   return (
-    <form
-      onSubmit={handleSubmit}
+    <div
+      // onSubmit={(e)}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -50,7 +50,7 @@ export const SettingsForm = ({
       }}
     >
       <div>
-        <label htmlFor='settings-game'>Game</label>
+        <label htmlFor="settings-game">Game</label>
         <Select
           value={form.game}
           onValueChange={(value) => {
@@ -58,7 +58,7 @@ export const SettingsForm = ({
           }}
           defaultValue={form.game}
         >
-          <SelectTrigger id='settings-game'>
+          <SelectTrigger id="settings-game">
             <SelectValue placeholder={form.game} />
           </SelectTrigger>
           <SelectContent>
@@ -71,10 +71,10 @@ export const SettingsForm = ({
         </Select>
       </div>
       <div>
-        <label htmlFor='settings-mod'>Mod</label>
+        <label htmlFor="settings-mod">Mod</label>
         <Input
-          id='settings-mod'
-          type='text'
+          id="settings-mod"
+          type="text"
           value={form.mod}
           onChange={(e) => {
             handleChange("mod", e.target.value);
@@ -82,9 +82,9 @@ export const SettingsForm = ({
         />
       </div>
       <div>
-        <label htmlFor='settings-game-dir'>Game Directory</label>
+        <label htmlFor="settings-game-dir">Game Directory</label>
         <FolderInput
-          title='Select'
+          title="Select"
           initialValue={form.gameDirectory}
           onChange={(val) => {
             handleChange("gameDirectory", val);
@@ -92,18 +92,23 @@ export const SettingsForm = ({
         />
       </div>
       <div>
-        <label htmlFor='settings-screenshots-dir'>Screenshots Directory</label>
+        <label htmlFor="settings-screenshots-dir">Screenshots Directory</label>
         <FolderInput
-          title='Select'
+          title="Select"
           initialValue={form.screenshotsDirectory}
           onChange={(val) => {
             handleChange("screenshotsDirectory", val);
           }}
         />
       </div>
-      <Button size='lg' type='submit' style={{ alignSelf: "flex-end" }}>
+      <Button
+        onClick={handleSubmit}
+        size="lg"
+        type="submit"
+        style={{ alignSelf: "flex-end" }}
+      >
         Save
       </Button>
-    </form>
+    </div>
   );
 };

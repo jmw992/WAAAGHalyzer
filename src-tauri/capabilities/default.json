@@ -12,6 +12,8 @@
     "fs:allow-read",
     "fs:allow-mkdir",
     "fs:allow-watch",
+    "fs:allow-app-write-recursive",
+    "fs:allow-copy-file",
     "fs:allow-picture-read-recursive",
     "fs:scope-config-recursive",
     "fs:scope-document-recursive",
