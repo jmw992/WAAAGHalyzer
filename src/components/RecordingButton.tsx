@@ -114,15 +114,18 @@ const recordingHandler = ({
     // Stop recording logic here
     unwatchScreenshotFn();
     unwatchAutoSaveFn();
-    addRecordedMatch({
-      game: recordingGame ?? TOTAL_WAR_WARHAMMER_3,
-      mod: recordingMod ?? DEFAULT,
-      screenshotFiles,
-      recordingUlid,
-      autoSaveFile,
-      recordingStartTime,
-      recordingEndTime: new Date(),
-    });
+    // Only add recorded match if files were captured
+    if (autoSaveFile || screenshotFiles.length > 0) {
+      addRecordedMatch({
+        game: recordingGame ?? TOTAL_WAR_WARHAMMER_3,
+        mod: recordingMod ?? DEFAULT,
+        screenshotFiles,
+        recordingUlid,
+        autoSaveFile,
+        recordingStartTime,
+        recordingEndTime: new Date(),
+      });
+    }
 
     setRecordingState({
       recordingStartTime: null,
