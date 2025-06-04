@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { TOTAL_WAR_WARHAMMER_3 } from "@/constants";
 import { open } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
 
@@ -15,7 +16,7 @@ export const FolderInput: React.FC<FolderInputProps> = ({
   onChange,
 }) => {
   const [displayFile, setDisplayFile] = useState(
-    inputPlaceholder ?? "total war warhammer 3",
+    inputPlaceholder ?? TOTAL_WAR_WARHAMMER_3,
   );
 
   const onClickAsync = async () => {
@@ -32,8 +33,7 @@ export const FolderInput: React.FC<FolderInputProps> = ({
   };
 
   const onClick = () => {
-    console.log("jmw onClick started");
-    onClickAsync();
+    void onClickAsync();
   };
 
   return (

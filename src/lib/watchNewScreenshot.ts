@@ -1,10 +1,10 @@
 import {
   BaseDirectory,
+  type UnwatchFn,
   copyFile,
   exists,
   mkdir,
   watch,
-  type UnwatchFn,
 } from "@tauri-apps/plugin-fs";
 import { ulid } from "ulid";
 

@@ -1,17 +1,17 @@
 import {
   BaseDirectory,
+  type UnwatchFn,
   copyFile,
   exists,
   mkdir,
   watch,
-  type UnwatchFn,
 } from "@tauri-apps/plugin-fs";
 
 import { appLocalDataDir, join } from "@tauri-apps/api/path";
 
 interface WatchNewScreenshotProps {
   // The source file path to copy from the root
-  replaysDir: string;
+  gameDirectory: string;
   /**  The destination file path to copy to, relative to the app's local data directory.  Will be ulid of recording */
   destinationDir: string;
   // Callback function to execute after the copy operation
@@ -19,7 +19,7 @@ interface WatchNewScreenshotProps {
 }
 
 const copyAutoSave = async ({
-  replaysDir: screenshotFile,
+  gameDirectory: screenshotFile,
   destinationDir,
   onCopy,
 }: WatchNewScreenshotProps): Promise<void> => {
@@ -48,12 +48,12 @@ const copyAutoSave = async ({
 };
 
 export const watchNewAutoSave = async ({
-  replaysDir,
+  gameDirectory,
   destinationDir,
   onCopy,
 }: WatchNewScreenshotProps): Promise<UnwatchFn> => {
   const seenFiles = new Set<string>();
-  const unWatch = await watch(replaysDir, (event) => {
+  const unWatch = await watch(gameDirectory, (event) => {
     console.log("app.log event", event);
     // return;
     const isCreateEvent =
@@ -63,7 +63,7 @@ export const watchNewAutoSave = async ({
     if ((isCreateEvent || isModifyEvent) && !seenFiles.has(event.paths[0])) {
       seenFiles.add(event.paths[0]);
       void copyAutoSave({
-        replaysDir: event.paths[0],
+        gameDirectory: event.paths[0],
         destinationDir,
         onCopy,
       });

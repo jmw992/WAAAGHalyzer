@@ -1,15 +1,30 @@
 "use client";
+import { DEFAULT, TOTAL_WAR_WARHAMMER_3 } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
-import { PlayIcon, StopIcon } from "@heroicons/react/24/outline";
-import { ulid } from "ulid";
+import type {
+  Action,
+  PersistedState,
+  RecordingState,
+} from "@/lib/useZustandStore";
 import { watchNewAutoSave } from "@/lib/watchNewAutoSave";
 import { watchNewScreenshot } from "@/lib/watchNewScreenshot";
+import { PlayIcon, StopIcon } from "@heroicons/react/24/outline";
+import { ulid } from "ulid";
 
-const asyncWatch = async (
-  newRecordingUlid: string,
-  screenshotsDirectory: string,
-  autosaveDirectory: string,
-) => {
+interface AsyncWatchProps {
+  newRecordingUlid: string;
+  screenshotsDirectory: PersistedState["gameDirectory"];
+  gameDirectory: PersistedState["gameDirectory"];
+  addScreenshotFile: Action["addScreenshotFile"];
+  setAutoSaveFile: Action["setAutoSaveFile"];
+}
+const asyncWatch = async ({
+  newRecordingUlid,
+  screenshotsDirectory,
+  gameDirectory,
+  addScreenshotFile,
+  setAutoSaveFile,
+}: AsyncWatchProps) => {
   try {
     const unwatchFns = await Promise.all([
       watchNewScreenshot({
@@ -17,11 +32,16 @@ const asyncWatch = async (
         destinationDir: newRecordingUlid,
         onCopy: (ulid) => {
           console.log("jmw screenshot copied with ulid:", ulid);
+          addScreenshotFile(ulid);
         },
       }),
       watchNewAutoSave({
-        replaysDir: autosaveDirectory,
+        gameDirectory,
         destinationDir: newRecordingUlid,
+        onCopy: (file) => {
+          console.log("jmw autosave copied:", file);
+          setAutoSaveFile(file);
+        },
       }),
     ]);
     return unwatchFns;
@@ -30,26 +50,48 @@ const asyncWatch = async (
   }
 };
 
+type RecordingHandlerProps = RecordingState &
+  PersistedState & {
+    setRecordingState: Action["setRecordingState"];
+    addScreenshotFile: Action["addScreenshotFile"];
+    setAutoSaveFile: Action["setAutoSaveFile"];
+    addRecordedMatch: Action["addRecordedMatch"];
+  };
+
 const recordingHandler = ({
   setRecordingState,
   isRecording,
   screenshotsDirectory,
   gameDirectory,
+  screenshotFiles,
   unwatchScreenshotFn,
   unwatchAutoSaveFn,
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-}: any) => {
+  addScreenshotFile,
+  setAutoSaveFile,
+  mod,
+  autoSaveFile,
+  game,
+  recordingGame,
+  recordingMod,
+  addRecordedMatch,
+  recordingUlid,
+}: RecordingHandlerProps) => {
   const newIsRecording = !isRecording;
   const recordingStartTime = newIsRecording ? new Date() : null;
-  const newRecordingUlid = newIsRecording ? ulid() : null;
 
   if (newIsRecording) {
     const newRecordingUlid = ulid();
     // Start recording logic here
 
-    asyncWatch(newRecordingUlid, screenshotsDirectory, gameDirectory)
+    asyncWatch({
+      newRecordingUlid,
+      screenshotsDirectory,
+      gameDirectory,
+      addScreenshotFile,
+      setAutoSaveFile,
+    })
       .then((unwatchFns) => {
-        if (!unwatchFns || unwatchFns.length !== 2) {
+        if (!unwatchFns) {
           throw new Error("jmw unwatchFns not set up correctly");
         }
         console.log("jmw recording started");
@@ -59,22 +101,39 @@ const recordingHandler = ({
           isRecording: newIsRecording,
           unwatchScreenshotFn: unwatchFns[0],
           unwatchAutoSaveFn: unwatchFns[1],
+          autoSaveFile: null,
+          screenshotFiles: [],
+          recordingGame: game,
+          recordingMod: mod,
         });
       })
-      .catch((error) => {
+      .catch((error: unknown) => {
         console.error("jmw error starting recording:", error);
       });
   } else {
     // Stop recording logic here
     unwatchScreenshotFn();
     unwatchAutoSaveFn();
+    addRecordedMatch({
+      game: recordingGame ?? TOTAL_WAR_WARHAMMER_3,
+      mod: recordingMod ?? DEFAULT,
+      screenshotFiles,
+      recordingUlid,
+      autoSaveFile,
+      recordingStartTime,
+      recordingEndTime: new Date(),
+    });
 
     setRecordingState({
-      recordingStartTime,
-      recordingUlid: newRecordingUlid,
+      recordingStartTime: null,
+      recordingUlid: null,
       isRecording: newIsRecording,
       unwatchScreenshotFn: () => {},
       unwatchAutoSaveFn: () => {},
+      autoSaveFile: null,
+      screenshotFiles: [],
+      recordingGame: null,
+      recordingMod: null,
     });
   }
 };
@@ -90,21 +149,45 @@ export default function RecordingButton() {
   const unwatchScreenshotFn = useZustandStore(
     (state) => state.unwatchScreenshotFn,
   );
+  const addScreenshotFile = useZustandStore((state) => state.addScreenshotFile);
+  const setAutoSaveFile = useZustandStore((state) => state.setAutoSaveFile);
+  const game = useZustandStore((state) => state.game);
+  const mod = useZustandStore((state) => state.mod);
+  const addRecordedMatch = useZustandStore((state) => state.addRecordedMatch);
+  const recordingGame = useZustandStore((state) => state.recordingGame);
+  const recordingMod = useZustandStore((state) => state.recordingMod);
+  const recordingUlid = useZustandStore((state) => state.recordingUlid);
+  const recordingStartTime = useZustandStore(
+    (state) => state.recordingStartTime,
+  );
+  const screenshotFiles = useZustandStore((state) => state.screenshotFiles);
+  const autoSaveFile = useZustandStore((state) => state.autoSaveFile);
 
   return (
     <button
       type="button"
       className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
-      onClick={() =>
+      onClick={() => {
         recordingHandler({
+          autoSaveFile,
           setRecordingState,
           isRecording,
           screenshotsDirectory,
           gameDirectory,
           unwatchScreenshotFn,
           unwatchAutoSaveFn,
-        })
-      }
+          addScreenshotFile,
+          setAutoSaveFile,
+          mod,
+          game,
+          recordingGame,
+          recordingMod,
+          addRecordedMatch,
+          recordingUlid,
+          recordingStartTime: recordingStartTime,
+          screenshotFiles: screenshotFiles,
+        });
+      }}
     >
       {/* <span className="absolute -inset-1.5" />
       <span className="sr-only">View notifications</span> */}
