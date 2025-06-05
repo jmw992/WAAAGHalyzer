@@ -1,7 +1,7 @@
 "use client";
 import History from "@/components/pages/History";
 import Home from "@/components/pages/Home";
-import Record from "@/components/pages/Record";
+import Recording from "@/components/pages/Recording";
 import Settings from "@/components/pages/Settings";
 import { HISTORY, HOME, RECORD, SETTINGS } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
@@ -12,7 +12,7 @@ const PageMap: Record<Page, React.FC> = {
   [HOME]: Home,
   [HISTORY]: History,
   [SETTINGS]: Settings,
-  [RECORD]: Record,
+  [RECORD]: Recording,
 };
 
 export default function RootPage() {

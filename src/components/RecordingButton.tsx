@@ -1,5 +1,4 @@
 "use client";
-import { DEFAULT, TOTAL_WAR_WARHAMMER_3 } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
 import type {
   Action,
@@ -50,13 +49,19 @@ const asyncWatch = async ({
   }
 };
 
-type RecordingHandlerProps = RecordingState &
-  PersistedState & {
-    setRecordingState: Action["setRecordingState"];
-    addScreenshotFile: Action["addScreenshotFile"];
-    setAutoSaveFile: Action["setAutoSaveFile"];
-    addRecordedMatch: Action["addRecordedMatch"];
-  };
+type RecordingHandlerProps = PersistedState & {
+  isRecording: RecordingState["isRecording"];
+  screenshotFiles: RecordingState["screenshotFiles"];
+  unwatchAutoSaveFn: RecordingState["unwatchAutoSaveFn"];
+  unwatchScreenshotFn: RecordingState["unwatchScreenshotFn"];
+  autoSaveFile: RecordingState["autoSaveFile"];
+
+  setRecordingState: Action["setRecordingState"];
+  addScreenshotFile: Action["addScreenshotFile"];
+  setAutoSaveFile: Action["setAutoSaveFile"];
+  addRecordedMatch: Action["addRecordedMatch"];
+  addRecordingToMatches: Action["addRecordingToMatches"];
+};
 
 const recordingHandler = ({
   setRecordingState,
@@ -71,10 +76,7 @@ const recordingHandler = ({
   mod,
   autoSaveFile,
   game,
-  recordingGame,
-  recordingMod,
-  addRecordedMatch,
-  recordingUlid,
+  addRecordingToMatches,
 }: RecordingHandlerProps) => {
   const newIsRecording = !isRecording;
   const recordingStartTime = newIsRecording ? new Date() : null;
@@ -116,15 +118,18 @@ const recordingHandler = ({
     unwatchAutoSaveFn();
     // Only add recorded match if files were captured
     if (autoSaveFile || screenshotFiles.length > 0) {
-      addRecordedMatch({
-        game: recordingGame ?? TOTAL_WAR_WARHAMMER_3,
-        mod: recordingMod ?? DEFAULT,
-        screenshotFiles,
-        recordingUlid,
-        autoSaveFile,
-        recordingStartTime,
-        recordingEndTime: new Date(),
-      });
+      // addRecordedMatch({
+      //   game: recordingGame ?? TOTAL_WAR_WARHAMMER_3,
+      //   mod: recordingMod ?? DEFAULT,
+      //   screenshotFiles,
+      //   recordingUlid,
+      //   autoSaveFile,
+      //   recordingStartTime,
+      //   recordingEndTime: new Date(),
+      // });
+      if (autoSaveFile !== null) {
+        addRecordingToMatches(new Date());
+      }
     }
 
     setRecordingState({
@@ -143,28 +148,26 @@ const recordingHandler = ({
 
 export default function RecordingButton() {
   const isRecording = useZustandStore((state) => state.isRecording);
-  const setRecordingState = useZustandStore((state) => state.setRecordingState);
   const screenshotsDirectory = useZustandStore(
     (state) => state.screenshotsDirectory,
   );
   const gameDirectory = useZustandStore((state) => state.gameDirectory);
+  const screenshotFiles = useZustandStore((state) => state.screenshotFiles);
+  const autoSaveFile = useZustandStore((state) => state.autoSaveFile);
+  const game = useZustandStore((state) => state.game);
+  const mod = useZustandStore((state) => state.mod);
+
+  const setRecordingState = useZustandStore((state) => state.setRecordingState);
   const unwatchAutoSaveFn = useZustandStore((state) => state.unwatchAutoSaveFn);
   const unwatchScreenshotFn = useZustandStore(
     (state) => state.unwatchScreenshotFn,
   );
+  const addRecordingToMatches = useZustandStore(
+    (state) => state.addRecordingToMatches,
+  );
   const addScreenshotFile = useZustandStore((state) => state.addScreenshotFile);
   const setAutoSaveFile = useZustandStore((state) => state.setAutoSaveFile);
-  const game = useZustandStore((state) => state.game);
-  const mod = useZustandStore((state) => state.mod);
   const addRecordedMatch = useZustandStore((state) => state.addRecordedMatch);
-  const recordingGame = useZustandStore((state) => state.recordingGame);
-  const recordingMod = useZustandStore((state) => state.recordingMod);
-  const recordingUlid = useZustandStore((state) => state.recordingUlid);
-  const recordingStartTime = useZustandStore(
-    (state) => state.recordingStartTime,
-  );
-  const screenshotFiles = useZustandStore((state) => state.screenshotFiles);
-  const autoSaveFile = useZustandStore((state) => state.autoSaveFile);
 
   return (
     <button
@@ -183,12 +186,9 @@ export default function RecordingButton() {
           setAutoSaveFile,
           mod,
           game,
-          recordingGame,
-          recordingMod,
           addRecordedMatch,
-          recordingUlid,
-          recordingStartTime: recordingStartTime,
           screenshotFiles: screenshotFiles,
+          addRecordingToMatches,
         });
       }}
     >

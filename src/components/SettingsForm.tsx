@@ -9,8 +9,7 @@ import {
 } from "@/components/ui/select";
 import { SUPPORTED_GAMES } from "@/constants";
 import { setStorePersistedSettings } from "@/lib/persistStorage";
-import { useZustandStore } from "@/lib/useZustandStore";
-import type { PersistedState } from "@/lib/useZustandStore";
+import { useZustandStore, type PersistedState } from "@/lib/useZustandStore";
 import { useState } from "react";
 import { toast } from "sonner";
 import { FolderInput } from "./FolderInputDialog";
@@ -84,7 +83,6 @@ export const SettingsForm = ({
       <div>
         <label htmlFor="settings-game-dir">Game Directory</label>
         <FolderInput
-          title="Select"
           initialValue={form.gameDirectory}
           onChange={(val) => {
             handleChange("gameDirectory", val);
@@ -94,7 +92,6 @@ export const SettingsForm = ({
       <div>
         <label htmlFor="settings-screenshots-dir">Screenshots Directory</label>
         <FolderInput
-          title="Select"
           initialValue={form.screenshotsDirectory}
           onChange={(val) => {
             handleChange("screenshotsDirectory", val);

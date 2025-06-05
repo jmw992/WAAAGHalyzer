@@ -27,10 +27,10 @@ export interface RecordedMatch {
   game: PersistedState["game"];
   mod: PersistedState["mod"];
   screenshotFiles: RecordingState["screenshotFiles"];
-  recordingUlid: RecordingState["recordingUlid"];
-  autoSaveFile: RecordingState["autoSaveFile"];
-  recordingStartTime: RecordingState["recordingStartTime"];
-  recordingEndTime: RecordingState["recordingStartTime"];
+  recordingUlid: string;
+  autoSaveFile: string;
+  recordingStartTime: Date;
+  recordingEndTime: Date;
 }
 
 /** Transient state items that get reset between app close & open */
@@ -52,6 +52,7 @@ export interface Action {
   setAutoSaveFile: (file: State["autoSaveFile"]) => void;
   addScreenshotFile: (file: string) => void;
   addRecordedMatch: (match: RecordedMatch) => void;
+  addRecordingToMatches: (recordingEndTime: Date) => void;
 
   setGame: (game: SupportedGames) => void;
   setGameDirectory: (gameDirectory: State["gameDirectory"]) => void;
@@ -134,6 +135,24 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
     set((state) => ({
       matches: [...state.matches, match],
     }));
+  },
+  addRecordingToMatches: (recordingEndTime: Date) => {
+    set((state) => {
+      return {
+        matches: [
+          ...state.matches,
+          {
+            game: state.recordingGame ?? TOTAL_WAR_WARHAMMER_3,
+            mod: state.recordingMod ?? DEFAULT,
+            screenshotFiles: state.screenshotFiles,
+            recordingUlid: state.recordingUlid ?? "",
+            autoSaveFile: state.autoSaveFile ?? "",
+            recordingStartTime: state.recordingStartTime ?? recordingEndTime,
+            recordingEndTime: recordingEndTime ?? new Date(),
+          },
+        ],
+      };
+    });
   },
   getPersistedState: () => ({
     game: get().game,

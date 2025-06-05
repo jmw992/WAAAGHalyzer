@@ -5,13 +5,11 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
 
 interface FolderInputProps {
-  title: string;
   initialValue?: string;
   onChange: (filePath: string) => void;
 }
 
 export const FolderInput: React.FC<FolderInputProps> = ({
-  title,
   initialValue: inputPlaceholder,
   onChange,
 }) => {

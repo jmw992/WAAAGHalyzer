@@ -1,9 +1,7 @@
 "use client";
-import { FileDialog } from "@/components/FileDialog";
-import { FolderInput } from "@/components/FolderInputDialog";
+
 import { RoundedButton } from "@/components/RoundedButton";
 import { invoke } from "@tauri-apps/api/core";
-import Image from "next/image";
 import { useCallback, useState } from "react";
 
 export default function Home() {
