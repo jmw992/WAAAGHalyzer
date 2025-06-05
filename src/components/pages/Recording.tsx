@@ -1,5 +1,7 @@
 "use client";
-import { useZustandStore } from "@/lib/useZustandStore";
+import { InputFile } from "@/components/InputFileDefault";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -7,11 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 // import { FolderInput } from "@/components/FolderInputDialog";
 import { SUPPORTED_GAMES } from "@/constants";
-import { InputFile } from "@/components/InputFileDefault";
+import { useZustandStore } from "@/lib/useZustandStore";
 
 export default function Recording() {
   const recordingStartTime = useZustandStore(

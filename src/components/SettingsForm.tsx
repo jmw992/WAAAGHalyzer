@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/select";
 import { SUPPORTED_GAMES } from "@/constants";
 import { setStorePersistedSettings } from "@/lib/persistStorage";
-import { useZustandStore, type PersistedState } from "@/lib/useZustandStore";
+import { type PersistedState, useZustandStore } from "@/lib/useZustandStore";
 import { useState } from "react";
 import { toast } from "sonner";
 import { FolderInput } from "./FolderInputDialog";
