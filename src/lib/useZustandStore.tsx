@@ -21,6 +21,7 @@ export interface RecordingState {
   screenshotFiles: string[];
   recordingGame: SupportedGames | null;
   recordingMod: string | null;
+  recordingWin: boolean | null;
 }
 
 export interface RecordedMatch {
@@ -31,6 +32,7 @@ export interface RecordedMatch {
   autoSaveFile: string;
   recordingStartTime: Date;
   recordingEndTime: Date;
+  win: boolean;
 }
 
 /** Transient state items that get reset between app close & open */
@@ -106,6 +108,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   unwatchScreenshotFn: () => {},
   recordingGame: TOTAL_WAR_WARHAMMER_3,
   recordingMod: DEFAULT,
+  recordingWin: null,
   setRecordingState: (state: RecordingState) => {
     set({
       isRecording: state.isRecording,
@@ -117,6 +120,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       screenshotFiles: state.screenshotFiles,
       recordingGame: state.recordingGame,
       recordingMod: state.recordingMod,
+      recordingWin: state.recordingWin,
     });
   },
 
@@ -149,6 +153,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
             autoSaveFile: state.autoSaveFile ?? "",
             recordingStartTime: state.recordingStartTime ?? recordingEndTime,
             recordingEndTime: recordingEndTime ?? new Date(),
+            win: state.recordingWin ?? false,
           },
         ],
       };

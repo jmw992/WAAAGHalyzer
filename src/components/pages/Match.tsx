@@ -13,7 +13,7 @@ import {
 import { SUPPORTED_GAMES } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
 
-export default function Recording() {
+export default function Match() {
   const recordingStartTime = useZustandStore(
     (state) => state.recordingStartTime,
   );
@@ -21,8 +21,10 @@ export default function Recording() {
   const recordingGame = useZustandStore((state) => state.recordingGame);
   const recordingMod = useZustandStore((state) => state.recordingMod);
   const autoSaveFile = useZustandStore((state) => state.autoSaveFile);
+  const recordingWin = useZustandStore((state) => state.recordingWin);
 
-  console.log("jmw autoSaveFile", autoSaveFile);
+  console.log("jmw autoSaveFile bbbbb", recordingStartTime, autoSaveFile);
+
   return (
     <div
       className="min-h-screen p-8 pb-20 gap-16 sm:p-20"
@@ -34,6 +36,36 @@ export default function Recording() {
         // maxWidth: 500,
       }}
     >
+      <div>
+        <label htmlFor="recording-win">Result</label>
+        <Select
+          value={
+            recordingWin === null ? undefined : recordingWin ? "win" : "loss"
+          }
+          onValueChange={(value) => {
+            console.log("jmw value", value);
+          }}
+          // defaultValue={form.game}
+        >
+          <SelectTrigger id="recording-game">
+            <SelectValue placeholder={recordingWin} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem key={"win"} value={"win"}>
+              Win
+            </SelectItem>
+            <SelectItem key={"loss"} value={"loss"}>
+              Loss
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <label htmlFor="screenshot-files">Screenshot Files</label>
+      <div id="screenshot-files">
+        {...screenshotFiles.map((files) => <p key={files}>{files}</p>)}
+      </div>
+
       <div>
         <label htmlFor="recording-game">Game</label>
         <Select
@@ -55,6 +87,7 @@ export default function Recording() {
           </SelectContent>
         </Select>
       </div>
+
       <div>
         <label htmlFor="recording-mod">Mod</label>
         <Input
@@ -66,10 +99,7 @@ export default function Recording() {
           }}
         />
       </div>
-      <label htmlFor="screenshot-files">Screenshot Files</label>
-      <div id="screenshot-files">
-        {...screenshotFiles.map((files) => <p key={files}>{files}</p>)}
-      </div>
+
       <div>
         <InputFile
           label={"Add a Screenshot"}
@@ -79,11 +109,13 @@ export default function Recording() {
           }}
         />
       </div>
+      <label htmlFor="autosave-file">Auto Save File</label>
+      <div id="autosave-file">{autoSaveFile}</div>
       <div>
         <InputFile
-          label={"Auto Save File"}
+          label={"Change Auto Save"}
           id={"auto-save-file"}
-          defaultValue={autoSaveFile ?? undefined}
+          // defaultValue={autoSaveFile ?? undefined}
           onChange={(val) => {
             console.log("jmw val", val);
           }}

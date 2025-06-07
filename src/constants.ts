@@ -1,6 +1,6 @@
 export const HISTORY = "History";
 export const SETTINGS = "Settings";
-export const RECORD = "Record";
+export const MATCH = "Match";
 export const HOME = "Home";
 
 /**  Appdate directory of default game Total War warhammer 3, relative to user config directory
@@ -20,3 +20,5 @@ export const DEFAULT = "default";
 export const REPLAYS = "replays";
 
 export const SUPPORTED_GAMES = [TOTAL_WAR_WARHAMMER_3] as const;
+
+export const MATCHES = "matches";

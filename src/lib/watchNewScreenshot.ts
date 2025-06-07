@@ -7,7 +7,7 @@ import {
   watch,
 } from "@tauri-apps/plugin-fs";
 import { ulid } from "ulid";
-
+import { MATCHES } from "@/constants";
 import { appLocalDataDir, join } from "@tauri-apps/api/path";
 
 interface WatchNewScreenshotProps {
@@ -56,6 +56,7 @@ export const watchNewScreenshot = async ({
   onCopy,
 }: WatchNewScreenshotProps): Promise<UnwatchFn> => {
   const createdFiles = new Set<string>();
+  const matchDir = await join(MATCHES, destinationDir);
   const unWatch = await watch(screenshotsDir, (event) => {
     console.log("app.log event", event);
     // return;
@@ -65,7 +66,7 @@ export const watchNewScreenshot = async ({
       createdFiles.add(event.paths[0]);
       void copyScreenshot({
         screenshotsDir: event.paths[0],
-        destinationDir,
+        destinationDir: matchDir,
         onCopy,
       });
     }

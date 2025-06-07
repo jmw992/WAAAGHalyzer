@@ -1,7 +1,7 @@
 "use client";
 import RecordingButton from "@/components/RecordingButton";
 import { Toaster } from "@/components/ui/sonner";
-import { HISTORY, HOME, RECORD, SETTINGS } from "@/constants";
+import { HISTORY, HOME, MATCH, SETTINGS } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
 import type { Page } from "@/types";
 import { Disclosure, DisclosureButton } from "@headlessui/react";
@@ -23,7 +23,7 @@ export default function AppLayout({
   const page = useZustandStore((state) => state.page);
   const setPage = useZustandStore((state) => state.setPage);
 
-  const navigation: Page[] = [HISTORY, RECORD];
+  const navigation: Page[] = [HISTORY, MATCH];
 
   return (
     <>

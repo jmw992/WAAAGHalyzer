@@ -7,6 +7,7 @@ import {
   watch,
 } from "@tauri-apps/plugin-fs";
 
+import { MATCHES } from "@/constants";
 import { appLocalDataDir, join } from "@tauri-apps/api/path";
 
 interface WatchNewScreenshotProps {
@@ -20,9 +21,12 @@ interface WatchNewScreenshotProps {
 
 const copyAutoSave = async ({
   gameDirectory: screenshotFile,
+  fileNameRoot,
   destinationDir,
   onCopy,
-}: WatchNewScreenshotProps): Promise<void> => {
+}: WatchNewScreenshotProps & {
+  fileNameRoot: string;
+}): Promise<void> => {
   if (
     !(await exists(destinationDir, {
       baseDir: BaseDirectory.AppLocalData,
@@ -35,15 +39,15 @@ const copyAutoSave = async ({
     });
   }
 
-  const newFile = await join(destinationDir, `${destinationDir}.replay`);
-
+  const newFile = await join(destinationDir, `${fileNameRoot}.replay`);
+  console.log("jmw autosave newFile", newFile);
   // Perform the copy operation
   await copyFile(screenshotFile, newFile, {
     toPathBaseDir: BaseDirectory.AppLocalData,
   });
 
   if (onCopy) {
-    onCopy(destinationDir);
+    onCopy(fileNameRoot);
   }
 };
 
@@ -53,18 +57,32 @@ export const watchNewAutoSave = async ({
   onCopy,
 }: WatchNewScreenshotProps): Promise<UnwatchFn> => {
   const seenFiles = new Set<string>();
-  const unWatch = await watch(gameDirectory, (event) => {
-    console.log("app.log event", event);
+  const gameAutoSaveFile = await join(
+    gameDirectory,
+    "replays",
+    "Auto-save.replay",
+  );
+  console.log("jmw gameAutoSaveFile", gameAutoSaveFile);
+  const matchDir = await join(MATCHES, destinationDir);
+  console.log("jmw auto-save matchDir ", matchDir);
+  const unWatch = await watch(gameAutoSaveFile, (event) => {
+    console.log("watchNewAutoSave event", event);
     // return;
     const isCreateEvent =
       typeof event.type === "object" && "create" in event.type;
-    const isModifyEvent =
-      typeof event.type === "object" && "modify" in event.type;
-    if ((isCreateEvent || isModifyEvent) && !seenFiles.has(event.paths[0])) {
+    const isModifyDataEvent =
+      typeof event.type === "object" &&
+      "modify" in event.type &&
+      event.type.modify.kind !== "metadata";
+    if (
+      (isCreateEvent || isModifyDataEvent) &&
+      !seenFiles.has(event.paths[0])
+    ) {
       seenFiles.add(event.paths[0]);
       void copyAutoSave({
         gameDirectory: event.paths[0],
-        destinationDir,
+        fileNameRoot: destinationDir,
+        destinationDir: matchDir,
         onCopy,
       });
     }
