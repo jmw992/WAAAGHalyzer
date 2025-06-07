@@ -9,15 +9,17 @@ import {
 } from "@/components/ui/select";
 import { SUPPORTED_GAMES } from "@/constants";
 import { setStorePersistedSettings } from "@/lib/persistStorage";
-import { useZustandStore } from "@/lib/useZustandStore";
-import type { PersistedState } from "@/lib/useZustandStore";
+import { type PersistedState, useZustandStore } from "@/lib/useZustandStore";
 import { useState } from "react";
 import { toast } from "sonner";
 import { FolderInput } from "./FolderInputDialog";
 
 export const SettingsForm = ({
   initialState,
-}: { initialState: PersistedState }) => {
+}: {
+  initialState: PersistedState;
+}) => {
+  console.log("jmw double render???", initialState);
   const setPersistedState = useZustandStore((state) => state.setPersistedState);
 
   // Local state for form
@@ -27,18 +29,18 @@ export const SettingsForm = ({
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    console.log("jmw handleSubmit", form);
+    // console.log("jmw how is this triggered.");
+    // e.preventDefault();
     setPersistedState(form);
     setStorePersistedSettings(form);
     toast.success("Settings saved successfully!");
   };
 
-  console.log("jmw form.game", form.game);
-
   return (
-    <form
-      onSubmit={handleSubmit}
+    <div
+      // onSubmit={(e)}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -81,7 +83,6 @@ export const SettingsForm = ({
       <div>
         <label htmlFor="settings-game-dir">Game Directory</label>
         <FolderInput
-          title="Select"
           initialValue={form.gameDirectory}
           onChange={(val) => {
             handleChange("gameDirectory", val);
@@ -91,16 +92,20 @@ export const SettingsForm = ({
       <div>
         <label htmlFor="settings-screenshots-dir">Screenshots Directory</label>
         <FolderInput
-          title="Select"
           initialValue={form.screenshotsDirectory}
           onChange={(val) => {
             handleChange("screenshotsDirectory", val);
           }}
         />
       </div>
-      <Button size="lg" type="submit" style={{ alignSelf: "flex-end" }}>
+      <Button
+        onClick={handleSubmit}
+        size="lg"
+        type="submit"
+        style={{ alignSelf: "flex-end" }}
+      >
         Save
       </Button>
-    </form>
+    </div>
   );
 };

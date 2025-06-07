@@ -1,7 +1,7 @@
 "use client";
 import RecordingButton from "@/components/RecordingButton";
 import { Toaster } from "@/components/ui/sonner";
-import { HOME, HISTORY, RECORD, SETTINGS } from "@/constants";
+import { HISTORY, HOME, MATCH, SETTINGS } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
 import type { Page } from "@/types";
 import { Disclosure, DisclosureButton } from "@headlessui/react";
@@ -23,22 +23,27 @@ export default function AppLayout({
   const page = useZustandStore((state) => state.page);
   const setPage = useZustandStore((state) => state.setPage);
 
-  const navigation: Page[] = [HISTORY, RECORD];
+  const navigation: Page[] = [HISTORY, MATCH];
 
   return (
     <>
-      <div className="min-h-full">
+      <div className="min-h-screen">
         <Disclosure as="nav" className="bg-gray-800">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 items-center justify-between">
               <div className="flex items-center">
-                <button type="button" onClick={() => setPage(HOME)}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPage(HOME);
+                  }}
+                >
                   <div className="shrink-0">
                     <img
                       alt="Waaaghlyzer logo"
-                      src="/WA.svg"
+                      src="/WA-NoBackground.svg"
                       // src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-                      className="size-8"
+                      className="size-10"
                     />
                   </div>
                 </button>

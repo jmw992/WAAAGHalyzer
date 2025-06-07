@@ -12,7 +12,9 @@ import {
 import type React from "react";
 import { useEffect } from "react";
 
-import { configDir, pictureDir } from "@tauri-apps/api/path";
+import { watch } from "@tauri-apps/plugin-fs";
+
+import { configDir, join, pictureDir } from "@tauri-apps/api/path";
 
 // /** These state items get persisted between app close & open */
 // export type PersistedState = {
@@ -39,7 +41,8 @@ const asyncDirsUpdate = async ({
     promises.push(
       (async () => {
         const dirRoot = await configDir();
-        setGameDirectory(`${dirRoot}\\${DEFAULT_GAME_DIRECTORY}`);
+        const gameDirectory = await join(dirRoot, DEFAULT_GAME_DIRECTORY);
+        setGameDirectory(gameDirectory);
       })(),
     );
   }
@@ -47,7 +50,11 @@ const asyncDirsUpdate = async ({
     promises.push(
       (async () => {
         const dirRoot = await pictureDir();
-        setScreenshotsDirectory(`${dirRoot}\\${DEFAULT_SCREENSHOTS_DIRECTORY}`);
+        const screenshotsDirectory = await join(
+          dirRoot,
+          DEFAULT_SCREENSHOTS_DIRECTORY,
+        );
+        setScreenshotsDirectory(screenshotsDirectory);
       })(),
     );
   }
@@ -63,10 +70,11 @@ export default function RootPage({
   useEffect(() => {
     // Set default from localStorage on first load
     const persistedState = getStorePersistedSettings();
+
     setPersistedState(persistedState);
     if (
       persistedState.gameDirectory === "" ||
-      persistedState.screenshotsDirectory
+      persistedState.screenshotsDirectory === ""
     ) {
       // console.log();
       void asyncDirsUpdate({

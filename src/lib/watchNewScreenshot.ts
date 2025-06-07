@@ -1,5 +1,8 @@
+import { MATCHES } from "@/constants";
+import { appLocalDataDir, join } from "@tauri-apps/api/path";
 import {
   BaseDirectory,
+  type UnwatchFn,
   copyFile,
   exists,
   mkdir,
@@ -17,11 +20,17 @@ interface WatchNewScreenshotProps {
 }
 
 const copyScreenshot = async ({
-  screenshotsDir: austoSaveFile,
+  screenshotsDir: screenshotFile,
   destinationDir,
   onCopy,
 }: WatchNewScreenshotProps): Promise<void> => {
-  if (!(await exists(destinationDir))) {
+  console.log("jmw starting copy....");
+  if (
+    !(await exists(destinationDir, {
+      baseDir: BaseDirectory.AppLocalData,
+    }))
+  ) {
+    console.log(`making ${destinationDir}`);
     await mkdir(destinationDir, {
       baseDir: BaseDirectory.AppLocalData,
       recursive: true,
@@ -29,9 +38,10 @@ const copyScreenshot = async ({
   }
 
   const newScreenshotUlid = ulid();
+  const newFile = await join(destinationDir, `${newScreenshotUlid}.png`);
 
   // Perform the copy operation
-  await copyFile(austoSaveFile, `destinationDir\\${newScreenshotUlid}`, {
+  await copyFile(screenshotFile, newFile, {
     toPathBaseDir: BaseDirectory.AppLocalData,
   });
 
@@ -40,28 +50,27 @@ const copyScreenshot = async ({
   }
 };
 
-export const watchNewAutoSave = async ({
+export const watchNewScreenshot = async ({
   screenshotsDir,
   destinationDir,
   onCopy,
-}: WatchNewScreenshotProps): Promise<void> => {
-  await watch(
-    screenshotsDir,
-    (event) => {
-      console.log("app.log event", event);
-      const isCreateEvent =
-        typeof event.type === "object" && "create" in event.type;
-      if (isCreateEvent) {
-        void copyScreenshot({
-          screenshotsDir,
-          destinationDir,
-          onCopy,
-        });
-      }
-    },
-    {
-      baseDir: BaseDirectory.AppLog,
-      delayMs: 1000, // Delay in milliseconds to wait for file changes
-    },
-  );
+}: WatchNewScreenshotProps): Promise<UnwatchFn> => {
+  const createdFiles = new Set<string>();
+  const matchDir = await join(MATCHES, destinationDir);
+  const unWatch = await watch(screenshotsDir, (event) => {
+    console.log("app.log event", event);
+    // return;
+    const isCreateEvent =
+      typeof event.type === "object" && "create" in event.type;
+    if (isCreateEvent && !createdFiles.has(event.paths[0])) {
+      createdFiles.add(event.paths[0]);
+      void copyScreenshot({
+        screenshotsDir: event.paths[0],
+        destinationDir: matchDir,
+        onCopy,
+      });
+    }
+  });
+  // unWatch();
+  return unWatch;
 };

@@ -1,21 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { TOTAL_WAR_WARHAMMER_3 } from "@/constants";
 import { open } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
 
 interface FolderInputProps {
-  title: string;
   initialValue?: string;
   onChange: (filePath: string) => void;
 }
 
 export const FolderInput: React.FC<FolderInputProps> = ({
-  title,
   initialValue: inputPlaceholder,
   onChange,
 }) => {
   const [displayFile, setDisplayFile] = useState(
-    inputPlaceholder ?? "total war warhammer 3",
+    inputPlaceholder ?? TOTAL_WAR_WARHAMMER_3,
   );
 
   const onClickAsync = async () => {
@@ -25,6 +24,7 @@ export const FolderInput: React.FC<FolderInputProps> = ({
     });
     console.log("Selected file:", file);
     if (typeof file === "string") {
+      console.log("jmw onClickAsync onChange", file);
       setDisplayFile(file);
       onChange(file);
     }
@@ -51,6 +51,7 @@ export const FolderInput: React.FC<FolderInputProps> = ({
         value={displayFile}
         style={{ width: "100%", minWidth: 0 }}
         onChange={(e) => {
+          console.log("jmw Input onChange", e.target.value);
           setDisplayFile(e.target.value);
           onChange(e.target.value);
         }}

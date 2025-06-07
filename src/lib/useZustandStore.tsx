@@ -1,5 +1,6 @@
-import { DEFAULT, HOME } from "@/constants";
+import { DEFAULT, HOME, TOTAL_WAR_WARHAMMER_3 } from "@/constants";
 import type { Page, SupportedGames } from "@/types";
+import type { UnwatchFn } from "@tauri-apps/plugin-fs";
 import { create } from "zustand";
 
 /** These state items get persisted between app close & open */
@@ -10,22 +11,51 @@ export interface PersistedState {
   screenshotsDirectory: string;
 }
 
-/** Transient state items that get reset between app close & open */
-export interface TransientState {
-  page: Page;
+export interface RecordingState {
   isRecording: boolean;
   recordingStartTime: Date | null;
   recordingUlid: string | null;
+  unwatchAutoSaveFn: UnwatchFn;
+  unwatchScreenshotFn: UnwatchFn;
+  autoSaveFile: string | null;
+  screenshotFiles: string[];
+  recordingGame: SupportedGames | null;
+  recordingMod: string | null;
+  recordingWin: boolean | null;
 }
+
+export interface RecordedMatch {
+  game: PersistedState["game"];
+  mod: PersistedState["mod"];
+  screenshotFiles: RecordingState["screenshotFiles"];
+  recordingUlid: string;
+  autoSaveFile: string;
+  recordingStartTime: Date;
+  recordingEndTime: Date;
+  win: boolean;
+}
+
+/** Transient state items that get reset between app close & open */
+export type TransientState = RecordingState & {
+  page: Page;
+  matches: RecordedMatch[];
+};
 
 /** Full application state */
 type State = PersistedState & TransientState;
 
-interface Action {
+export interface Action {
   setPage: (page: State["page"]) => void;
+
   setIsRecording: (isRecording: State["isRecording"]) => void;
   setRecordingStartTime: (startTime: State["recordingStartTime"]) => void;
-  setRecordingUlid: (ulid: string | null) => void;
+  setRecordingUlid: (ulid: State["recordingUlid"]) => void;
+  setRecordingState: (recordingState: RecordingState) => void;
+  setAutoSaveFile: (file: State["autoSaveFile"]) => void;
+  addScreenshotFile: (file: string) => void;
+  addRecordedMatch: (match: RecordedMatch) => void;
+  addRecordingToMatches: (recordingEndTime: Date) => void;
+
   setGame: (game: SupportedGames) => void;
   setGameDirectory: (gameDirectory: State["gameDirectory"]) => void;
   setMod: (mod: State["mod"]) => void;
@@ -40,6 +70,7 @@ export type ZustandStateAction = State & Action;
 
 export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   page: HOME,
+  matches: [],
   setPage: (value: Page) => {
     set({ page: value });
   },
@@ -51,7 +82,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   setMod(value: string) {
     set({ mod: value });
   },
-  game: "Total War Warhammer 3",
+  game: TOTAL_WAR_WARHAMMER_3,
   setGame(value: SupportedGames) {
     set({ game: value });
   },
@@ -71,8 +102,62 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   setRecordingUlid: (ulid: string | null) => {
     set({ recordingUlid: ulid });
   },
+  autoSaveFile: null,
+  screenshotFiles: [],
+  unwatchAutoSaveFn: () => {},
+  unwatchScreenshotFn: () => {},
+  recordingGame: TOTAL_WAR_WARHAMMER_3,
+  recordingMod: DEFAULT,
+  recordingWin: null,
+  setRecordingState: (state: RecordingState) => {
+    set({
+      isRecording: state.isRecording,
+      recordingStartTime: state.recordingStartTime,
+      recordingUlid: state.recordingUlid,
+      unwatchAutoSaveFn: state.unwatchAutoSaveFn,
+      unwatchScreenshotFn: state.unwatchScreenshotFn,
+      autoSaveFile: state.autoSaveFile,
+      screenshotFiles: state.screenshotFiles,
+      recordingGame: state.recordingGame,
+      recordingMod: state.recordingMod,
+      recordingWin: state.recordingWin,
+    });
+  },
+
+  setAutoSaveFile: (file: string | null) => {
+    set({ autoSaveFile: file });
+  },
+  addScreenshotFile: (file: string) => {
+    set((state) => ({
+      screenshotFiles: [...state.screenshotFiles, file],
+    }));
+  },
   setPersistedState(value) {
     set(value);
+  },
+  addRecordedMatch: (match: RecordedMatch) => {
+    set((state) => ({
+      matches: [...state.matches, match],
+    }));
+  },
+  addRecordingToMatches: (recordingEndTime: Date) => {
+    set((state) => {
+      return {
+        matches: [
+          ...state.matches,
+          {
+            game: state.recordingGame ?? TOTAL_WAR_WARHAMMER_3,
+            mod: state.recordingMod ?? DEFAULT,
+            screenshotFiles: state.screenshotFiles,
+            recordingUlid: state.recordingUlid ?? "",
+            autoSaveFile: state.autoSaveFile ?? "",
+            recordingStartTime: state.recordingStartTime ?? recordingEndTime,
+            recordingEndTime: recordingEndTime,
+            win: state.recordingWin ?? false,
+          },
+        ],
+      };
+    });
   },
   getPersistedState: () => ({
     game: get().game,
