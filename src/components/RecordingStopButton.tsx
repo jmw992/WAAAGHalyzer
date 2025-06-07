@@ -3,7 +3,7 @@ import { useZustandStore } from "@/lib/useZustandStore";
 import type { Action, RecordingState } from "@/lib/useZustandStore";
 import { StopIcon } from "@heroicons/react/24/outline";
 
-type StopHandlerProps = {
+interface StopHandlerProps {
   screenshotFiles: RecordingState["screenshotFiles"];
   unwatchAutoSaveFn: RecordingState["unwatchAutoSaveFn"];
   unwatchScreenshotFn: RecordingState["unwatchScreenshotFn"];
@@ -12,7 +12,7 @@ type StopHandlerProps = {
 
   setIsRecording: Action["setIsRecording"];
   addRecordingToMatches: Action["addRecordingToMatches"];
-};
+}
 
 const stopHandler = ({
   screenshotFiles,

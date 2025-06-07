@@ -1,3 +1,5 @@
+import { MATCHES } from "@/constants";
+import { appLocalDataDir, join } from "@tauri-apps/api/path";
 import {
   BaseDirectory,
   type UnwatchFn,
@@ -7,8 +9,6 @@ import {
   watch,
 } from "@tauri-apps/plugin-fs";
 import { ulid } from "ulid";
-import { MATCHES } from "@/constants";
-import { appLocalDataDir, join } from "@tauri-apps/api/path";
 
 interface WatchNewScreenshotProps {
   // The source file path to copy from the root

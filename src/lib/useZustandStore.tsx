@@ -152,7 +152,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
             recordingUlid: state.recordingUlid ?? "",
             autoSaveFile: state.autoSaveFile ?? "",
             recordingStartTime: state.recordingStartTime ?? recordingEndTime,
-            recordingEndTime: recordingEndTime ?? new Date(),
+            recordingEndTime: recordingEndTime,
             win: state.recordingWin ?? false,
           },
         ],
