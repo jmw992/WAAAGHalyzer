@@ -1,5 +1,5 @@
-import { DEFAULT, HOME, TOTAL_WAR_WARHAMMER_3 } from "@/constants";
-import type { Page, SupportedGames } from "@/types";
+import { BEASTMEN, DEFAULT, HOME, TOTAL_WAR_WARHAMMER_3 } from "@/constants";
+import type { Page, SupportedGames, Faction } from "@/types";
 import type { UnwatchFn } from "@tauri-apps/plugin-fs";
 import { create } from "zustand";
 
@@ -22,9 +22,16 @@ export interface RecordingState {
   recordingGame: SupportedGames | null;
   recordingMod: string | null;
   recordingWin: boolean | null;
+  playerFaction: Faction | null;
+  opponentFaction: Faction | null;
+  map: string | null;
+  notes: string | null;
+  links: string[] | null;
 }
 
 export interface RecordedMatch {
+  playerFaction: Faction;
+  opponentFaction: Faction;
   game: PersistedState["game"];
   mod: PersistedState["mod"];
   screenshotFiles: RecordingState["screenshotFiles"];
@@ -33,6 +40,9 @@ export interface RecordedMatch {
   recordingStartTime: Date;
   recordingEndTime: Date;
   win: boolean;
+  map: string;
+  notes: RecordingState["notes"];
+  links: RecordingState["links"];
 }
 
 /** Transient state items that get reset between app close & open */
@@ -44,14 +54,30 @@ export type TransientState = RecordingState & {
 /** Full application state */
 type State = PersistedState & TransientState;
 
+type StartRecordingProps = {
+  recordingUlid: RecordingState["recordingUlid"];
+  unwatchScreenshotFn: RecordingState["unwatchScreenshotFn"];
+  unwatchAutoSaveFn: RecordingState["unwatchAutoSaveFn"];
+  recordingGame: RecordingState["recordingGame"];
+  recordingMod: RecordingState["recordingMod"];
+};
+
 export interface Action {
   setPage: (page: State["page"]) => void;
 
-  setIsRecording: (isRecording: State["isRecording"]) => void;
-  setRecordingStartTime: (startTime: State["recordingStartTime"]) => void;
-  setRecordingUlid: (ulid: State["recordingUlid"]) => void;
+  setPlayerFaction: (playerFaction: RecordingState["playerFaction"]) => void;
+  setOpponentFaction: (
+    opponentFaction: RecordingState["opponentFaction"],
+  ) => void;
+  setRecordingWin: (recordingWin: RecordingState["recordingWin"]) => void;
+  setIsRecording: (isRecording: RecordingState["isRecording"]) => void;
+  setRecordingStartTime: (
+    startTime: RecordingState["recordingStartTime"],
+  ) => void;
+  setRecordingUlid: (ulid: RecordingState["recordingUlid"]) => void;
   setRecordingState: (recordingState: RecordingState) => void;
-  setAutoSaveFile: (file: State["autoSaveFile"]) => void;
+  setRecordingStartState: (startRecordingProps: StartRecordingProps) => void;
+  setAutoSaveFile: (file: RecordingState["autoSaveFile"]) => void;
   addScreenshotFile: (file: string) => void;
   addRecordedMatch: (match: RecordedMatch) => void;
   addRecordingToMatches: (recordingEndTime: Date) => void;
@@ -98,6 +124,9 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   setRecordingStartTime: (value: Date | null) => {
     set({ recordingStartTime: value });
   },
+  setRecordingWin: (recordingWin: RecordingState["recordingWin"]) => {
+    set({ recordingWin });
+  },
   recordingUlid: null,
   setRecordingUlid: (ulid: string | null) => {
     set({ recordingUlid: ulid });
@@ -109,6 +138,17 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   recordingGame: TOTAL_WAR_WARHAMMER_3,
   recordingMod: DEFAULT,
   recordingWin: null,
+  playerFaction: null,
+  opponentFaction: null,
+  map: null,
+  notes: null,
+  links: null,
+  setPlayerFaction: (playerFaction) => {
+    set({ playerFaction });
+  },
+  setOpponentFaction: (opponentFaction) => {
+    set({ opponentFaction });
+  },
   setRecordingState: (state: RecordingState) => {
     set({
       isRecording: state.isRecording,
@@ -121,9 +161,32 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       recordingGame: state.recordingGame,
       recordingMod: state.recordingMod,
       recordingWin: state.recordingWin,
+      playerFaction: state.playerFaction,
+      opponentFaction: state.opponentFaction,
+      map: state.map,
+      notes: state.notes,
+      links: state.links,
     });
   },
-
+  setRecordingStartState: (state: StartRecordingProps) => {
+    set({
+      recordingStartTime: new Date(),
+      recordingUlid: state.recordingUlid,
+      unwatchAutoSaveFn: state.unwatchAutoSaveFn,
+      unwatchScreenshotFn: state.unwatchScreenshotFn,
+      isRecording: true,
+      recordingGame: state.recordingGame,
+      recordingMod: state.recordingMod,
+      autoSaveFile: null,
+      screenshotFiles: [],
+      recordingWin: null,
+      playerFaction: null,
+      opponentFaction: null,
+      map: null,
+      notes: null,
+      links: null,
+    });
+  },
   setAutoSaveFile: (file: string | null) => {
     set({ autoSaveFile: file });
   },
@@ -154,6 +217,11 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
             recordingStartTime: state.recordingStartTime ?? recordingEndTime,
             recordingEndTime: recordingEndTime,
             win: state.recordingWin ?? false,
+            playerFaction: state.playerFaction ?? BEASTMEN,
+            opponentFaction: state.opponentFaction ?? BEASTMEN,
+            notes: state.notes,
+            map: state.map ?? "",
+            links: state.links,
           },
         ],
       };

@@ -46,9 +46,9 @@ const asyncWatch = async ({
 };
 
 type RecordingHandlerProps = PersistedState & {
-  setRecordingState: Action["setRecordingState"];
   addScreenshotFile: Action["addScreenshotFile"];
   setAutoSaveFile: Action["setAutoSaveFile"];
+  setRecordingStartState: Action["setRecordingStartState"];
 };
 
 const recordingHandler = ({
@@ -57,11 +57,10 @@ const recordingHandler = ({
   mod,
   game,
 
-  setRecordingState,
   addScreenshotFile,
   setAutoSaveFile,
+  setRecordingStartState,
 }: RecordingHandlerProps) => {
-  const recordingStartTime = new Date();
   const newRecordingUlid = ulid();
   // Start recording logic here
 
@@ -79,17 +78,12 @@ const recordingHandler = ({
       console.log("jmw recording started");
       console.log("jmw unwatchFns[0]", unwatchFns[0]);
       console.log("jmw unwatchFns[1]", unwatchFns[1]);
-      setRecordingState({
-        recordingStartTime,
+      setRecordingStartState({
         recordingUlid: newRecordingUlid,
-        isRecording: true,
         unwatchScreenshotFn: unwatchFns[0],
         unwatchAutoSaveFn: unwatchFns[1],
-        autoSaveFile: null,
-        screenshotFiles: [],
         recordingGame: game,
         recordingMod: mod,
-        recordingWin: null,
       });
     })
     .catch((error: unknown) => {
@@ -105,9 +99,12 @@ export default function RecordingStartButton() {
   const game = useZustandStore((state) => state.game);
   const mod = useZustandStore((state) => state.mod);
 
-  const setRecordingState = useZustandStore((state) => state.setRecordingState);
+  const setRecordingStartState = useZustandStore(
+    (state) => state.setRecordingStartState,
+  );
   const addScreenshotFile = useZustandStore((state) => state.addScreenshotFile);
   const setAutoSaveFile = useZustandStore((state) => state.setAutoSaveFile);
+  // setRecordingStartState
 
   return (
     <button
@@ -115,13 +112,13 @@ export default function RecordingStartButton() {
       className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
       onClick={() => {
         recordingHandler({
-          setRecordingState,
           screenshotsDirectory,
           gameDirectory,
-          addScreenshotFile,
-          setAutoSaveFile,
           mod,
           game,
+          addScreenshotFile,
+          setAutoSaveFile,
+          setRecordingStartState,
         });
       }}
     >

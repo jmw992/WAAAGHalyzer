@@ -14,16 +14,19 @@ import { SUPPORTED_GAMES } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
 
 export default function Match() {
-  const recordingStartTime = useZustandStore(
-    (state) => state.recordingStartTime,
-  );
   const screenshotFiles = useZustandStore((state) => state.screenshotFiles);
   const recordingGame = useZustandStore((state) => state.recordingGame);
   const recordingMod = useZustandStore((state) => state.recordingMod);
   const autoSaveFile = useZustandStore((state) => state.autoSaveFile);
   const recordingWin = useZustandStore((state) => state.recordingWin);
-
-  console.log("jmw autoSaveFile bbbbb", recordingStartTime, autoSaveFile);
+  const recordingStartTime = useZustandStore(
+    (state) => state.recordingStartTime,
+  );
+  const playerFaction = useZustandStore((state) => state.playerFaction);
+  const opponentFaction = useZustandStore((state) => state.opponentFaction);
+  const map = useZustandStore((state) => state.map);
+  const links = useZustandStore((state) => state.links);
+  const notes = useZustandStore((state) => state.notes);
 
   return (
     <div
