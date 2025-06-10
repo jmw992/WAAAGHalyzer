@@ -79,3 +79,14 @@ export const FACTIONS = [
 export const WIN = "Win";
 export const LOSS = "Loss";
 export const RESULT_ARRAY = [WIN, LOSS];
+
+export const DOMINATION = "Domination";
+export const LAND_BATTLE = "Land Battle";
+export const CONQUEST = "Conquest";
+export const MATCH_TYPES = [DOMINATION, LAND_BATTLE, CONQUEST];
+
+export const LOADING = "Loading";
+export const VICTORY = "Victory";
+export const END_BATTLE = "End Battle";
+export const OTHER = "Other";
+export const SCREENSHOT_TYPES = [LOADING, VICTORY, END_BATTLE, OTHER];

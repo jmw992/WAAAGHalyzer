@@ -19,29 +19,28 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import type { RecordingState } from "@/lib/useZustandStore";
-import { LOSS, RESULT_ARRAY, WIN } from "@/constants";
+import { MAPS } from "@/constants/maps";
+import type { Faction } from "@/types";
 
-const resultOptions = RESULT_ARRAY.map((result) => ({
-  value: result,
-  label: result,
+const mapOptions = MAPS.map((map) => ({
+  value: map,
+  label: map,
 }));
 
-type ComboBoxWinProps = {
-  onSelectCb: (value: RecordingState["recordingWin"]) => void;
-  initialValue: RecordingState["recordingWin"];
+type FactionComboBoxProps = {
+  onSelectCb: (value: RecordingState["map"]) => void;
+  initialValue: RecordingState["map"];
 };
 
-export default function ComboBoxWin({
+export default function MapComboBox({
   initialValue,
   onSelectCb,
-}: ComboBoxWinProps) {
-  console.log("jmw FactionComboBox");
+}: FactionComboBoxProps) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(
-    initialValue === null ? "" : initialValue ? WIN : LOSS,
+    initialValue === null ? "" : initialValue,
   );
-  console.log("jmw initialValue", initialValue);
-  console.log("jmw value", value);
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -50,28 +49,28 @@ export default function ComboBoxWin({
           // biome-ignore lint/a11y/useSemanticElements: <explanation>
           role="combobox"
           aria-expanded={open}
-          className="w-[1  100px] justify-between"
+          className="w-[150px] justify-between"
         >
-          {value !== null
-            ? resultOptions.find((map) => map.value === value)?.label
-            : "Select..."}
+          {value
+            ? mapOptions.find((framework) => framework.value === value)?.label
+            : "Select"}
           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[150px] p-0">
         <Command>
-          <CommandInput placeholder="Win or Loss?" />
+          <CommandInput placeholder="Search maps..." />
           <CommandList>
-            <CommandEmpty>Was it a draw?</CommandEmpty>
+            <CommandEmpty>No Map Found</CommandEmpty>
             <CommandGroup>
-              {resultOptions.map((framework) => (
+              {mapOptions.map((framework) => (
                 <CommandItem
                   key={framework.value}
                   value={framework.value}
                   onSelect={(currentValue) => {
                     const cV =
-                      currentValue === value ? null : currentValue === WIN;
-                    setValue(cV === null ? "" : currentValue);
+                      currentValue === value ? null : (currentValue as Faction);
+                    setValue(cV === null ? "" : cV);
                     onSelectCb(cV);
 
                     setOpen(false);

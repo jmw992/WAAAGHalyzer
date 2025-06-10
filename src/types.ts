@@ -28,6 +28,13 @@ import type {
   VAMPIRE_COUNTS,
   WARRIORS_OF_CHAOS,
   WOOD_ELVES,
+  CONQUEST,
+  DOMINATION,
+  LAND_BATTLE,
+  OTHER,
+  END_BATTLE,
+  LOADING,
+  VICTORY,
 } from "@/constants";
 
 export type Page =
@@ -37,6 +44,11 @@ export type Page =
   | typeof MATCH;
 
 export type SupportedGames = typeof TOTAL_WAR_WARHAMMER_3;
+
+export type MatchTypes =
+  | typeof CONQUEST
+  | typeof DOMINATION
+  | typeof LAND_BATTLE;
 
 export type Faction =
   | typeof BEASTMEN
@@ -63,3 +75,9 @@ export type Faction =
   | typeof VAMPIRE_COUNTS
   | typeof WARRIORS_OF_CHAOS
   | typeof WOOD_ELVES;
+
+export type ScreenshotType =
+  | typeof OTHER
+  | typeof END_BATTLE
+  | typeof LOADING
+  | typeof VICTORY;

@@ -7,7 +7,6 @@ import ExampleComboBox from "@/components/ExampleComboBox";
 
 export default function History() {
   const matches = useZustandStore((state) => state.matches);
-  const playerFaction = useZustandStore((state) => state.playerFaction);
   console.log("jmw matches", JSON.stringify(matches, null, 2));
   return (
     <>

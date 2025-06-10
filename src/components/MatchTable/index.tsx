@@ -7,13 +7,15 @@ export default function MatchTable() {
   const opponentFaction = useZustandStore((state) => state.opponentFaction);
   const map = useZustandStore((state) => state.map);
   const recordingWin = useZustandStore((state) => state.recordingWin);
+  const matchType = useZustandStore((state) => state.matchType);
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto py-5">
       <DataTable
         columns={columns}
         data={[
           {
+            matchType,
             playerFaction,
             opponentFaction,
             map,

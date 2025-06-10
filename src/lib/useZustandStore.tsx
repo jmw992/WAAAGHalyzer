@@ -1,15 +1,33 @@
-import { BEASTMEN, DEFAULT, HOME, TOTAL_WAR_WARHAMMER_3 } from "@/constants";
-import type { Page, SupportedGames, Faction } from "@/types";
+import {
+  BEASTMEN,
+  DEFAULT,
+  DOMINATION,
+  HOME,
+  TOTAL_WAR_WARHAMMER_3,
+} from "@/constants";
+import type {
+  Page,
+  SupportedGames,
+  Faction,
+  MatchTypes,
+  ScreenshotType,
+} from "@/types";
 import type { UnwatchFn } from "@tauri-apps/plugin-fs";
 import { create } from "zustand";
 
 /** These state items get persisted between app close & open */
 export interface PersistedState {
   game: SupportedGames;
+  defaultMatchType: MatchTypes;
   mod: string;
   gameDirectory: string;
   screenshotsDirectory: string;
 }
+
+export type Screenshot = {
+  file: string;
+  type: ScreenshotType;
+};
 
 export interface RecordingState {
   isRecording: boolean;
@@ -17,8 +35,10 @@ export interface RecordingState {
   recordingUlid: string | null;
   unwatchAutoSaveFn: UnwatchFn;
   unwatchScreenshotFn: UnwatchFn;
+  matchType: MatchTypes | null;
   autoSaveFile: string | null;
   screenshotFiles: string[];
+  screenshots: Screenshot[];
   recordingGame: SupportedGames | null;
   recordingMod: string | null;
   recordingWin: boolean | null;
@@ -65,6 +85,8 @@ type StartRecordingProps = {
 export interface Action {
   setPage: (page: State["page"]) => void;
 
+  setMatchType: (matchType: RecordingState["matchType"]) => void;
+  setMap: (map: RecordingState["map"]) => void;
   setPlayerFaction: (playerFaction: RecordingState["playerFaction"]) => void;
   setOpponentFaction: (
     opponentFaction: RecordingState["opponentFaction"],
@@ -97,8 +119,13 @@ export type ZustandStateAction = State & Action;
 export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   page: HOME,
   matches: [],
+  defaultMatchType: DOMINATION,
   setPage: (value: Page) => {
     set({ page: value });
+  },
+  matchType: null,
+  setMatchType(matchType: RecordingState["matchType"]) {
+    set({ matchType });
   },
   isRecording: false,
   setIsRecording: (value: boolean) => {
@@ -143,6 +170,9 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   map: null,
   notes: null,
   links: null,
+  setMap: (map) => {
+    set({ map });
+  },
   setPlayerFaction: (playerFaction) => {
     set({ playerFaction });
   },
@@ -230,6 +260,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   getPersistedState: () => ({
     game: get().game,
     mod: get().mod,
+    defaultMatchType: get().defaultMatchType,
     gameDirectory: get().gameDirectory,
     screenshotsDirectory: get().screenshotsDirectory,
   }),

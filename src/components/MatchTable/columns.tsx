@@ -4,7 +4,11 @@ import type { CellContext, ColumnDef, RowData } from "@tanstack/react-table";
 import type { RecordingState } from "@/lib/useZustandStore";
 import ComboBoxFaction from "@/components/ComboBoxFaction";
 import { useZustandStore } from "@/lib/useZustandStore";
-import ComboBoxWin from "../ComboBoxWin";
+import ComboBoxWin from "@/components/ComboBoxWin";
+import ComboBoxMaps from "@/components/ComboBoxMaps";
+import ComboBoxMatchType from "@/components/ComboBoxMatchType";
+import { LOSS, WIN } from "@/constants";
+// ComboBoxMaps
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
@@ -15,10 +19,44 @@ declare module "@tanstack/react-table" {
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type RecordingMatchColumns = {
+  matchType: RecordingState["matchType"];
   map: RecordingState["map"];
   playerFaction: RecordingState["playerFaction"];
   opponentFaction: RecordingState["opponentFaction"];
   recordingWin: RecordingState["recordingWin"];
+};
+
+const matchCell = ({
+  getValue,
+}: CellContext<RecordingMatchColumns, unknown>) => {
+  const initialValue = getValue();
+  console.log("jmw initialValue", initialValue);
+  const setMatchType = useZustandStore((state) => state.setMatchType);
+
+  return (
+    <ComboBoxMatchType
+      initialValue={initialValue as null}
+      onSelectCb={(val) => {
+        setMatchType(val);
+      }}
+    />
+  );
+};
+
+const mapCell = ({ getValue }: CellContext<RecordingMatchColumns, unknown>) => {
+  const initialValue = getValue();
+  console.log("jmw initialValue", initialValue);
+  const setMap = useZustandStore((state) => state.setMap);
+
+  return (
+    <ComboBoxMaps
+      initialValue={initialValue as null}
+      onSelectCb={(val) => {
+        console.log("jmw onSelectCb val", val);
+        setMap(val);
+      }}
+    />
+  );
 };
 
 const playerCell = ({
@@ -63,9 +101,7 @@ const recordingWinCell = ({
   getValue,
 }: CellContext<RecordingMatchColumns, unknown>) => {
   const initialValue = getValue();
-  console.log("jmw initialValue", initialValue);
   const setRecordingWin = useZustandStore((state) => state.setRecordingWin);
-
   return (
     <ComboBoxWin
       initialValue={initialValue as null}
@@ -79,31 +115,14 @@ const recordingWinCell = ({
 
 export const columns: ColumnDef<RecordingMatchColumns>[] = [
   {
+    accessorKey: "matchType",
+    header: "Match Type",
+    cell: matchCell,
+  },
+  {
     accessorKey: "map",
     header: "Map",
-    cell: ({ getValue, row: { index }, column: { id }, table }) => {
-      const initialValue = getValue();
-      // We need to keep and update the state of the cell normally
-      const [value, setValue] = React.useState(initialValue);
-
-      // When the input is blurred, we'll call our table meta's updateData function
-      const onBlur = () => {
-        table.options.meta?.updateData(index, id, value);
-      };
-
-      // If the initialValue is changed external, sync it up with our state
-      React.useEffect(() => {
-        setValue(initialValue);
-      }, [initialValue]);
-
-      return (
-        <input
-          value={value as string}
-          onChange={(e) => setValue(e.target.value)}
-          onBlur={onBlur}
-        />
-      );
-    },
+    cell: mapCell,
   },
   {
     accessorKey: "playerFaction",
@@ -119,14 +138,5 @@ export const columns: ColumnDef<RecordingMatchColumns>[] = [
     accessorKey: "recordingWin",
     header: "Result",
     cell: recordingWinCell,
-  },
-];
-
-export const exampleData: RecordingMatchColumns[] = [
-  {
-    map: "abc123",
-    playerFaction: "Beastmen",
-    opponentFaction: "Beastmen",
-    recordingWin: true,
   },
 ];

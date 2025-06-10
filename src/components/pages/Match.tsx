@@ -12,6 +12,17 @@ import {
 // import { FolderInput } from "@/components/FolderInputDialog";
 import { SUPPORTED_GAMES } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
+import MatchTable from "@/components/MatchTable";
+import { Textarea } from "@/components/ui/textarea";
+
+export function Notes() {
+  return (
+    <>
+      <label htmlFor="notesInput">Notes</label>
+      <Textarea id="notesInput" placeholder="Type your message here." />{" "}
+    </>
+  );
+}
 
 export default function Match() {
   const screenshotFiles = useZustandStore((state) => state.screenshotFiles);
@@ -29,80 +40,13 @@ export default function Match() {
   const notes = useZustandStore((state) => state.notes);
 
   return (
-    <div
-      className="min-h-screen p-8 pb-20 gap-16 sm:p-20"
-      // onSubmit={(e)}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
-        // maxWidth: 500,
-      }}
-    >
-      <div>
-        <label htmlFor="recording-win">Result</label>
-        <Select
-          value={
-            recordingWin === null ? undefined : recordingWin ? "win" : "loss"
-          }
-          onValueChange={(value) => {
-            console.log("jmw value", value);
-          }}
-          // defaultValue={form.game}
-        >
-          <SelectTrigger id="recording-game">
-            <SelectValue placeholder={recordingWin} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem key={"win"} value={"win"}>
-              Win
-            </SelectItem>
-            <SelectItem key={"loss"} value={"loss"}>
-              Loss
-            </SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
+    <div>
+      <MatchTable />
+      <Notes />
       <label htmlFor="screenshot-files">Screenshot Files</label>
       <div id="screenshot-files">
         {...screenshotFiles.map((files) => <p key={files}>{files}</p>)}
       </div>
-
-      <div>
-        <label htmlFor="recording-game">Game</label>
-        <Select
-          value={recordingGame ?? undefined}
-          onValueChange={(value) => {
-            console.log("jmw value", value);
-          }}
-          // defaultValue={form.game}
-        >
-          <SelectTrigger id="recording-game">
-            <SelectValue placeholder={recordingGame} />
-          </SelectTrigger>
-          <SelectContent>
-            {...SUPPORTED_GAMES.map((game) => (
-              <SelectItem key={game} value={game}>
-                {game}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div>
-        <label htmlFor="recording-mod">Mod</label>
-        <Input
-          id="recording-mod"
-          type="text"
-          value={recordingMod ?? undefined}
-          onChange={(e) => {
-            console.log("mod", e.target.value);
-          }}
-        />
-      </div>
-
       <div>
         <InputFile
           label={"Add a Screenshot"}
@@ -112,6 +56,7 @@ export default function Match() {
           }}
         />
       </div>
+
       <label htmlFor="autosave-file">Auto Save File</label>
       <div id="autosave-file">{autoSaveFile}</div>
       <div>
@@ -123,6 +68,42 @@ export default function Match() {
             console.log("jmw val", val);
           }}
         />
+      </div>
+
+      <div className="flex flex-row pb-4">
+        <div className="pr-8">
+          <label htmlFor="recording-game">Game</label>
+          <Select
+            value={recordingGame ?? undefined}
+            onValueChange={(value) => {
+              console.log("jmw value", value);
+            }}
+            // defaultValue={form.game}
+          >
+            <SelectTrigger id="recording-game">
+              <SelectValue placeholder={recordingGame} />
+            </SelectTrigger>
+            <SelectContent>
+              {...SUPPORTED_GAMES.map((game) => (
+                <SelectItem key={game} value={game}>
+                  {game}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <label htmlFor="recording-mod">Mod</label>
+          <Input
+            id="recording-mod"
+            type="text"
+            value={recordingMod ?? undefined}
+            onChange={(e) => {
+              console.log("mod", e.target.value);
+            }}
+          />
+        </div>
       </div>
 
       <Button
