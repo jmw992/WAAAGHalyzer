@@ -2,8 +2,11 @@ import {
   BEASTMEN,
   DEFAULT,
   DOMINATION,
+  END_BATTLE,
   HOME,
+  OTHER,
   TOTAL_WAR_WARHAMMER_3,
+  VICTORY,
 } from "@/constants";
 import type {
   Page,
@@ -37,7 +40,6 @@ export interface RecordingState {
   unwatchScreenshotFn: UnwatchFn;
   matchType: MatchTypes | null;
   autoSaveFile: string | null;
-  screenshotFiles: string[];
   screenshots: Screenshot[];
   recordingGame: SupportedGames | null;
   recordingMod: string | null;
@@ -54,7 +56,6 @@ export interface RecordedMatch {
   opponentFaction: Faction;
   game: PersistedState["game"];
   mod: PersistedState["mod"];
-  screenshotFiles: RecordingState["screenshotFiles"];
   recordingUlid: string;
   autoSaveFile: string;
   recordingStartTime: Date;
@@ -80,6 +81,7 @@ type StartRecordingProps = {
   unwatchAutoSaveFn: RecordingState["unwatchAutoSaveFn"];
   recordingGame: RecordingState["recordingGame"];
   recordingMod: RecordingState["recordingMod"];
+  matchType: RecordingState["matchType"];
 };
 
 export interface Action {
@@ -101,6 +103,7 @@ export interface Action {
   setRecordingStartState: (startRecordingProps: StartRecordingProps) => void;
   setAutoSaveFile: (file: RecordingState["autoSaveFile"]) => void;
   addScreenshotFile: (file: string) => void;
+  addScreenshot: (file: string) => void;
   addRecordedMatch: (match: RecordedMatch) => void;
   addRecordingToMatches: (recordingEndTime: Date) => void;
 
@@ -159,7 +162,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
     set({ recordingUlid: ulid });
   },
   autoSaveFile: null,
-  screenshotFiles: [],
+  screenshots: [],
   unwatchAutoSaveFn: () => {},
   unwatchScreenshotFn: () => {},
   recordingGame: TOTAL_WAR_WARHAMMER_3,
@@ -187,7 +190,6 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       unwatchAutoSaveFn: state.unwatchAutoSaveFn,
       unwatchScreenshotFn: state.unwatchScreenshotFn,
       autoSaveFile: state.autoSaveFile,
-      screenshotFiles: state.screenshotFiles,
       recordingGame: state.recordingGame,
       recordingMod: state.recordingMod,
       recordingWin: state.recordingWin,
@@ -224,6 +226,25 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
     set((state) => ({
       screenshotFiles: [...state.screenshotFiles, file],
     }));
+  },
+  addScreenshot: (file: string) => {
+    set((state) => {
+      const type =
+        state.screenshots.length === 0
+          ? VICTORY
+          : state.screenshots.length === 1
+            ? END_BATTLE
+            : OTHER;
+      return {
+        screenshots: [
+          ...state.screenshots,
+          {
+            file,
+            type,
+          },
+        ],
+      };
+    });
   },
   setPersistedState(value) {
     set(value);

@@ -53,7 +53,7 @@ export default function MapComboBox({
         >
           {value
             ? mapOptions.find((framework) => framework.value === value)?.label
-            : "Select"}
+            : "Select..."}
           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

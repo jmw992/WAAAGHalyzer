@@ -14,6 +14,7 @@ import { SUPPORTED_GAMES } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
 import MatchTable from "@/components/MatchTable";
 import { Textarea } from "@/components/ui/textarea";
+import { ScreenshotsTable } from "@/components/ScreenshotsTable";
 
 export function Notes() {
   return (
@@ -25,7 +26,7 @@ export function Notes() {
 }
 
 export default function Match() {
-  const screenshotFiles = useZustandStore((state) => state.screenshotFiles);
+  const screenshots = useZustandStore((state) => state.screenshots);
   const recordingGame = useZustandStore((state) => state.recordingGame);
   const recordingMod = useZustandStore((state) => state.recordingMod);
   const autoSaveFile = useZustandStore((state) => state.autoSaveFile);
@@ -42,10 +43,11 @@ export default function Match() {
   return (
     <div>
       <MatchTable />
+      <ScreenshotsTable />
       <Notes />
       <label htmlFor="screenshot-files">Screenshot Files</label>
       <div id="screenshot-files">
-        {...screenshotFiles.map((files) => <p key={files}>{files}</p>)}
+        {...screenshots.map(({ file }) => <p key={file}>{file}</p>)}
       </div>
       <div>
         <InputFile

@@ -10,14 +10,14 @@ interface AsyncWatchProps {
   newRecordingUlid: string;
   screenshotsDirectory: PersistedState["gameDirectory"];
   gameDirectory: PersistedState["gameDirectory"];
-  addScreenshotFile: Action["addScreenshotFile"];
+  addScreenshot: Action["addScreenshot"];
   setAutoSaveFile: Action["setAutoSaveFile"];
 }
 const asyncWatch = async ({
   newRecordingUlid,
   screenshotsDirectory,
   gameDirectory,
-  addScreenshotFile,
+  addScreenshot,
   setAutoSaveFile,
 }: AsyncWatchProps) => {
   try {
@@ -27,7 +27,7 @@ const asyncWatch = async ({
         destinationDir: newRecordingUlid,
         onCopy: (ulid) => {
           console.log("jmw screenshot copied with ulid:", ulid);
-          addScreenshotFile(ulid);
+          addScreenshot(ulid);
         },
       }),
       watchNewAutoSave({
@@ -46,7 +46,7 @@ const asyncWatch = async ({
 };
 
 type RecordingHandlerProps = PersistedState & {
-  addScreenshotFile: Action["addScreenshotFile"];
+  addScreenshot: Action["addScreenshot"];
   setAutoSaveFile: Action["setAutoSaveFile"];
   setRecordingStartState: Action["setRecordingStartState"];
 };
@@ -56,8 +56,8 @@ const recordingHandler = ({
   gameDirectory,
   mod,
   game,
-
-  addScreenshotFile,
+  defaultMatchType,
+  addScreenshot,
   setAutoSaveFile,
   setRecordingStartState,
 }: RecordingHandlerProps) => {
@@ -68,7 +68,7 @@ const recordingHandler = ({
     newRecordingUlid,
     screenshotsDirectory,
     gameDirectory,
-    addScreenshotFile,
+    addScreenshot,
     setAutoSaveFile,
   })
     .then((unwatchFns) => {
@@ -79,6 +79,7 @@ const recordingHandler = ({
       console.log("jmw unwatchFns[0]", unwatchFns[0]);
       console.log("jmw unwatchFns[1]", unwatchFns[1]);
       setRecordingStartState({
+        matchType: defaultMatchType,
         recordingUlid: newRecordingUlid,
         unwatchScreenshotFn: unwatchFns[0],
         unwatchAutoSaveFn: unwatchFns[1],
@@ -98,13 +99,13 @@ export default function RecordingStartButton() {
   const gameDirectory = useZustandStore((state) => state.gameDirectory);
   const game = useZustandStore((state) => state.game);
   const mod = useZustandStore((state) => state.mod);
+  const defaultMatchType = useZustandStore((state) => state.defaultMatchType);
 
   const setRecordingStartState = useZustandStore(
     (state) => state.setRecordingStartState,
   );
-  const addScreenshotFile = useZustandStore((state) => state.addScreenshotFile);
+  const addScreenshot = useZustandStore((state) => state.addScreenshot);
   const setAutoSaveFile = useZustandStore((state) => state.setAutoSaveFile);
-  // setRecordingStartState
 
   return (
     <button
@@ -116,7 +117,8 @@ export default function RecordingStartButton() {
           gameDirectory,
           mod,
           game,
-          addScreenshotFile,
+          defaultMatchType,
+          addScreenshot,
           setAutoSaveFile,
           setRecordingStartState,
         });
