@@ -28,7 +28,8 @@ export interface PersistedState {
 }
 
 export type Screenshot = {
-  file: string;
+  /** Filename without extension */
+  filename: string;
   type: ScreenshotType;
 };
 
@@ -102,8 +103,8 @@ export interface Action {
   setRecordingState: (recordingState: RecordingState) => void;
   setRecordingStartState: (startRecordingProps: StartRecordingProps) => void;
   setAutoSaveFile: (file: RecordingState["autoSaveFile"]) => void;
-  addScreenshotFile: (file: string) => void;
-  addScreenshot: (file: string) => void;
+  addScreenshot: (filename: string) => void;
+  deleteScreenshot: (file: string) => void;
   addRecordedMatch: (match: RecordedMatch) => void;
   addRecordingToMatches: (recordingEndTime: Date) => void;
 
@@ -210,7 +211,6 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       recordingGame: state.recordingGame,
       recordingMod: state.recordingMod,
       autoSaveFile: null,
-      screenshotFiles: [],
       recordingWin: null,
       playerFaction: null,
       opponentFaction: null,
@@ -222,12 +222,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   setAutoSaveFile: (file: string | null) => {
     set({ autoSaveFile: file });
   },
-  addScreenshotFile: (file: string) => {
-    set((state) => ({
-      screenshotFiles: [...state.screenshotFiles, file],
-    }));
-  },
-  addScreenshot: (file: string) => {
+  addScreenshot: (filename: string) => {
     set((state) => {
       const type =
         state.screenshots.length === 0
@@ -239,10 +234,19 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
         screenshots: [
           ...state.screenshots,
           {
-            file,
+            filename,
             type,
           },
         ],
+      };
+    });
+  },
+  deleteScreenshot: (delFile: string) => {
+    set((state) => {
+      return {
+        screenshots: state.screenshots.filter(
+          ({ filename }) => filename !== delFile,
+        ),
       };
     });
   },
@@ -262,7 +266,6 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
           {
             game: state.recordingGame ?? TOTAL_WAR_WARHAMMER_3,
             mod: state.recordingMod ?? DEFAULT,
-            screenshotFiles: state.screenshotFiles,
             recordingUlid: state.recordingUlid ?? "",
             autoSaveFile: state.autoSaveFile ?? "",
             recordingStartTime: state.recordingStartTime ?? recordingEndTime,

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useMemo } from "react";
 import { useZustandStore } from "@/lib/useZustandStore";
 import {
   Table,
@@ -15,24 +15,41 @@ import {
   type ColumnDef,
 } from "@tanstack/react-table";
 import { Eye, Trash2 } from "lucide-react";
+import {
+  deleteSreenshotFile,
+  getScreenshotSrc,
+} from "@/lib/screenshotFileHandling";
 
 export function ScreenshotsTable() {
   const screenshots = useZustandStore((s) => s.screenshots);
+  const recordingUlid = useZustandStore((s) => s.recordingUlid);
+  const deleteScreenshot = useZustandStore((s) => s.deleteScreenshot);
 
   // Optionally, add handlers for view/delete actions
   const handleView = (file: string) => {
     // Implement your view logic here
+    getScreenshotSrc({
+      screenshotFile: file,
+      subDir: recordingUlid ?? "",
+    });
     window.open(file, "_blank");
   };
 
   const handleDelete = (file: string) => {
-    // Implement your delete logic here
-    // e.g., remove from Zustand store
-    // You may want to add a removeScreenshot action to your store
-    alert(`Delete ${file}`);
+    deleteSreenshotFile({
+      screenshotFile: file,
+      subDir: recordingUlid ?? "",
+    })
+      .then(() => {
+        deleteScreenshot(file);
+      })
+      .catch((e) => {
+        console.error("jmw delete file errror", e);
+      });
   };
 
-  const columns = React.useMemo<ColumnDef<(typeof screenshots)[0]>[]>(
+  // biome-ignore lint/correctness/useExhaustiveDependencies: dependencies are actions
+  const columns = useMemo<ColumnDef<(typeof screenshots)[0]>[]>(
     () => [
       {
         accessorKey: "file",
@@ -52,7 +69,7 @@ export function ScreenshotsTable() {
           <button
             className="p-1 hover:text-primary"
             title="View"
-            onClick={() => handleView(row.original.file)}
+            onClick={() => handleView(row.original.filename)}
           >
             <Eye size={18} />
           </button>
@@ -66,7 +83,7 @@ export function ScreenshotsTable() {
           <button
             className="p-1 hover:text-destructive"
             title="Delete"
-            onClick={() => handleDelete(row.original.file)}
+            onClick={() => handleDelete(row.original.filename)}
           >
             <Trash2 size={18} />
           </button>
