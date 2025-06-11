@@ -1,9 +1,8 @@
 "use client";
 
-import * as React from "react";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -18,8 +17,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import type { RecordingState } from "@/lib/useZustandStore";
 import { FACTIONS } from "@/constants";
+import type { RecordingState } from "@/lib/useZustandStore";
+import { cn } from "@/lib/utils";
 import type { Faction } from "@/types";
 
 const factionOptions = FACTIONS.map((faction) => ({
@@ -27,10 +27,10 @@ const factionOptions = FACTIONS.map((faction) => ({
   label: faction as Faction,
 }));
 
-type FactionComboBoxProps = {
+interface FactionComboBoxProps {
   onSelectCb: (value: RecordingState["playerFaction"]) => void;
   initialValue: RecordingState["playerFaction"];
-};
+}
 
 export default function FactionComboBox({
   initialValue,
@@ -38,9 +38,7 @@ export default function FactionComboBox({
 }: FactionComboBoxProps) {
   console.log("jmw FactionComboBox");
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(
-    initialValue === null ? "" : initialValue,
-  );
+  const [value, setValue] = React.useState(initialValue ?? "");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -72,7 +70,7 @@ export default function FactionComboBox({
                   onSelect={(currentValue) => {
                     const cV =
                       currentValue === value ? null : (currentValue as Faction);
-                    setValue(cV === null ? "" : cV);
+                    setValue(cV ?? "");
                     onSelectCb(cV);
 
                     setOpen(false);

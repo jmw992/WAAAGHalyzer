@@ -1,5 +1,7 @@
 "use client";
 import { InputFile } from "@/components/InputFileDefault";
+import MatchTable from "@/components/MatchTable";
+import { ScreenshotsTable } from "@/components/ScreenshotsTable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,12 +11,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 // import { FolderInput } from "@/components/FolderInputDialog";
 import { SUPPORTED_GAMES } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
-import MatchTable from "@/components/MatchTable";
-import { Textarea } from "@/components/ui/textarea";
-import { ScreenshotsTable } from "@/components/ScreenshotsTable";
 
 export function Notes() {
   return (
@@ -47,7 +47,7 @@ export default function Match() {
       <Notes />
       <label htmlFor="screenshot-files">Screenshot Files</label>
       <div id="screenshot-files">
-        {...screenshots.map(({ file }) => <p key={file}>{file}</p>)}
+        {...screenshots.map(({ filename }) => <p key={filename}>{filename}</p>)}
       </div>
       <div>
         <InputFile

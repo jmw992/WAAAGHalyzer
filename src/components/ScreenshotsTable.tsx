@@ -1,24 +1,24 @@
-import { useMemo } from "react";
-import { useZustandStore } from "@/lib/useZustandStore";
 import {
   Table,
-  TableHeader,
   TableBody,
-  TableRow,
-  TableHead,
   TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
-import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-  type ColumnDef,
-} from "@tanstack/react-table";
-import { Eye, Trash2 } from "lucide-react";
 import {
   deleteSreenshotFile,
   getScreenshotSrc,
 } from "@/lib/screenshotFileHandling";
+import { useZustandStore } from "@/lib/useZustandStore";
+import {
+  type ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Eye, Trash2 } from "lucide-react";
+import { useMemo } from "react";
 
 export function ScreenshotsTable() {
   const screenshots = useZustandStore((s) => s.screenshots);
@@ -31,8 +31,14 @@ export function ScreenshotsTable() {
     getScreenshotSrc({
       screenshotFile: file,
       subDir: recordingUlid ?? "",
-    });
-    window.open(file, "_blank");
+    })
+      .then((src) => {
+        console.log("jmw TODO src", src);
+      })
+      .catch((err: unknown) => {
+        console.error("jmw getScreenshotSrc", err);
+      });
+    // window.open(file, "_blank");
   };
 
   const handleDelete = (file: string) => {
@@ -43,7 +49,7 @@ export function ScreenshotsTable() {
       .then(() => {
         deleteScreenshot(file);
       })
-      .catch((e) => {
+      .catch((e: unknown) => {
         console.error("jmw delete file errror", e);
       });
   };
@@ -69,7 +75,9 @@ export function ScreenshotsTable() {
           <button
             className="p-1 hover:text-primary"
             title="View"
-            onClick={() => handleView(row.original.filename)}
+            onClick={() => {
+              handleView(row.original.filename);
+            }}
           >
             <Eye size={18} />
           </button>
@@ -83,7 +91,9 @@ export function ScreenshotsTable() {
           <button
             className="p-1 hover:text-destructive"
             title="Delete"
-            onClick={() => handleDelete(row.original.filename)}
+            onClick={() => {
+              handleDelete(row.original.filename);
+            }}
           >
             <Trash2 size={18} />
           </button>

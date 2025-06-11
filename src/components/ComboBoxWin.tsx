@@ -1,9 +1,8 @@
 "use client";
 
-import * as React from "react";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -18,18 +17,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import type { RecordingState } from "@/lib/useZustandStore";
 import { LOSS, RESULT_ARRAY, WIN } from "@/constants";
+import type { RecordingState } from "@/lib/useZustandStore";
+import { cn } from "@/lib/utils";
 
 const resultOptions = RESULT_ARRAY.map((result) => ({
   value: result,
   label: result,
 }));
 
-type ComboBoxWinProps = {
+interface ComboBoxWinProps {
   onSelectCb: (value: RecordingState["recordingWin"]) => void;
   initialValue: RecordingState["recordingWin"];
-};
+}
 
 export default function ComboBoxWin({
   initialValue,
@@ -52,9 +52,8 @@ export default function ComboBoxWin({
           aria-expanded={open}
           className="w-[1  100px] justify-between"
         >
-          {value !== null
-            ? resultOptions.find((map) => map.value === value)?.label
-            : "Select..."}
+          {resultOptions.find((map) => map.value === value)?.label ??
+            "Select..."}
           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

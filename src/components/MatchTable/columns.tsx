@@ -1,13 +1,13 @@
 "use client";
-import React from "react";
-import type { CellContext, ColumnDef, RowData } from "@tanstack/react-table";
-import type { RecordingState } from "@/lib/useZustandStore";
 import ComboBoxFaction from "@/components/ComboBoxFaction";
-import { useZustandStore } from "@/lib/useZustandStore";
-import ComboBoxWin from "@/components/ComboBoxWin";
 import ComboBoxMaps from "@/components/ComboBoxMaps";
 import ComboBoxMatchType from "@/components/ComboBoxMatchType";
+import ComboBoxWin from "@/components/ComboBoxWin";
 import { LOSS, WIN } from "@/constants";
+import type { RecordingState } from "@/lib/useZustandStore";
+import { useZustandStore } from "@/lib/useZustandStore";
+import type { CellContext, ColumnDef, RowData } from "@tanstack/react-table";
+import React from "react";
 // ComboBoxMaps
 
 declare module "@tanstack/react-table" {
@@ -18,13 +18,13 @@ declare module "@tanstack/react-table" {
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type RecordingMatchColumns = {
+export interface RecordingMatchColumns {
   matchType: RecordingState["matchType"];
   map: RecordingState["map"];
   playerFaction: RecordingState["playerFaction"];
   opponentFaction: RecordingState["opponentFaction"];
   recordingWin: RecordingState["recordingWin"];
-};
+}
 
 const matchCell = ({
   getValue,

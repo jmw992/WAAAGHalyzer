@@ -1,6 +1,6 @@
+import { useZustandStore } from "@/lib/useZustandStore";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
-import { useZustandStore } from "@/lib/useZustandStore";
 
 export default function MatchTable() {
   const playerFaction = useZustandStore((state) => state.playerFaction);

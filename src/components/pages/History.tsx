@@ -1,9 +1,9 @@
 "use client";
 
-import { useZustandStore } from "@/lib/useZustandStore";
+import ExampleComboBox from "@/components/ExampleComboBox";
 import ExampleTable from "@/components/ExampleTable/ExampleTable";
 import MatchTable from "@/components/MatchTable";
-import ExampleComboBox from "@/components/ExampleComboBox";
+import { useZustandStore } from "@/lib/useZustandStore";
 
 export default function History() {
   const matches = useZustandStore((state) => state.matches);

@@ -1,6 +1,6 @@
-import { columns, type Payment } from "./columns";
-import { DataTable } from "./data-table";
+import { type Payment, columns } from "./columns";
 import { payments } from "./data";
+import { DataTable } from "./data-table";
 
 function getData(): Payment[] {
   // Fetch data from your API here.

@@ -1,8 +1,8 @@
 import { BaseDirectory, remove } from "@tauri-apps/plugin-fs";
 
 import { MATCHES } from "@/constants";
-import { join } from "@tauri-apps/api/path";
 import { convertFileSrc } from "@tauri-apps/api/core";
+import { appLocalDataDir, join } from "@tauri-apps/api/path";
 
 interface FileProps {
   screenshotFile: string;
@@ -23,7 +23,11 @@ export const getScreenshotSrc = async ({
   screenshotFile,
   subDir,
 }: FileProps) => {
-  const file = await join(MATCHES, subDir, `${screenshotFile}.png`);
-  const src = await convertFileSrc(file);
-  return src;
+  const file = await join(
+    await appLocalDataDir(),
+    MATCHES,
+    subDir,
+    `${screenshotFile}.png`,
+  );
+  return convertFileSrc(file);
 };

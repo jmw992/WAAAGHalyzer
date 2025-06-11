@@ -7,8 +7,8 @@ export const getStorePersistedSettings = (): PersistedState => {
     game: (localStorage.getItem("game") ??
       TOTAL_WAR_WARHAMMER_3) as SupportedGames,
     mod: localStorage.getItem("mod") ?? DEFAULT,
-    defaultMatchType:
-      (localStorage.getItem("defaultMatchType") as MatchTypes) ?? DOMINATION,
+    defaultMatchType: (localStorage.getItem("defaultMatchType") ??
+      DOMINATION) as MatchTypes,
     gameDirectory: localStorage.getItem("gameDirectory") ?? "",
     screenshotsDirectory: localStorage.getItem("screenshotsDirectory") ?? "",
   };

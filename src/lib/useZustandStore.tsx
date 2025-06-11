@@ -9,11 +9,11 @@ import {
   VICTORY,
 } from "@/constants";
 import type {
-  Page,
-  SupportedGames,
   Faction,
   MatchTypes,
+  Page,
   ScreenshotType,
+  SupportedGames,
 } from "@/types";
 import type { UnwatchFn } from "@tauri-apps/plugin-fs";
 import { create } from "zustand";
@@ -27,11 +27,11 @@ export interface PersistedState {
   screenshotsDirectory: string;
 }
 
-export type Screenshot = {
+export interface Screenshot {
   /** Filename without extension */
   filename: string;
   type: ScreenshotType;
-};
+}
 
 export interface RecordingState {
   isRecording: boolean;
@@ -76,14 +76,14 @@ export type TransientState = RecordingState & {
 /** Full application state */
 type State = PersistedState & TransientState;
 
-type StartRecordingProps = {
+interface StartRecordingProps {
   recordingUlid: RecordingState["recordingUlid"];
   unwatchScreenshotFn: RecordingState["unwatchScreenshotFn"];
   unwatchAutoSaveFn: RecordingState["unwatchAutoSaveFn"];
   recordingGame: RecordingState["recordingGame"];
   recordingMod: RecordingState["recordingMod"];
   matchType: RecordingState["matchType"];
-};
+}
 
 export interface Action {
   setPage: (page: State["page"]) => void;

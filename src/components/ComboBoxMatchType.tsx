@@ -1,9 +1,8 @@
 "use client";
 
-import * as React from "react";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -18,8 +17,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import type { RecordingState } from "@/lib/useZustandStore";
 import { MATCH_TYPES } from "@/constants";
+import type { RecordingState } from "@/lib/useZustandStore";
+import { cn } from "@/lib/utils";
 import type { Faction, MatchTypes } from "@/types";
 
 const matchOptions = MATCH_TYPES.map((matchType) => ({
@@ -27,19 +27,17 @@ const matchOptions = MATCH_TYPES.map((matchType) => ({
   label: matchType,
 }));
 
-type FactionComboBoxProps = {
+interface FactionComboBoxProps {
   onSelectCb: (value: RecordingState["matchType"]) => void;
   initialValue: RecordingState["matchType"];
-};
+}
 
 export default function MapComboBox({
   initialValue,
   onSelectCb,
 }: FactionComboBoxProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(
-    initialValue === null ? "" : initialValue,
-  );
+  const [value, setValue] = React.useState(initialValue ?? "");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -72,7 +70,7 @@ export default function MapComboBox({
                       currentValue === value
                         ? null
                         : (currentValue as MatchTypes);
-                    setValue(cV === null ? "" : cV);
+                    setValue(cV ?? "");
                     onSelectCb(cV);
 
                     setOpen(false);
