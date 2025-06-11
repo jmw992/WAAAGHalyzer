@@ -10,14 +10,14 @@ interface AsyncWatchProps {
   newRecordingUlid: string;
   screenshotsDirectory: PersistedState["gameDirectory"];
   gameDirectory: PersistedState["gameDirectory"];
-  addScreenshotFile: Action["addScreenshotFile"];
+  addScreenshot: Action["addScreenshot"];
   setAutoSaveFile: Action["setAutoSaveFile"];
 }
 const asyncWatch = async ({
   newRecordingUlid,
   screenshotsDirectory,
   gameDirectory,
-  addScreenshotFile,
+  addScreenshot,
   setAutoSaveFile,
 }: AsyncWatchProps) => {
   try {
@@ -27,7 +27,7 @@ const asyncWatch = async ({
         destinationDir: newRecordingUlid,
         onCopy: (ulid) => {
           console.log("jmw screenshot copied with ulid:", ulid);
-          addScreenshotFile(ulid);
+          addScreenshot(ulid);
         },
       }),
       watchNewAutoSave({
@@ -46,9 +46,9 @@ const asyncWatch = async ({
 };
 
 type RecordingHandlerProps = PersistedState & {
-  setRecordingState: Action["setRecordingState"];
-  addScreenshotFile: Action["addScreenshotFile"];
+  addScreenshot: Action["addScreenshot"];
   setAutoSaveFile: Action["setAutoSaveFile"];
+  setRecordingStartState: Action["setRecordingStartState"];
 };
 
 const recordingHandler = ({
@@ -56,12 +56,11 @@ const recordingHandler = ({
   gameDirectory,
   mod,
   game,
-
-  setRecordingState,
-  addScreenshotFile,
+  defaultMatchType,
+  addScreenshot,
   setAutoSaveFile,
+  setRecordingStartState,
 }: RecordingHandlerProps) => {
-  const recordingStartTime = new Date();
   const newRecordingUlid = ulid();
   // Start recording logic here
 
@@ -69,7 +68,7 @@ const recordingHandler = ({
     newRecordingUlid,
     screenshotsDirectory,
     gameDirectory,
-    addScreenshotFile,
+    addScreenshot,
     setAutoSaveFile,
   })
     .then((unwatchFns) => {
@@ -79,17 +78,13 @@ const recordingHandler = ({
       console.log("jmw recording started");
       console.log("jmw unwatchFns[0]", unwatchFns[0]);
       console.log("jmw unwatchFns[1]", unwatchFns[1]);
-      setRecordingState({
-        recordingStartTime,
+      setRecordingStartState({
+        matchType: defaultMatchType,
         recordingUlid: newRecordingUlid,
-        isRecording: true,
         unwatchScreenshotFn: unwatchFns[0],
         unwatchAutoSaveFn: unwatchFns[1],
-        autoSaveFile: null,
-        screenshotFiles: [],
         recordingGame: game,
         recordingMod: mod,
-        recordingWin: null,
       });
     })
     .catch((error: unknown) => {
@@ -104,9 +99,12 @@ export default function RecordingStartButton() {
   const gameDirectory = useZustandStore((state) => state.gameDirectory);
   const game = useZustandStore((state) => state.game);
   const mod = useZustandStore((state) => state.mod);
+  const defaultMatchType = useZustandStore((state) => state.defaultMatchType);
 
-  const setRecordingState = useZustandStore((state) => state.setRecordingState);
-  const addScreenshotFile = useZustandStore((state) => state.addScreenshotFile);
+  const setRecordingStartState = useZustandStore(
+    (state) => state.setRecordingStartState,
+  );
+  const addScreenshot = useZustandStore((state) => state.addScreenshot);
   const setAutoSaveFile = useZustandStore((state) => state.setAutoSaveFile);
 
   return (
@@ -115,13 +113,14 @@ export default function RecordingStartButton() {
       className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
       onClick={() => {
         recordingHandler({
-          setRecordingState,
           screenshotsDirectory,
           gameDirectory,
-          addScreenshotFile,
-          setAutoSaveFile,
           mod,
           game,
+          defaultMatchType,
+          addScreenshot,
+          setAutoSaveFile,
+          setRecordingStartState,
         });
       }}
     >

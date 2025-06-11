@@ -4,18 +4,18 @@ import type { Action, RecordingState } from "@/lib/useZustandStore";
 import { StopIcon } from "@heroicons/react/24/outline";
 
 interface StopHandlerProps {
-  screenshotFiles: RecordingState["screenshotFiles"];
-  unwatchAutoSaveFn: RecordingState["unwatchAutoSaveFn"];
-  unwatchScreenshotFn: RecordingState["unwatchScreenshotFn"];
   autoSaveFile: RecordingState["autoSaveFile"];
   recordingWin: RecordingState["recordingWin"];
+  screenshots: RecordingState["screenshots"];
+  unwatchAutoSaveFn: RecordingState["unwatchAutoSaveFn"];
+  unwatchScreenshotFn: RecordingState["unwatchScreenshotFn"];
 
   setIsRecording: Action["setIsRecording"];
   addRecordingToMatches: Action["addRecordingToMatches"];
 }
 
 const stopHandler = ({
-  screenshotFiles,
+  screenshots,
   recordingWin,
   autoSaveFile,
   unwatchScreenshotFn,
@@ -34,7 +34,7 @@ const stopHandler = ({
   }
   console.log("jmw unwatched");
   // Only add recorded match if files were captured
-  if (autoSaveFile || screenshotFiles.length > 0 || recordingWin) {
+  if (autoSaveFile || screenshots.length > 0 || recordingWin) {
     if (autoSaveFile !== null) {
       addRecordingToMatches(new Date());
     }
@@ -45,7 +45,7 @@ const stopHandler = ({
 
 export default function RecordingStopButton() {
   console.log("jmw RecordingStopButton");
-  const screenshotFiles = useZustandStore((state) => state.screenshotFiles);
+  const screenshots = useZustandStore((state) => state.screenshots);
   const autoSaveFile = useZustandStore((state) => state.autoSaveFile);
   const recordingWin = useZustandStore((state) => state.recordingWin);
 
@@ -65,11 +65,11 @@ export default function RecordingStopButton() {
       onClick={() => {
         stopHandler({
           autoSaveFile,
+          recordingWin,
+          screenshots,
           unwatchScreenshotFn,
           unwatchAutoSaveFn,
-          screenshotFiles: screenshotFiles,
           addRecordingToMatches,
-          recordingWin,
           setIsRecording,
         });
       }}

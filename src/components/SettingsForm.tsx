@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SUPPORTED_GAMES } from "@/constants";
+import { MATCH_TYPES, SUPPORTED_GAMES } from "@/constants";
 import { setStorePersistedSettings } from "@/lib/persistStorage";
 import { type PersistedState, useZustandStore } from "@/lib/useZustandStore";
 import { useState } from "react";
@@ -19,7 +19,7 @@ export const SettingsForm = ({
 }: {
   initialState: PersistedState;
 }) => {
-  console.log("jmw double render???", initialState);
+  console.log("jmw initialState???", initialState);
   const setPersistedState = useZustandStore((state) => state.setPersistedState);
 
   // Local state for form
@@ -28,7 +28,6 @@ export const SettingsForm = ({
   const handleChange = (key: keyof PersistedState, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
-
   const handleSubmit = () => {
     console.log("jmw handleSubmit", form);
     // console.log("jmw how is this triggered.");
@@ -37,6 +36,8 @@ export const SettingsForm = ({
     setStorePersistedSettings(form);
     toast.success("Settings saved successfully!");
   };
+
+  console.log("jmw form", form);
 
   return (
     <div
@@ -69,6 +70,7 @@ export const SettingsForm = ({
           </SelectContent>
         </Select>
       </div>
+
       <div>
         <label htmlFor="settings-mod">Mod</label>
         <Input
@@ -80,6 +82,30 @@ export const SettingsForm = ({
           }}
         />
       </div>
+
+      <div>
+        <label htmlFor="settings-defaultMatchType">Default Match Type</label>
+        <Select
+          value={form.defaultMatchType}
+          onValueChange={(value) => {
+            console.log("jmw defaultMatchType", value);
+            handleChange("defaultMatchType", value);
+          }}
+          defaultValue={form.defaultMatchType}
+        >
+          <SelectTrigger id="settings-defaultMatchType">
+            <SelectValue placeholder={form.defaultMatchType} />
+          </SelectTrigger>
+          <SelectContent>
+            {...MATCH_TYPES.map((matchType) => (
+              <SelectItem key={matchType} value={matchType}>
+                {matchType}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       <div>
         <label htmlFor="settings-game-dir">Game Directory</label>
         <FolderInput
@@ -89,6 +115,7 @@ export const SettingsForm = ({
           }}
         />
       </div>
+
       <div>
         <label htmlFor="settings-screenshots-dir">Screenshots Directory</label>
         <FolderInput

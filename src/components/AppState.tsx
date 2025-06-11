@@ -67,11 +67,17 @@ export default function RootPage({
   children: React.ReactNode;
 }>) {
   const setPersistedState = useZustandStore((state) => state.setPersistedState);
+  const setMatchType = useZustandStore((state) => state.setMatchType);
   useEffect(() => {
     // Set default from localStorage on first load
     const persistedState = getStorePersistedSettings();
-
+    console.log("jmw persistedState.defaultMatchType", persistedState);
     setPersistedState(persistedState);
+    console.log(
+      "jmw persistedState.defaultMatchType",
+      persistedState.defaultMatchType,
+    );
+    setMatchType(persistedState.defaultMatchType);
     if (
       persistedState.gameDirectory === "" ||
       persistedState.screenshotsDirectory === ""
@@ -85,7 +91,7 @@ export default function RootPage({
           useZustandStore.getState().setScreenshotsDirectory,
       });
     }
-  }, [setPersistedState]);
+  }, [setPersistedState, setMatchType]);
 
   return children;
 }
