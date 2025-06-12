@@ -1,6 +1,7 @@
 "use client";
 import RecordingButton from "@/components/RecordingButton";
 import { HISTORY, HOME, MATCH, SETTINGS } from "@/constants";
+import { copyScreenshotDebug, copyAutoSaveDebug } from "@/lib/fileHandling";
 import { useZustandStore } from "@/lib/useZustandStore";
 import type { Page } from "@/types";
 import { Disclosure, DisclosureButton } from "@headlessui/react";
@@ -13,6 +14,8 @@ import {
 const classNames = (...classes: string[]) => {
   return classes.filter(Boolean).join(" ");
 };
+
+const DEBUG = true;
 
 export default function TopNav() {
   const page = useZustandStore((state) => state.page);
@@ -46,6 +49,7 @@ export default function TopNav() {
               </button>
               <div className="hidden md:block">
                 <div className="ml-10 flex items-baseline space-x-4">
+                  {/* Page Buttons */}
                   {navigation.map((name) => (
                     <button
                       key={name}
@@ -64,6 +68,34 @@ export default function TopNav() {
                       {name}
                     </button>
                   ))}
+                  {DEBUG ? (
+                    <>
+                      <button
+                        className={classNames(
+                          "text-gray-300 hover:bg-gray-700 hover:text-white",
+                          "rounded-md px-3 py-2 text-sm font-medium",
+                        )}
+                        type="button"
+                        onClick={() => {
+                          copyAutoSaveDebug();
+                        }}
+                      >
+                        Copy Replay
+                      </button>
+                      <button
+                        className={classNames(
+                          "text-gray-300 hover:bg-gray-700 hover:text-white",
+                          "rounded-md px-3 py-2 text-sm font-medium",
+                        )}
+                        type="button"
+                        onClick={() => {
+                          copyScreenshotDebug();
+                        }}
+                      >
+                        Copy Screenshot
+                      </button>
+                    </>
+                  ) : null}
                 </div>
               </div>
             </div>

@@ -3,10 +3,6 @@ import { Toaster } from "@/components/ui/sonner";
 
 import TopNav from "@/components/TopNav";
 
-const classNames = (...classes: string[]) => {
-  return classes.filter(Boolean).join(" ");
-};
-
 export default function AppLayout({
   children,
 }: Readonly<{

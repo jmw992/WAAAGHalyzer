@@ -45,10 +45,6 @@ export default function Match() {
       <MatchTable />
       <ScreenshotsTable />
       <Notes />
-      <label htmlFor="screenshot-files">Screenshot Files</label>
-      <div id="screenshot-files">
-        {...screenshots.map(({ filename }) => <p key={filename}>{filename}</p>)}
-      </div>
       <div>
         <InputFile
           label={"Add a Screenshot"}
