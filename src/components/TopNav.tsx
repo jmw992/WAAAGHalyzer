@@ -1,7 +1,7 @@
 "use client";
 import RecordingButton from "@/components/RecordingButton";
 import { HISTORY, HOME, MATCH, SETTINGS } from "@/constants";
-import { copyScreenshotDebug, copyAutoSaveDebug } from "@/lib/fileHandling";
+import { copyAutoSaveDebug, copyScreenshotDebug } from "@/lib/fileHandling";
 import { useZustandStore } from "@/lib/useZustandStore";
 import type { Page } from "@/types";
 import { Disclosure, DisclosureButton } from "@headlessui/react";
@@ -68,34 +68,37 @@ export default function TopNav() {
                       {name}
                     </button>
                   ))}
-                  {DEBUG ? (
-                    <>
-                      <button
-                        className={classNames(
-                          "text-gray-300 hover:bg-gray-700 hover:text-white",
-                          "rounded-md px-3 py-2 text-sm font-medium",
-                        )}
-                        type="button"
-                        onClick={() => {
-                          copyAutoSaveDebug();
-                        }}
-                      >
-                        Copy Replay
-                      </button>
-                      <button
-                        className={classNames(
-                          "text-gray-300 hover:bg-gray-700 hover:text-white",
-                          "rounded-md px-3 py-2 text-sm font-medium",
-                        )}
-                        type="button"
-                        onClick={() => {
-                          copyScreenshotDebug();
-                        }}
-                      >
-                        Copy Screenshot
-                      </button>
-                    </>
-                  ) : null}
+                  {
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                    DEBUG ? (
+                      <>
+                        <button
+                          className={classNames(
+                            "text-gray-300 hover:bg-gray-700 hover:text-white",
+                            "rounded-md px-3 py-2 text-sm font-medium",
+                          )}
+                          type="button"
+                          onClick={() => {
+                            void copyAutoSaveDebug();
+                          }}
+                        >
+                          Copy Replay
+                        </button>
+                        <button
+                          className={classNames(
+                            "text-gray-300 hover:bg-gray-700 hover:text-white",
+                            "rounded-md px-3 py-2 text-sm font-medium",
+                          )}
+                          type="button"
+                          onClick={() => {
+                            void copyScreenshotDebug();
+                          }}
+                        >
+                          Copy Screenshot
+                        </button>
+                      </>
+                    ) : null
+                  }
                 </div>
               </div>
             </div>

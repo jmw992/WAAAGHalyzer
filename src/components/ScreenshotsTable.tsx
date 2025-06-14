@@ -1,3 +1,4 @@
+import ComboBoxScreenshotType from "@/components/ComboBoxScreenshotType";
 import {
   Table,
   TableBody,
@@ -6,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { OTHER } from "@/constants";
 import { deleteSreenshotFile, getScreenshotSrc } from "@/lib/fileHandling";
 import { useZustandStore } from "@/lib/useZustandStore";
 import {
@@ -16,9 +18,7 @@ import {
 } from "@tanstack/react-table";
 import { Eye, Trash2 } from "lucide-react";
 import { useMemo } from "react";
-import ComboBoxScreenshotType from "@/components/ComboBoxScreenshotType";
-import { OTHER } from "@/constants";
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // Modal component for displaying the screenshot image
 function ScreenshotModal({
@@ -39,7 +39,9 @@ function ScreenshotModal({
       if (e.key === "Escape") onClose();
     };
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [open, onClose]);
 
   if (!open || !src) return null;
@@ -142,7 +144,7 @@ export function ScreenshotsTable() {
               onSelectCb={(screenshotType) => {
                 updateScreenshot(row.index, {
                   filename: row.original.filename,
-                  type: screenshotType ?? OTHER,
+                  type: screenshotType,
                 });
               }}
             />
