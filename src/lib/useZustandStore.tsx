@@ -103,6 +103,7 @@ export interface Action {
   setRecordingState: (recordingState: RecordingState) => void;
   setRecordingStartState: (startRecordingProps: StartRecordingProps) => void;
   setAutoSaveFile: (file: RecordingState["autoSaveFile"]) => void;
+  updateScreenshot: (index: number, screenshot: Screenshot) => void;
   addScreenshot: (filename: string) => void;
   deleteScreenshot: (file: string) => void;
   addRecordedMatch: (match: RecordedMatch) => void;
@@ -221,6 +222,13 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   },
   setAutoSaveFile: (file: string | null) => {
     set({ autoSaveFile: file });
+  },
+  updateScreenshot: (index: number, screenshot: Screenshot) => {
+    set((state) => ({
+      screenshots: state.screenshots.map((scrn, ii) =>
+        ii === index ? screenshot : scrn,
+      ),
+    }));
   },
   addScreenshot: (filename: string) => {
     set((state) => {
