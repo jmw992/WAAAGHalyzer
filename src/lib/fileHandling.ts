@@ -11,29 +11,30 @@ import { appLocalDataDir, join } from "@tauri-apps/api/path";
 import { ulid } from "ulid";
 
 interface FileProps {
-  screenshotFile: string;
+  filename: string;
   subDir: string;
 }
 
-export const deleteSreenshotFile = async ({
-  screenshotFile,
-  subDir,
-}: FileProps) => {
-  const file = await join(MATCHES, subDir, `${screenshotFile}.png`);
+export const deleteArmySetupFile = async ({ filename, subDir }: FileProps) => {
+  const file = await join(MATCHES, subDir, `${filename}.army_setup`);
   await remove(file, {
     baseDir: BaseDirectory.AppLocalData,
   });
 };
 
-export const getScreenshotSrc = async ({
-  screenshotFile,
-  subDir,
-}: FileProps) => {
+export const deleteSreenshotFile = async ({ filename, subDir }: FileProps) => {
+  const file = await join(MATCHES, subDir, `${filename}.png`);
+  await remove(file, {
+    baseDir: BaseDirectory.AppLocalData,
+  });
+};
+
+export const getScreenshotSrc = async ({ filename, subDir }: FileProps) => {
   const file = await join(
     await appLocalDataDir(),
     MATCHES,
     subDir,
-    `${screenshotFile}.png`,
+    `${filename}.png`,
   );
   console.log("jmw file", file);
   return convertFileSrc(file);

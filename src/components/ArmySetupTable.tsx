@@ -1,4 +1,5 @@
-import ComboBoxScreenshotType from "@/components/ComboBoxScreenshotType";
+// import ComboBoxScreenshotType from "@/components/ComboBoxScreenshotType";
+import ComboBoxArmySetupType from "@/components/ComboBoxArmySetupType";
 import {
   Table,
   TableBody,
@@ -7,7 +8,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { deleteSreenshotFile, getScreenshotSrc } from "@/lib/fileHandling";
+import { OTHER } from "@/constants";
+import {
+  deleteSreenshotFile,
+  getScreenshotSrc,
+  deleteArmySetupFile,
+} from "@/lib/fileHandling";
 import { useZustandStore } from "@/lib/useZustandStore";
 import {
   type ColumnDef,
@@ -17,89 +23,19 @@ import {
 } from "@tanstack/react-table";
 import { Eye, Trash2 } from "lucide-react";
 import { useMemo } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 
-// Modal component for displaying the screenshot image
-function ScreenshotModal({
-  src,
-  open,
-  onClose,
-}: {
-  src: string | null;
-  open: boolean;
-  onClose: () => void;
-}) {
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  // Close on Escape key
-  useEffect(() => {
-    if (!open) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open, onClose]);
-
-  if (!open || !src) return null;
-  return (
-    <div
-      ref={modalRef}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
-      tabIndex={-1}
-      aria-modal="true"
-      // biome-ignore lint/a11y/useSemanticElements: <explanation>
-      role="dialog"
-    >
-      <div className="rounded shadow-lg p-4 max-w-full max-h-full flex flex-col items-center">
-        <button
-          type="button"
-          className="self-end mb-2 px-2 py-1 rounded bg-red-400 hover:bg-gray-300"
-          onClick={onClose}
-          aria-label="Close"
-        >
-          ×
-        </button>
-        <img
-          src={src}
-          alt="Screenshot"
-          className="max-w-[80vw] max-h-[80vh] rounded"
-        />
-      </div>
-    </div>
-  );
-}
-
-export function ScreenshotsTable() {
-  const screenshots = useZustandStore((s) => s.screenshots);
+export function ArmySetupTable() {
+  const armySetups = useZustandStore((s) => s.armySetups);
   const recordingUlid = useZustandStore((s) => s.recordingUlid);
-  const deleteScreenshot = useZustandStore((s) => s.deleteScreenshot);
-  const updateScreenshot = useZustandStore((s) => s.updateScreenshot);
+  const deleteArmySetup = useZustandStore((s) => s.deleteArmySetup);
+  const updateArmySetup = useZustandStore((s) => s.updateArmySetup);
+  const addArmySetup = useZustandStore((s) => s.addArmySetup);
 
   // State for modal
   const [modalSrc, setModalSrc] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   console.log("jmw modalSrc, modalOpen", modalSrc, modalOpen);
-
-  // Handler to view screenshot in modal
-  const handleView = useCallback(
-    (file: string) => {
-      getScreenshotSrc({
-        filename: file,
-        subDir: recordingUlid ?? "",
-      })
-        .then((src) => {
-          setModalSrc(src);
-          setModalOpen(true);
-        })
-        .catch((err: unknown) => {
-          console.error("jmw getScreenshotSrc", err);
-        });
-    },
-    [recordingUlid],
-  );
 
   // Handler to close modal
   const handleCloseModal = useCallback(() => {
@@ -108,12 +44,12 @@ export function ScreenshotsTable() {
   }, []);
 
   const handleDelete = (file: string) => {
-    deleteSreenshotFile({
+    deleteArmySetupFile({
       filename: file,
       subDir: recordingUlid ?? "",
     })
       .then(() => {
-        deleteScreenshot(file);
+        deleteArmySetup(file);
       })
       .catch((e: unknown) => {
         console.error("jmw delete file errror", e);
@@ -121,7 +57,7 @@ export function ScreenshotsTable() {
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: dependencies are actions
-  const columns = useMemo<ColumnDef<(typeof screenshots)[0]>[]>(
+  const columns = useMemo<ColumnDef<(typeof armySetups)[0]>[]>(
     () => [
       {
         accessorKey: "index",
@@ -138,33 +74,17 @@ export function ScreenshotsTable() {
         header: "Type",
         cell: ({ row }) => {
           return (
-            <ComboBoxScreenshotType
+            <ComboBoxArmySetupType
               initialValue={row.original.type}
-              onSelectCb={(screenshotType) => {
-                updateScreenshot(row.index, {
+              onSelectCb={(armySetupType) => {
+                updateArmySetup(row.index, {
                   filename: row.original.filename,
-                  type: screenshotType,
+                  type: armySetupType,
                 });
               }}
             />
           );
         },
-      },
-      {
-        id: "view",
-        header: "",
-        cell: ({ row }) => (
-          <button
-            type="button"
-            className="p-1 hover:text-primary rounded-2xl hover:bg-gray-700 "
-            title="View"
-            onClick={() => {
-              handleView(row.original.filename);
-            }}
-          >
-            <Eye size={18} />
-          </button>
-        ),
       },
       {
         id: "delete",
@@ -187,7 +107,7 @@ export function ScreenshotsTable() {
   );
 
   const table = useReactTable({
-    data: screenshots,
+    data: armySetups,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -223,17 +143,12 @@ export function ScreenshotsTable() {
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="text-center">
-                No screenshots found.
+                No Army Setups
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
-      <ScreenshotModal
-        src={modalSrc}
-        open={modalOpen}
-        onClose={handleCloseModal}
-      />
     </>
   );
 }

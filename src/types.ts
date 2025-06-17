@@ -23,7 +23,9 @@ import type {
   NORSCA,
   NURGLE,
   OGRE_KINGDOMS,
+  OPPONENT,
   OTHER,
+  PLAYER,
   SETTINGS,
   SKAVEN,
   SLAANESH,
@@ -81,3 +83,5 @@ export type ScreenshotType =
   | typeof END_BATTLE
   | typeof LOADING
   | typeof VICTORY;
+
+export type ArmySetupType = typeof OTHER | typeof PLAYER | typeof OPPONENT;

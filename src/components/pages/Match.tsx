@@ -2,6 +2,8 @@
 import { InputFile } from "@/components/InputFileDefault";
 import MatchTable from "@/components/MatchTable";
 import { ScreenshotsTable } from "@/components/ScreenshotsTable";
+import { ArmySetupTable } from "@/components/ArmySetupTable";
+import { PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -44,6 +46,20 @@ export default function Match() {
     <div>
       <MatchTable />
       <ScreenshotsTable />
+      <div className="flex justify-end">
+        <Button
+          onClick={() => {
+            console.log("Submitting recording");
+          }}
+          size="sm"
+          type="submit"
+          // className="flex justify-end"
+          // style={{ alignSelf: "flex-end" }}
+        >
+          <PlusIcon />
+        </Button>
+      </div>
+      <ArmySetupTable />
       <Notes />
       <div>
         <InputFile

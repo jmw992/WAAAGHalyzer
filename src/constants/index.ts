@@ -90,3 +90,7 @@ export const VICTORY = "Victory";
 export const END_BATTLE = "End Battle";
 export const OTHER = "Other";
 export const SCREENSHOT_TYPES = [LOADING, VICTORY, END_BATTLE, OTHER];
+
+export const PLAYER = "Player";
+export const OPPONENT = "Opponent";
+export const ARMY_SETUP_TYPES = [PLAYER, OPPONENT, OTHER];
