@@ -22,6 +22,7 @@ export const REPLAYS = "replays";
 export const SUPPORTED_GAMES = [TOTAL_WAR_WARHAMMER_3] as const;
 
 export const MATCHES = "matches";
+export const ARMY_SETUPS = "army_setups";
 
 // Factions
 export const BRETONNIA = "Bretonnia";
@@ -86,10 +87,17 @@ export const CONQUEST = "Conquest";
 export const MATCH_TYPES = [DOMINATION, LAND_BATTLE, CONQUEST];
 
 export const LOADING = "Loading";
-export const VICTORY = "Victory";
+export const RESULT = "Result";
 export const END_BATTLE = "End Battle";
+export const REPLAY_PREVIEW = "Replay Preview";
 export const OTHER = "Other";
-export const SCREENSHOT_TYPES = [LOADING, VICTORY, END_BATTLE, OTHER];
+export const SCREENSHOT_TYPES = [
+  LOADING,
+  RESULT,
+  END_BATTLE,
+  REPLAY_PREVIEW,
+  OTHER,
+];
 
 export const PLAYER = "Player";
 export const OPPONENT = "Opponent";

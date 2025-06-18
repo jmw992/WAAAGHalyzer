@@ -1,7 +1,11 @@
 "use client";
 import RecordingButton from "@/components/RecordingButton";
 import { HISTORY, HOME, MATCH, SETTINGS } from "@/constants";
-import { copyAutoSaveDebug, copyScreenshotDebug } from "@/lib/fileHandling";
+import {
+  copyAutoSaveDebug,
+  copyScreenshotDebug,
+  copyArmySetupDebug,
+} from "@/lib/fileHandling";
 import { useZustandStore } from "@/lib/useZustandStore";
 import type { Page } from "@/types";
 import { Disclosure, DisclosureButton } from "@headlessui/react";
@@ -95,6 +99,18 @@ export default function TopNav() {
                           }}
                         >
                           Copy Screenshot
+                        </button>
+                        <button
+                          className={classNames(
+                            "text-gray-300 hover:bg-gray-700 hover:text-white",
+                            "rounded-md px-3 py-2 text-sm font-medium",
+                          )}
+                          type="button"
+                          onClick={() => {
+                            void copyArmySetupDebug();
+                          }}
+                        >
+                          Copy Army Setup
                         </button>
                       </>
                     ) : null

@@ -1,3 +1,5 @@
+import { ARMY_SETUPS, MATCHES } from "@/constants";
+import { join } from "@tauri-apps/api/path";
 import {
   BaseDirectory,
   type UnwatchFn,
@@ -6,22 +8,31 @@ import {
   mkdir,
   watch,
 } from "@tauri-apps/plugin-fs";
-
-import { MATCHES } from "@/constants";
-import { appLocalDataDir, join } from "@tauri-apps/api/path";
+import type { WatchGameDirProps } from "./watchNewAutoSave";
+import { splitFilePath } from "./fileHandling";
 import { ulid } from "ulid";
 
-export interface WatchGameDirProps {
-  /**  The source file path to copy from the root */
-  gameDirectory: string;
-  /**  The destination file path to copy to, relative to the app's local data directory.  Will be ulid of recording */
-  destinationDir: string;
-  /**  Callback function to execute after the copy operation*/
+export const copyAutoSaveToMatchDir = async ({
+  sourceFile,
+  matchId,
+  onCopy,
+}: {
+  sourceFile: string;
+  matchId: string;
   onCopy?: (ulid: string, origFilename?: string) => void;
-}
+}): Promise<void> => {
+  const matchDir = await join(MATCHES, matchId);
+  console.log("jmw matchDir", matchDir);
+  copyArmySetupBase({
+    gameDirectory: sourceFile,
+    fileNameRoot: ulid(),
+    destinationDir: matchDir,
+    onCopy,
+  });
+};
 
-const copyAutoSaveBase = async ({
-  gameDirectory: screenshotFile,
+const copyArmySetupBase = async ({
+  gameDirectory: armySetupFile,
   fileNameRoot,
   destinationDir,
   onCopy,
@@ -39,34 +50,35 @@ const copyAutoSaveBase = async ({
       recursive: true,
     });
   }
+  console.log("jmw armySetupFile", armySetupFile);
+  const origFilename = splitFilePath(armySetupFile).filename;
+  console.log("jmw origFilename", origFilename);
 
-  const newFile = await join(destinationDir, `${fileNameRoot}.replay`);
-  console.log("jmw autosave newFile", newFile);
+  console.log("jmw fileNameRoot", fileNameRoot);
+
+  const newFile = await join(destinationDir, `${fileNameRoot}.army_setup`);
+  console.log("jmw army setup newFile", newFile);
   // Perform the copy operation
-  await copyFile(screenshotFile, newFile, {
+  await copyFile(armySetupFile, newFile, {
     toPathBaseDir: BaseDirectory.AppLocalData,
   });
 
   if (onCopy) {
-    onCopy(fileNameRoot);
+    onCopy(fileNameRoot, origFilename);
   }
 };
 
-export const watchNewAutoSave = async ({
+export const watchNewArmySetup = async ({
   gameDirectory,
   destinationDir,
   onCopy,
 }: WatchGameDirProps): Promise<UnwatchFn> => {
   const seenFiles = new Set<string>();
-  const gameAutoSaveFile = await join(
-    gameDirectory,
-    "replays",
-    "Auto-save.replay",
-  );
-  console.log("jmw gameAutoSaveFile", gameAutoSaveFile);
+  const armySetupsDir = await join(gameDirectory, ARMY_SETUPS);
+  console.log("jmw armySetupsDir", armySetupsDir);
   const matchDir = await join(MATCHES, destinationDir);
-  console.log("jmw auto-save matchDir ", matchDir);
-  const unWatch = await watch(gameAutoSaveFile, (event) => {
+  console.log("jmw armySetup matchDir ", matchDir);
+  const unWatch = await watch(armySetupsDir, (event) => {
     console.log("watchNewAutoSave event", event);
     // return;
     const isCreateEvent =
@@ -80,14 +92,13 @@ export const watchNewAutoSave = async ({
       !seenFiles.has(event.paths[0])
     ) {
       seenFiles.add(event.paths[0]);
-      void copyAutoSaveBase({
+      void copyArmySetupBase({
         gameDirectory: event.paths[0],
-        fileNameRoot: destinationDir,
+        fileNameRoot: ulid(),
         destinationDir: matchDir,
         onCopy,
       });
     }
   });
-  // unWatch();
   return unWatch;
 };

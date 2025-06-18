@@ -1,9 +1,5 @@
 "use client";
-import { InputFile } from "@/components/InputFileDefault";
 import MatchTable from "@/components/MatchTable";
-import { ScreenshotsTable } from "@/components/ScreenshotsTable";
-import { ArmySetupTable } from "@/components/ArmySetupTable";
-import { PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,6 +13,8 @@ import { Textarea } from "@/components/ui/textarea";
 // import { FolderInput } from "@/components/FolderInputDialog";
 import { SUPPORTED_GAMES } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
+import { ArmySetupMatchSection } from "@/components/ArmySetupMatchSection";
+import { ScreenshotsMatchSection } from "@/components/ScreenshotsMatchSection";
 
 export function Notes() {
   return (
@@ -31,61 +29,24 @@ export default function Match() {
   const screenshots = useZustandStore((state) => state.screenshots);
   const recordingGame = useZustandStore((state) => state.recordingGame);
   const recordingMod = useZustandStore((state) => state.recordingMod);
+  const recordingUlid = useZustandStore((state) => state.recordingUlid);
   const autoSaveFile = useZustandStore((state) => state.autoSaveFile);
-  const recordingWin = useZustandStore((state) => state.recordingWin);
   const recordingStartTime = useZustandStore(
     (state) => state.recordingStartTime,
   );
-  const playerFaction = useZustandStore((state) => state.playerFaction);
-  const opponentFaction = useZustandStore((state) => state.opponentFaction);
-  const map = useZustandStore((state) => state.map);
   const links = useZustandStore((state) => state.links);
   const notes = useZustandStore((state) => state.notes);
+  const setNotes = useZustandStore((state) => state.setNotes);
 
+  console;
   return (
     <div>
       <MatchTable />
-      <ScreenshotsTable />
-      <div className="flex justify-end">
-        <Button
-          onClick={() => {
-            console.log("Submitting recording");
-          }}
-          size="sm"
-          type="submit"
-          // className="flex justify-end"
-          // style={{ alignSelf: "flex-end" }}
-        >
-          <PlusIcon />
-        </Button>
-      </div>
-      <ArmySetupTable />
-      <Notes />
-      <div>
-        <InputFile
-          label={"Add a Screenshot"}
-          id={"add-a-screenshot"}
-          onChange={(val) => {
-            console.log("jmw val", val);
-          }}
-        />
-      </div>
-
-      <label htmlFor="autosave-file">Auto Save File</label>
-      <div id="autosave-file">{autoSaveFile}</div>
-      <div>
-        <InputFile
-          label={"Change Auto Save"}
-          id={"auto-save-file"}
-          // defaultValue={autoSaveFile ?? undefined}
-          onChange={(val) => {
-            console.log("jmw val", val);
-          }}
-        />
-      </div>
+      <ScreenshotsMatchSection />
+      <ArmySetupMatchSection />
 
       <div className="flex flex-row pb-4">
-        <div className="pr-8">
+        <div>
           <label htmlFor="recording-game">Game</label>
           <Select
             value={recordingGame ?? undefined}
@@ -107,7 +68,7 @@ export default function Match() {
           </Select>
         </div>
 
-        <div>
+        <div className="pl-2">
           <label htmlFor="recording-mod">Mod</label>
           <Input
             id="recording-mod"
@@ -118,7 +79,36 @@ export default function Match() {
             }}
           />
         </div>
+        <div className="pl-2">
+          <label htmlFor="recordingUlid">Recording Id</label>
+          <Input
+            id="recordingUlid"
+            type="text"
+            readOnly
+            value={recordingUlid ?? undefined}
+          />
+        </div>
+        <div className="pl-2">
+          <label htmlFor="recordingUlid">AutoSave</label>
+          <Input
+            id="recordingUlid"
+            type="text"
+            readOnly
+            value={autoSaveFile ?? undefined}
+          />
+        </div>
       </div>
+      <>
+        <label htmlFor="notesInput">Notes</label>
+        <Textarea
+          id="notesInput"
+          placeholder="Type your message here."
+          value={notes ?? "Type your message here."}
+          onChange={(event) => {
+            setNotes(event.target.value);
+          }}
+        />
+      </>
 
       <Button
         onClick={() => {
@@ -128,7 +118,7 @@ export default function Match() {
         type="submit"
         style={{ alignSelf: "flex-end" }}
       >
-        Save to History
+        Save
       </Button>
     </div>
   );

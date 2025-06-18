@@ -8,7 +8,7 @@ import {
   OTHER,
   PLAYER,
   TOTAL_WAR_WARHAMMER_3,
-  VICTORY,
+  RESULT,
 } from "@/constants";
 import type {
   ArmySetupType,
@@ -61,14 +61,21 @@ export interface RecordedMatch {
   screenshots: RecordingState["screenshots"];
 }
 
-export interface RecordingState {
-  index: number;
-  isRecording: boolean;
-  recordingStartTime: Date | null;
+interface StartRecordingProps {
   recordingUlid: string | null;
   unwatchAutoSaveFn: UnwatchFn;
   unwatchScreenshotFn: UnwatchFn;
+  unwatchArmySetup: UnwatchFn;
+  recordingGame: SupportedGames | null;
+  recordingMod: string | null;
   matchType: MatchTypes | null;
+}
+
+export type RecordingState = StartRecordingProps & {
+  index: number;
+  isRecording: boolean;
+  recordingStartTime: Date | null;
+
   autoSaveFile: string | null;
   screenshots: Screenshot[];
   armySetups: ArmySetup[];
@@ -80,7 +87,7 @@ export interface RecordingState {
   map: string | null;
   notes: string | null;
   links: string[] | null;
-}
+};
 
 /** Transient state items that get reset between app close & open */
 export type TransientState = RecordingState & {
@@ -90,15 +97,6 @@ export type TransientState = RecordingState & {
 
 /** Full application state */
 type State = PersistedState & TransientState;
-
-interface StartRecordingProps {
-  recordingUlid: RecordingState["recordingUlid"];
-  unwatchScreenshotFn: RecordingState["unwatchScreenshotFn"];
-  unwatchAutoSaveFn: RecordingState["unwatchAutoSaveFn"];
-  recordingGame: RecordingState["recordingGame"];
-  recordingMod: RecordingState["recordingMod"];
-  matchType: RecordingState["matchType"];
-}
 
 export interface Action {
   setPage: (page: State["page"]) => void;
@@ -114,7 +112,7 @@ export interface Action {
   setRecordingStartTime: (
     startTime: RecordingState["recordingStartTime"],
   ) => void;
-  setRecordingUlid: (ulid: RecordingState["recordingUlid"]) => void;
+  setRecordingUlid: (ulid: StartRecordingProps["recordingUlid"]) => void;
   setRecordingState: (recordingState: RecordingState) => void;
   setRecordingStartState: (startRecordingProps: StartRecordingProps) => void;
   setAutoSaveFile: (file: RecordingState["autoSaveFile"]) => void;
@@ -130,6 +128,7 @@ export interface Action {
   setGame: (game: SupportedGames) => void;
   setGameDirectory: (gameDirectory: State["gameDirectory"]) => void;
   setMod: (mod: State["mod"]) => void;
+  setNotes: (notes: State["notes"]) => void;
   setScreenshotsDirectory: (
     gameDirectory: State["screenshotsDirectory"],
   ) => void;
@@ -156,8 +155,11 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
     set({ isRecording: value });
   },
   mod: DEFAULT,
-  setMod(value: string) {
+  setMod(value) {
     set({ mod: value });
+  },
+  setNotes(value) {
+    set({ notes: value });
   },
   game: TOTAL_WAR_WARHAMMER_3,
   setGame(value: SupportedGames) {
@@ -187,6 +189,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   armySetups: [],
   unwatchAutoSaveFn: () => {},
   unwatchScreenshotFn: () => {},
+  unwatchArmySetup: () => {},
   recordingGame: TOTAL_WAR_WARHAMMER_3,
   recordingMod: DEFAULT,
   recordingWin: null,
@@ -262,7 +265,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
     set((state) => {
       const type =
         state.screenshots.length === 0
-          ? VICTORY
+          ? RESULT
           : state.screenshots.length === 1
             ? END_BATTLE
             : OTHER;

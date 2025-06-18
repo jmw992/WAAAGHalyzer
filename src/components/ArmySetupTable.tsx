@@ -8,12 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { OTHER } from "@/constants";
-import {
-  deleteSreenshotFile,
-  getScreenshotSrc,
-  deleteArmySetupFile,
-} from "@/lib/fileHandling";
+import { deleteArmySetupFile } from "@/lib/fileHandling";
 import { useZustandStore } from "@/lib/useZustandStore";
 import {
   type ColumnDef,
@@ -21,7 +16,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Eye, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { useMemo } from "react";
 import { useCallback, useState } from "react";
 
@@ -30,7 +25,6 @@ export function ArmySetupTable() {
   const recordingUlid = useZustandStore((s) => s.recordingUlid);
   const deleteArmySetup = useZustandStore((s) => s.deleteArmySetup);
   const updateArmySetup = useZustandStore((s) => s.updateArmySetup);
-  const addArmySetup = useZustandStore((s) => s.addArmySetup);
 
   // State for modal
   const [modalSrc, setModalSrc] = useState<string | null>(null);
@@ -43,17 +37,12 @@ export function ArmySetupTable() {
     setModalSrc(null);
   }, []);
 
-  const handleDelete = (file: string) => {
-    deleteArmySetupFile({
+  const handleDelete = async (file: string) => {
+    await deleteArmySetupFile({
       filename: file,
       subDir: recordingUlid ?? "",
-    })
-      .then(() => {
-        deleteArmySetup(file);
-      })
-      .catch((e: unknown) => {
-        console.error("jmw delete file errror", e);
-      });
+    });
+    deleteArmySetup(file);
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: dependencies are actions
@@ -65,9 +54,9 @@ export function ArmySetupTable() {
         cell: ({ row }) => row.index + 1,
       },
       {
-        accessorKey: "file",
-        header: "File",
-        cell: ({ row }) => row.original.filename,
+        accessorKey: "armySetup",
+        header: "Army Setup",
+        cell: ({ row }) => row.original.origFilename,
       },
       {
         accessorKey: "type",
@@ -80,6 +69,7 @@ export function ArmySetupTable() {
                 updateArmySetup(row.index, {
                   filename: row.original.filename,
                   type: armySetupType,
+                  origFilename: row.original.origFilename,
                 });
               }}
             />
@@ -95,7 +85,7 @@ export function ArmySetupTable() {
             className="p-1 hover:text-destructive"
             title="Delete"
             onClick={() => {
-              handleDelete(row.original.filename);
+              void handleDelete(row.original.filename);
             }}
           >
             <Trash2 size={18} />

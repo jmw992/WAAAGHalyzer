@@ -129,8 +129,8 @@ export function ScreenshotsTable() {
         cell: ({ row }) => row.index + 1,
       },
       {
-        accessorKey: "file",
-        header: "File",
+        accessorKey: "Screenshot",
+        header: "Screenshot",
         cell: ({ row }) => row.original.filename,
       },
       {

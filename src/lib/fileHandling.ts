@@ -52,3 +52,51 @@ export const copyAutoSaveDebug = async () => {
     "/Users/jwilliams/Documents/GitHub/WAAAGHalyzer/test/mockTww3/replays/Auto-save.replay";
   await writeTextFile(targetFile, "debug auto-save");
 };
+
+export const copyArmySetupDebug = async () => {
+  const sourceFile =
+    "/Users/jwilliams/Documents/GitHub/WAAAGHalyzer/test/mockTww3/army_setups/mock.army_setup";
+  const targetFile = `/Users/jwilliams/Documents/GitHub/WAAAGHalyzer/test/mockTww3/army_setups/${ulid()}.army_setup`;
+  await copyFile(sourceFile, targetFile);
+};
+
+/**
+ * Splits a file path string into its directory path, filename, and file extension.
+ *
+ * @param filePath The complete file path string.
+ * @returns An object containing:
+ * - `directory`: The path to the directory containing the file (empty string if no directory).
+ * - `filename`: The name of the file without its extension.
+ * - `extension`: The file extension (e.g., ".txt", ".jpg"), including the dot, or an empty string if no extension.
+ */
+export const splitFilePath = (
+  filePath: string,
+): {
+  directory: string;
+  filename: string;
+  extension: string;
+} => {
+  const lastSlashIndex = filePath.lastIndexOf("/");
+  const lastBackslashIndex = filePath.lastIndexOf("\\");
+  const lastSeparatorIndex = Math.max(lastSlashIndex, lastBackslashIndex);
+
+  let directory = "";
+  let fullFilename = filePath;
+
+  if (lastSeparatorIndex !== -1) {
+    directory = filePath.substring(0, lastSeparatorIndex);
+    fullFilename = filePath.substring(lastSeparatorIndex + 1);
+  }
+
+  const lastDotIndex = fullFilename.lastIndexOf(".");
+
+  let filename = fullFilename;
+  let extension = "";
+
+  if (lastDotIndex !== -1) {
+    filename = fullFilename.substring(0, lastDotIndex);
+    extension = fullFilename.substring(lastDotIndex);
+  }
+
+  return { directory, filename, extension };
+};

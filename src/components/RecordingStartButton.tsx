@@ -2,6 +2,7 @@
 import { useZustandStore } from "@/lib/useZustandStore";
 import type { Action, PersistedState } from "@/lib/useZustandStore";
 import { watchNewAutoSave } from "@/lib/watchNewAutoSave";
+import { watchNewArmySetup } from "@/lib/watchNewArmySetup";
 import { watchNewScreenshot } from "@/lib/watchNewScreenshot";
 import { PlayIcon } from "@heroicons/react/24/outline";
 import { ulid } from "ulid";
@@ -12,6 +13,7 @@ interface AsyncWatchProps {
   gameDirectory: PersistedState["gameDirectory"];
   addScreenshot: Action["addScreenshot"];
   setAutoSaveFile: Action["setAutoSaveFile"];
+  addArmySetup: Action["addArmySetup"];
 }
 const asyncWatch = async ({
   newRecordingUlid,
@@ -19,6 +21,7 @@ const asyncWatch = async ({
   gameDirectory,
   addScreenshot,
   setAutoSaveFile,
+  addArmySetup,
 }: AsyncWatchProps) => {
   try {
     const unwatchFns = await Promise.all([
@@ -38,6 +41,14 @@ const asyncWatch = async ({
           setAutoSaveFile(file);
         },
       }),
+      watchNewArmySetup({
+        gameDirectory,
+        destinationDir: newRecordingUlid,
+        onCopy: (file, origFilename) => {
+          console.log("jmw army setup copied:", file);
+          addArmySetup(file, origFilename ?? "");
+        },
+      }),
     ]);
     return unwatchFns;
   } catch (error) {
@@ -47,6 +58,7 @@ const asyncWatch = async ({
 
 type RecordingHandlerProps = PersistedState & {
   addScreenshot: Action["addScreenshot"];
+  addArmySetup: Action["addArmySetup"];
   setAutoSaveFile: Action["setAutoSaveFile"];
   setRecordingStartState: Action["setRecordingStartState"];
 };
@@ -58,6 +70,7 @@ const recordingHandler = ({
   game,
   defaultMatchType,
   addScreenshot,
+  addArmySetup,
   setAutoSaveFile,
   setRecordingStartState,
 }: RecordingHandlerProps) => {
@@ -69,6 +82,7 @@ const recordingHandler = ({
     screenshotsDirectory,
     gameDirectory,
     addScreenshot,
+    addArmySetup,
     setAutoSaveFile,
   })
     .then((unwatchFns) => {
@@ -83,6 +97,7 @@ const recordingHandler = ({
         recordingUlid: newRecordingUlid,
         unwatchScreenshotFn: unwatchFns[0],
         unwatchAutoSaveFn: unwatchFns[1],
+        unwatchArmySetup: unwatchFns[2],
         recordingGame: game,
         recordingMod: mod,
       });
@@ -105,6 +120,7 @@ export default function RecordingStartButton() {
     (state) => state.setRecordingStartState,
   );
   const addScreenshot = useZustandStore((state) => state.addScreenshot);
+  const addArmySetup = useZustandStore((state) => state.addArmySetup);
   const setAutoSaveFile = useZustandStore((state) => state.setAutoSaveFile);
 
   return (
@@ -119,6 +135,7 @@ export default function RecordingStartButton() {
           game,
           defaultMatchType,
           addScreenshot,
+          addArmySetup,
           setAutoSaveFile,
           setRecordingStartState,
         });
