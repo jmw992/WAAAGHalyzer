@@ -1,8 +1,8 @@
 "use client";
 import { useZustandStore } from "@/lib/useZustandStore";
 import type { Action, PersistedState } from "@/lib/useZustandStore";
-import { watchNewAutoSave } from "@/lib/watchNewAutoSave";
 import { watchNewArmySetup } from "@/lib/watchNewArmySetup";
+import { watchNewAutoSave } from "@/lib/watchNewAutoSave";
 import { watchNewScreenshot } from "@/lib/watchNewScreenshot";
 import { PlayIcon } from "@heroicons/react/24/outline";
 import { ulid } from "ulid";

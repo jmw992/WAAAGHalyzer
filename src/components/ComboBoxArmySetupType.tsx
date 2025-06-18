@@ -17,7 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { OTHER, ARMY_SETUP_TYPES } from "@/constants";
+import { ARMY_SETUP_TYPES, OTHER } from "@/constants";
 import { cn } from "@/lib/utils";
 import type { ArmySetupType } from "@/types";
 

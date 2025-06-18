@@ -2,9 +2,9 @@
 import RecordingButton from "@/components/RecordingButton";
 import { HISTORY, HOME, MATCH, SETTINGS } from "@/constants";
 import {
+  copyArmySetupDebug,
   copyAutoSaveDebug,
   copyScreenshotDebug,
-  copyArmySetupDebug,
 } from "@/lib/fileHandling";
 import { useZustandStore } from "@/lib/useZustandStore";
 import type { Page } from "@/types";

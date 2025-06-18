@@ -1,5 +1,7 @@
 "use client";
+import { ArmySetupMatchSection } from "@/components/ArmySetupMatchSection";
 import MatchTable from "@/components/MatchTable";
+import { ScreenshotsMatchSection } from "@/components/ScreenshotsMatchSection";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,8 +15,6 @@ import { Textarea } from "@/components/ui/textarea";
 // import { FolderInput } from "@/components/FolderInputDialog";
 import { SUPPORTED_GAMES } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
-import { ArmySetupMatchSection } from "@/components/ArmySetupMatchSection";
-import { ScreenshotsMatchSection } from "@/components/ScreenshotsMatchSection";
 
 export function Notes() {
   return (
@@ -38,7 +38,6 @@ export default function Match() {
   const notes = useZustandStore((state) => state.notes);
   const setNotes = useZustandStore((state) => state.setNotes);
 
-  console;
   return (
     <div>
       <MatchTable />

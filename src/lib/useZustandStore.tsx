@@ -7,8 +7,8 @@ import {
   OPPONENT,
   OTHER,
   PLAYER,
-  TOTAL_WAR_WARHAMMER_3,
   RESULT,
+  TOTAL_WAR_WARHAMMER_3,
 } from "@/constants";
 import type {
   ArmySetupType,

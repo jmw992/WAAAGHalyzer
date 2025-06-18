@@ -26,6 +26,7 @@ import type {
   OPPONENT,
   OTHER,
   PLAYER,
+  RESULT,
   SETTINGS,
   SKAVEN,
   SLAANESH,
@@ -34,7 +35,6 @@ import type {
   TZEENTCH,
   VAMPIRE_COAST,
   VAMPIRE_COUNTS,
-  RESULT,
   WARRIORS_OF_CHAOS,
   WOOD_ELVES,
 } from "@/constants";

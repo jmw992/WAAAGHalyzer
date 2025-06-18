@@ -1,11 +1,11 @@
+import { splitFilePath } from "@/lib/fileHandling";
+import { useZustandStore } from "@/lib/useZustandStore";
+import { copyAutoSaveToMatchDir } from "@/lib/watchNewArmySetup";
+import { open } from "@tauri-apps/plugin-dialog";
 import { PlusIcon } from "lucide-react";
+import { ulid } from "ulid";
 import { ArmySetupTable } from "./ArmySetupTable";
 import { Button } from "./ui/button";
-import { open } from "@tauri-apps/plugin-dialog";
-import { ulid } from "ulid";
-import { useZustandStore } from "@/lib/useZustandStore";
-import { splitFilePath } from "@/lib/fileHandling";
-import { copyAutoSaveToMatchDir } from "@/lib/watchNewArmySetup";
 
 export const ArmySetupMatchSection = () => {
   const addArmySetup = useZustandStore((state) => state.addArmySetup);

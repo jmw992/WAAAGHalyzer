@@ -8,9 +8,9 @@ import {
   mkdir,
   watch,
 } from "@tauri-apps/plugin-fs";
-import type { WatchGameDirProps } from "./watchNewAutoSave";
-import { splitFilePath } from "./fileHandling";
 import { ulid } from "ulid";
+import { splitFilePath } from "./fileHandling";
+import type { WatchGameDirProps } from "./watchNewAutoSave";
 
 export const copyAutoSaveToMatchDir = async ({
   sourceFile,
@@ -23,7 +23,7 @@ export const copyAutoSaveToMatchDir = async ({
 }): Promise<void> => {
   const matchDir = await join(MATCHES, matchId);
   console.log("jmw matchDir", matchDir);
-  copyArmySetupBase({
+  await copyArmySetupBase({
     gameDirectory: sourceFile,
     fileNameRoot: ulid(),
     destinationDir: matchDir,
