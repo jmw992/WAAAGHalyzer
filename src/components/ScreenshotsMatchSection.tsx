@@ -1,7 +1,7 @@
+import { useZustandStore } from "@/lib/useZustandStore";
 import { PlusIcon } from "lucide-react";
 import { ScreenshotsTable } from "./ScreenshotsTable";
 import { Button } from "./ui/button";
-import { useZustandStore } from "@/lib/useZustandStore";
 
 export const ScreenshotsMatchSection = () => {
   const recordingUlid = useZustandStore((state) => state.recordingUlid);

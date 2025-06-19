@@ -1,7 +1,7 @@
 "use client";
 import { ArmySetupMatchSection } from "@/components/ArmySetupMatchSection";
-import PreMatchTable from "@/components/PreMatchTable";
 import MatchTable from "@/components/MatchTable";
+import PreMatchTable from "@/components/PreMatchTable";
 import { ScreenshotsMatchSection } from "@/components/ScreenshotsMatchSection";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 // import { FolderInput } from "@/components/FolderInputDialog";
 import { SUPPORTED_GAMES } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
-import { DownloadIcon, Clipboard } from "lucide-react";
+import { Clipboard, DownloadIcon } from "lucide-react";
 
 export function Notes() {
   return (
