@@ -41,7 +41,6 @@ const copyAutoSaveBase = async ({
   }
 
   const newFile = await join(destinationDir, `${fileNameRoot}.replay`);
-  console.log("jmw autosave newFile", newFile);
   // Perform the copy operation
   await copyFile(screenshotFile, newFile, {
     toPathBaseDir: BaseDirectory.AppLocalData,
@@ -63,12 +62,8 @@ export const watchNewAutoSave = async ({
     "replays",
     "Auto-save.replay",
   );
-  console.log("jmw gameAutoSaveFile", gameAutoSaveFile);
   const matchDir = await join(MATCHES, destinationDir);
-  console.log("jmw auto-save matchDir ", matchDir);
   const unWatch = await watch(gameAutoSaveFile, (event) => {
-    console.log("watchNewAutoSave event", event);
-    // return;
     const isCreateEvent =
       typeof event.type === "object" && "create" in event.type;
     const isModifyDataEvent =

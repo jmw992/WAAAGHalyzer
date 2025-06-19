@@ -22,7 +22,6 @@ export const copyAutoSaveToMatchDir = async ({
   onCopy?: (ulid: string, origFilename?: string) => void;
 }): Promise<void> => {
   const matchDir = await join(MATCHES, matchId);
-  console.log("jmw matchDir", matchDir);
   await copyArmySetupBase({
     gameDirectory: sourceFile,
     fileNameRoot: ulid(),
@@ -50,14 +49,8 @@ const copyArmySetupBase = async ({
       recursive: true,
     });
   }
-  console.log("jmw armySetupFile", armySetupFile);
   const origFilename = splitFilePath(armySetupFile).filename;
-  console.log("jmw origFilename", origFilename);
-
-  console.log("jmw fileNameRoot", fileNameRoot);
-
   const newFile = await join(destinationDir, `${fileNameRoot}.army_setup`);
-  console.log("jmw army setup newFile", newFile);
   // Perform the copy operation
   await copyFile(armySetupFile, newFile, {
     toPathBaseDir: BaseDirectory.AppLocalData,
@@ -75,12 +68,8 @@ export const watchNewArmySetup = async ({
 }: WatchGameDirProps): Promise<UnwatchFn> => {
   const seenFiles = new Set<string>();
   const armySetupsDir = await join(gameDirectory, ARMY_SETUPS);
-  console.log("jmw armySetupsDir", armySetupsDir);
   const matchDir = await join(MATCHES, destinationDir);
-  console.log("jmw armySetup matchDir ", matchDir);
   const unWatch = await watch(armySetupsDir, (event) => {
-    console.log("watchNewAutoSave event", event);
-    // return;
     const isCreateEvent =
       typeof event.type === "object" && "create" in event.type;
     const isModifyDataEvent =

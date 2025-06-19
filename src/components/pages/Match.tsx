@@ -1,5 +1,6 @@
 "use client";
 import { ArmySetupMatchSection } from "@/components/ArmySetupMatchSection";
+import PreMatchTable from "@/components/PreMatchTable";
 import MatchTable from "@/components/MatchTable";
 import { ScreenshotsMatchSection } from "@/components/ScreenshotsMatchSection";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 // import { FolderInput } from "@/components/FolderInputDialog";
 import { SUPPORTED_GAMES } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
+import { DownloadIcon, Clipboard } from "lucide-react";
 
 export function Notes() {
   return (
@@ -37,9 +39,11 @@ export default function Match() {
   const links = useZustandStore((state) => state.links);
   const notes = useZustandStore((state) => state.notes);
   const setNotes = useZustandStore((state) => state.setNotes);
+  const setRecordingMod = useZustandStore((state) => state.setRecordingMod);
 
   return (
     <div>
+      <PreMatchTable />
       <MatchTable />
       <ScreenshotsMatchSection />
       <ArmySetupMatchSection />
@@ -50,9 +54,8 @@ export default function Match() {
           <Select
             value={recordingGame ?? undefined}
             onValueChange={(value) => {
-              console.log("jmw value", value);
+              console.log("TODO value", value);
             }}
-            // defaultValue={form.game}
           >
             <SelectTrigger id="recording-game">
               <SelectValue placeholder={recordingGame} />
@@ -75,26 +78,19 @@ export default function Match() {
             value={recordingMod ?? undefined}
             onChange={(e) => {
               console.log("mod", e.target.value);
+              setRecordingMod(e.target.value);
             }}
           />
         </div>
+      </div>
+      <div className="flex flex-row pb-4">
         <div className="pl-2">
           <label htmlFor="recordingUlid">Recording Id</label>
-          <Input
-            id="recordingUlid"
-            type="text"
-            readOnly
-            value={recordingUlid ?? undefined}
-          />
+          <p id="recordingUlid">{recordingUlid ?? "..."}</p>
         </div>
         <div className="pl-2">
-          <label htmlFor="recordingUlid">AutoSave</label>
-          <Input
-            id="recordingUlid"
-            type="text"
-            readOnly
-            value={autoSaveFile ?? undefined}
-          />
+          <label htmlFor="autoSaveFile">AutoSave</label>
+          <p id="autoSaveFile">{autoSaveFile ?? "..."}</p>
         </div>
       </div>
       <>
@@ -108,17 +104,52 @@ export default function Match() {
           }}
         />
       </>
+      <div className="flex justify-between mt-4">
+        <Button
+          onClick={() => {
+            console.log("Submitting recording");
+          }}
+          size="lg"
+          type="submit"
+        >
+          Save
+        </Button>
 
-      <Button
-        onClick={() => {
-          console.log("Submitting recording");
-        }}
-        size="lg"
-        type="submit"
-        style={{ alignSelf: "flex-end" }}
-      >
-        Save
-      </Button>
+        <div className="flex items-start">
+          <Button
+            onClick={() => {
+              console.log("Submitting recording");
+            }}
+            size="sm"
+            type="button"
+            variant={"secondary"}
+          >
+            <Clipboard />
+          </Button>
+          <Button
+            className="ml-1"
+            onClick={() => {
+              console.log("Submitting recording");
+            }}
+            size="sm"
+            type="reset"
+            variant={"secondary"}
+          >
+            <DownloadIcon />
+          </Button>
+          <Button
+            className="ml-1"
+            onClick={() => {
+              console.log("Submitting recording");
+            }}
+            size="sm"
+            type="reset"
+            variant={"destructive"}
+          >
+            Reset
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

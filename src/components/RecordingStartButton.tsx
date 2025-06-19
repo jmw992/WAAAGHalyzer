@@ -4,8 +4,10 @@ import type { Action, PersistedState } from "@/lib/useZustandStore";
 import { watchNewArmySetup } from "@/lib/watchNewArmySetup";
 import { watchNewAutoSave } from "@/lib/watchNewAutoSave";
 import { watchNewScreenshot } from "@/lib/watchNewScreenshot";
-import { PlayIcon } from "@heroicons/react/24/outline";
+// import { PlayIcon } from "@heroicons/react/24/outline";
+import { PlayIcon } from "lucide-react";
 import { ulid } from "ulid";
+import { Button } from "./ui/button";
 
 interface AsyncWatchProps {
   newRecordingUlid: string;
@@ -29,7 +31,6 @@ const asyncWatch = async ({
         screenshotsDir: screenshotsDirectory,
         destinationDir: newRecordingUlid,
         onCopy: (ulid) => {
-          console.log("jmw screenshot copied with ulid:", ulid);
           addScreenshot(ulid);
         },
       }),
@@ -37,7 +38,6 @@ const asyncWatch = async ({
         gameDirectory,
         destinationDir: newRecordingUlid,
         onCopy: (file) => {
-          console.log("jmw autosave copied:", file);
           setAutoSaveFile(file);
         },
       }),
@@ -45,14 +45,13 @@ const asyncWatch = async ({
         gameDirectory,
         destinationDir: newRecordingUlid,
         onCopy: (file, origFilename) => {
-          console.log("jmw army setup copied:", file);
           addArmySetup(file, origFilename ?? "");
         },
       }),
     ]);
     return unwatchFns;
   } catch (error) {
-    console.error("jmw error setting up screenshot watch:", error);
+    console.error("asyncWatch error:", error);
   }
 };
 
@@ -87,11 +86,8 @@ const recordingHandler = ({
   })
     .then((unwatchFns) => {
       if (!unwatchFns) {
-        throw new Error("jmw unwatchFns not set up correctly");
+        throw new Error("recordingHandler unwatchFns not set up correctly");
       }
-      console.log("jmw recording started");
-      console.log("jmw unwatchFns[0]", unwatchFns[0]);
-      console.log("jmw unwatchFns[1]", unwatchFns[1]);
       setRecordingStartState({
         matchType: defaultMatchType,
         recordingUlid: newRecordingUlid,
@@ -103,7 +99,7 @@ const recordingHandler = ({
       });
     })
     .catch((error: unknown) => {
-      console.error("jmw error starting recording:", error);
+      console.error("recordingHandler error:", error);
     });
 };
 
@@ -124,9 +120,10 @@ export default function RecordingStartButton() {
   const setAutoSaveFile = useZustandStore((state) => state.setAutoSaveFile);
 
   return (
-    <button
+    <Button
       type="button"
-      className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
+      variant={"ghost"}
+      className="p-1 text-green-500 hover:text-green-300"
       onClick={() => {
         recordingHandler({
           screenshotsDirectory,
@@ -141,7 +138,7 @@ export default function RecordingStartButton() {
         });
       }}
     >
-      <PlayIcon stroke="green" className="size-6" />
-    </button>
+      <PlayIcon className="size-6 " />
+    </Button>
   );
 }

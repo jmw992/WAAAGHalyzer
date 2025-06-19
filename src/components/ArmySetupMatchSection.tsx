@@ -18,7 +18,6 @@ export const ArmySetupMatchSection = () => {
     });
     console.log("Selected file:", file);
     if (typeof file === "string") {
-      console.log("jmw onClickAsync onChange", file);
       const originalFile = splitFilePath(file).filename;
       await copyAutoSaveToMatchDir({
         sourceFile: file,
@@ -38,6 +37,7 @@ export const ArmySetupMatchSection = () => {
             void onClickAsync();
           }}
           size="icon"
+          variant={"secondary"}
         >
           <PlusIcon />
         </Button>

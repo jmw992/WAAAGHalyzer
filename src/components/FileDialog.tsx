@@ -8,7 +8,6 @@ interface FileDialogProps {
 }
 
 const onClickAsync = async () => {
-  console.log("jmw onclick start..");
   // Open a dialog
   const file = await open({
     multiple: false,

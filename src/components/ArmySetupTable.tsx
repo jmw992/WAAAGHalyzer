@@ -27,9 +27,8 @@ export function ArmySetupTable() {
   const updateArmySetup = useZustandStore((s) => s.updateArmySetup);
 
   // State for modal
-  const [modalSrc, setModalSrc] = useState<string | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
-  console.log("jmw modalSrc, modalOpen", modalSrc, modalOpen);
+  const [_modalSrc, setModalSrc] = useState<string | null>(null);
+  const [_modalOpen, setModalOpen] = useState(false);
 
   // Handler to close modal
   const handleCloseModal = useCallback(() => {
@@ -103,7 +102,7 @@ export function ArmySetupTable() {
   });
 
   return (
-    <>
+    <div className="rounded-md border mt-2">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -139,6 +138,6 @@ export function ArmySetupTable() {
           )}
         </TableBody>
       </Table>
-    </>
+    </div>
   );
 }

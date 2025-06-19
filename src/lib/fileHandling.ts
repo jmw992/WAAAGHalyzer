@@ -36,7 +36,6 @@ export const getScreenshotSrc = async ({ filename, subDir }: FileProps) => {
     subDir,
     `${filename}.png`,
   );
-  console.log("jmw file", file);
   return convertFileSrc(file);
 };
 

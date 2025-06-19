@@ -108,6 +108,7 @@ export interface Action {
     opponentFaction: RecordingState["opponentFaction"],
   ) => void;
   setRecordingWin: (recordingWin: RecordingState["recordingWin"]) => void;
+  setRecordingMod: (recordingWin: RecordingState["recordingMod"]) => void;
   setIsRecording: (isRecording: RecordingState["isRecording"]) => void;
   setRecordingStartTime: (
     startTime: RecordingState["recordingStartTime"],
@@ -177,8 +178,11 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   setRecordingStartTime: (value: Date | null) => {
     set({ recordingStartTime: value });
   },
-  setRecordingWin: (recordingWin: RecordingState["recordingWin"]) => {
+  setRecordingWin: (recordingWin) => {
     set({ recordingWin });
+  },
+  setRecordingMod: (recordingMod) => {
+    set({ recordingMod });
   },
   recordingUlid: null,
   setRecordingUlid: (ulid: string | null) => {

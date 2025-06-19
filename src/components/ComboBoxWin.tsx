@@ -35,13 +35,10 @@ export default function ComboBoxWin({
   initialValue,
   onSelectCb,
 }: ComboBoxWinProps) {
-  console.log("jmw FactionComboBox");
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(
     initialValue === null ? "" : initialValue ? WIN : LOSS,
   );
-  console.log("jmw initialValue", initialValue);
-  console.log("jmw value", value);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
