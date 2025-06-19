@@ -7,10 +7,10 @@ import { useZustandStore } from "@/lib/useZustandStore";
 
 export default function History() {
   const matches = useZustandStore((state) => state.matches);
-  console.log("jmw matches", JSON.stringify(matches, null, 2));
   return (
     <>
       <h1>History</h1>
+      <p>{JSON.stringify(matches, null, 2)}</p>
       <ExampleComboBox />
       <MatchTable />
       <ExampleTable />

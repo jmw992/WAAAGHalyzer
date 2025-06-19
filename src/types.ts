@@ -23,7 +23,10 @@ import type {
   NORSCA,
   NURGLE,
   OGRE_KINGDOMS,
+  OPPONENT,
   OTHER,
+  PLAYER,
+  RESULT,
   SETTINGS,
   SKAVEN,
   SLAANESH,
@@ -32,7 +35,6 @@ import type {
   TZEENTCH,
   VAMPIRE_COAST,
   VAMPIRE_COUNTS,
-  VICTORY,
   WARRIORS_OF_CHAOS,
   WOOD_ELVES,
 } from "@/constants";
@@ -80,4 +82,6 @@ export type ScreenshotType =
   | typeof OTHER
   | typeof END_BATTLE
   | typeof LOADING
-  | typeof VICTORY;
+  | typeof RESULT;
+
+export type ArmySetupType = typeof OTHER | typeof PLAYER | typeof OPPONENT;

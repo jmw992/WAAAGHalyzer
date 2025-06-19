@@ -1,10 +1,13 @@
 "use client";
 import { useZustandStore } from "@/lib/useZustandStore";
 import type { Action, PersistedState } from "@/lib/useZustandStore";
+import { watchNewArmySetup } from "@/lib/watchNewArmySetup";
 import { watchNewAutoSave } from "@/lib/watchNewAutoSave";
 import { watchNewScreenshot } from "@/lib/watchNewScreenshot";
-import { PlayIcon } from "@heroicons/react/24/outline";
+// import { PlayIcon } from "@heroicons/react/24/outline";
+import { PlayIcon } from "lucide-react";
 import { ulid } from "ulid";
+import { Button } from "./ui/button";
 
 interface AsyncWatchProps {
   newRecordingUlid: string;
@@ -12,6 +15,7 @@ interface AsyncWatchProps {
   gameDirectory: PersistedState["gameDirectory"];
   addScreenshot: Action["addScreenshot"];
   setAutoSaveFile: Action["setAutoSaveFile"];
+  addArmySetup: Action["addArmySetup"];
 }
 const asyncWatch = async ({
   newRecordingUlid,
@@ -19,6 +23,7 @@ const asyncWatch = async ({
   gameDirectory,
   addScreenshot,
   setAutoSaveFile,
+  addArmySetup,
 }: AsyncWatchProps) => {
   try {
     const unwatchFns = await Promise.all([
@@ -26,7 +31,6 @@ const asyncWatch = async ({
         screenshotsDir: screenshotsDirectory,
         destinationDir: newRecordingUlid,
         onCopy: (ulid) => {
-          console.log("jmw screenshot copied with ulid:", ulid);
           addScreenshot(ulid);
         },
       }),
@@ -34,19 +38,26 @@ const asyncWatch = async ({
         gameDirectory,
         destinationDir: newRecordingUlid,
         onCopy: (file) => {
-          console.log("jmw autosave copied:", file);
           setAutoSaveFile(file);
+        },
+      }),
+      watchNewArmySetup({
+        gameDirectory,
+        destinationDir: newRecordingUlid,
+        onCopy: (file, origFilename) => {
+          addArmySetup(file, origFilename ?? "");
         },
       }),
     ]);
     return unwatchFns;
   } catch (error) {
-    console.error("jmw error setting up screenshot watch:", error);
+    console.error("asyncWatch error:", error);
   }
 };
 
 type RecordingHandlerProps = PersistedState & {
   addScreenshot: Action["addScreenshot"];
+  addArmySetup: Action["addArmySetup"];
   setAutoSaveFile: Action["setAutoSaveFile"];
   setRecordingStartState: Action["setRecordingStartState"];
 };
@@ -58,6 +69,7 @@ const recordingHandler = ({
   game,
   defaultMatchType,
   addScreenshot,
+  addArmySetup,
   setAutoSaveFile,
   setRecordingStartState,
 }: RecordingHandlerProps) => {
@@ -69,26 +81,25 @@ const recordingHandler = ({
     screenshotsDirectory,
     gameDirectory,
     addScreenshot,
+    addArmySetup,
     setAutoSaveFile,
   })
     .then((unwatchFns) => {
       if (!unwatchFns) {
-        throw new Error("jmw unwatchFns not set up correctly");
+        throw new Error("recordingHandler unwatchFns not set up correctly");
       }
-      console.log("jmw recording started");
-      console.log("jmw unwatchFns[0]", unwatchFns[0]);
-      console.log("jmw unwatchFns[1]", unwatchFns[1]);
       setRecordingStartState({
         matchType: defaultMatchType,
         recordingUlid: newRecordingUlid,
         unwatchScreenshotFn: unwatchFns[0],
         unwatchAutoSaveFn: unwatchFns[1],
+        unwatchArmySetup: unwatchFns[2],
         recordingGame: game,
         recordingMod: mod,
       });
     })
     .catch((error: unknown) => {
-      console.error("jmw error starting recording:", error);
+      console.error("recordingHandler error:", error);
     });
 };
 
@@ -105,12 +116,14 @@ export default function RecordingStartButton() {
     (state) => state.setRecordingStartState,
   );
   const addScreenshot = useZustandStore((state) => state.addScreenshot);
+  const addArmySetup = useZustandStore((state) => state.addArmySetup);
   const setAutoSaveFile = useZustandStore((state) => state.setAutoSaveFile);
 
   return (
-    <button
+    <Button
       type="button"
-      className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
+      variant={"ghost"}
+      className="p-1 text-green-500 hover:text-green-300"
       onClick={() => {
         recordingHandler({
           screenshotsDirectory,
@@ -119,12 +132,13 @@ export default function RecordingStartButton() {
           game,
           defaultMatchType,
           addScreenshot,
+          addArmySetup,
           setAutoSaveFile,
           setRecordingStartState,
         });
       }}
     >
-      <PlayIcon stroke="green" className="size-6" />
-    </button>
+      <PlayIcon className="size-6 " />
+    </Button>
   );
 }

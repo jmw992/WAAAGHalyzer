@@ -36,7 +36,6 @@ export default function FactionComboBox({
   initialValue,
   onSelectCb,
 }: FactionComboBoxProps) {
-  console.log("jmw FactionComboBox");
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(initialValue ?? "");
 

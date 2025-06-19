@@ -19,7 +19,6 @@ export const SettingsForm = ({
 }: {
   initialState: PersistedState;
 }) => {
-  console.log("jmw initialState???", initialState);
   const setPersistedState = useZustandStore((state) => state.setPersistedState);
 
   // Local state for form
@@ -29,15 +28,10 @@ export const SettingsForm = ({
     setForm((prev) => ({ ...prev, [key]: value }));
   };
   const handleSubmit = () => {
-    console.log("jmw handleSubmit", form);
-    // console.log("jmw how is this triggered.");
-    // e.preventDefault();
     setPersistedState(form);
     setStorePersistedSettings(form);
     toast.success("Settings saved successfully!");
   };
-
-  console.log("jmw form", form);
 
   return (
     <div
@@ -88,7 +82,6 @@ export const SettingsForm = ({
         <Select
           value={form.defaultMatchType}
           onValueChange={(value) => {
-            console.log("jmw defaultMatchType", value);
             handleChange("defaultMatchType", value);
           }}
           defaultValue={form.defaultMatchType}

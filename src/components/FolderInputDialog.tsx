@@ -24,7 +24,6 @@ export const FolderInput: React.FC<FolderInputProps> = ({
     });
     console.log("Selected file:", file);
     if (typeof file === "string") {
-      console.log("jmw onClickAsync onChange", file);
       setDisplayFile(file);
       onChange(file);
     }

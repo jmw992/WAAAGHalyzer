@@ -71,12 +71,7 @@ export default function RootPage({
   useEffect(() => {
     // Set default from localStorage on first load
     const persistedState = getStorePersistedSettings();
-    console.log("jmw persistedState.defaultMatchType", persistedState);
     setPersistedState(persistedState);
-    console.log(
-      "jmw persistedState.defaultMatchType",
-      persistedState.defaultMatchType,
-    );
     setMatchType(persistedState.defaultMatchType);
     if (
       persistedState.gameDirectory === "" ||

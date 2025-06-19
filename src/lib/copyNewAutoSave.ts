@@ -27,14 +27,6 @@ export const copyNewAutoSave = async ({
   newSaveRoot,
   onCopy,
 }: CopyNewAutoSaveProps): Promise<void> => {
-  const configDir = await path.configDir();
-  const documentDir = await path.documentDir();
-  const downloadDir = await path.downloadDir();
-  console.log("jmw ", {
-    configDir,
-    documentDir,
-    downloadDir,
-  });
   const fileExists = await exists(sourceFromRoot);
   if (!fileExists) {
     return;

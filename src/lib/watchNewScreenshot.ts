@@ -24,7 +24,6 @@ const copyScreenshot = async ({
   destinationDir,
   onCopy,
 }: WatchNewScreenshotProps): Promise<void> => {
-  console.log("jmw starting copy....");
   if (
     !(await exists(destinationDir, {
       baseDir: BaseDirectory.AppLocalData,
@@ -58,8 +57,6 @@ export const watchNewScreenshot = async ({
   const createdFiles = new Set<string>();
   const matchDir = await join(MATCHES, destinationDir);
   const unWatch = await watch(screenshotsDir, (event) => {
-    console.log("app.log event", event);
-    // return;
     const isCreateEvent =
       typeof event.type === "object" && "create" in event.type;
     if (isCreateEvent && !createdFiles.has(event.paths[0])) {
@@ -71,6 +68,5 @@ export const watchNewScreenshot = async ({
       });
     }
   });
-  // unWatch();
   return unWatch;
 };

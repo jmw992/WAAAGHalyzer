@@ -1,3 +1,5 @@
+import { ARMY_SETUPS, MATCHES } from "@/constants";
+import { join } from "@tauri-apps/api/path";
 import {
   BaseDirectory,
   type UnwatchFn,
@@ -6,22 +8,30 @@ import {
   mkdir,
   watch,
 } from "@tauri-apps/plugin-fs";
-
-import { MATCHES } from "@/constants";
-import { appLocalDataDir, join } from "@tauri-apps/api/path";
 import { ulid } from "ulid";
+import { splitFilePath } from "./fileHandling";
+import type { WatchGameDirProps } from "./watchNewAutoSave";
 
-export interface WatchGameDirProps {
-  /**  The source file path to copy from the root */
-  gameDirectory: string;
-  /**  The destination file path to copy to, relative to the app's local data directory.  Will be ulid of recording */
-  destinationDir: string;
-  /**  Callback function to execute after the copy operation*/
+export const copyAutoSaveToMatchDir = async ({
+  sourceFile,
+  matchId,
+  onCopy,
+}: {
+  sourceFile: string;
+  matchId: string;
   onCopy?: (ulid: string, origFilename?: string) => void;
-}
+}): Promise<void> => {
+  const matchDir = await join(MATCHES, matchId);
+  await copyArmySetupBase({
+    gameDirectory: sourceFile,
+    fileNameRoot: ulid(),
+    destinationDir: matchDir,
+    onCopy,
+  });
+};
 
-const copyAutoSaveBase = async ({
-  gameDirectory: screenshotFile,
+const copyArmySetupBase = async ({
+  gameDirectory: armySetupFile,
   fileNameRoot,
   destinationDir,
   onCopy,
@@ -39,31 +49,27 @@ const copyAutoSaveBase = async ({
       recursive: true,
     });
   }
-
-  const newFile = await join(destinationDir, `${fileNameRoot}.replay`);
+  const origFilename = splitFilePath(armySetupFile).filename;
+  const newFile = await join(destinationDir, `${fileNameRoot}.army_setup`);
   // Perform the copy operation
-  await copyFile(screenshotFile, newFile, {
+  await copyFile(armySetupFile, newFile, {
     toPathBaseDir: BaseDirectory.AppLocalData,
   });
 
   if (onCopy) {
-    onCopy(fileNameRoot);
+    onCopy(fileNameRoot, origFilename);
   }
 };
 
-export const watchNewAutoSave = async ({
+export const watchNewArmySetup = async ({
   gameDirectory,
   destinationDir,
   onCopy,
 }: WatchGameDirProps): Promise<UnwatchFn> => {
   const seenFiles = new Set<string>();
-  const gameAutoSaveFile = await join(
-    gameDirectory,
-    "replays",
-    "Auto-save.replay",
-  );
+  const armySetupsDir = await join(gameDirectory, ARMY_SETUPS);
   const matchDir = await join(MATCHES, destinationDir);
-  const unWatch = await watch(gameAutoSaveFile, (event) => {
+  const unWatch = await watch(armySetupsDir, (event) => {
     const isCreateEvent =
       typeof event.type === "object" && "create" in event.type;
     const isModifyDataEvent =
@@ -75,14 +81,13 @@ export const watchNewAutoSave = async ({
       !seenFiles.has(event.paths[0])
     ) {
       seenFiles.add(event.paths[0]);
-      void copyAutoSaveBase({
+      void copyArmySetupBase({
         gameDirectory: event.paths[0],
-        fileNameRoot: destinationDir,
+        fileNameRoot: ulid(),
         destinationDir: matchDir,
         onCopy,
       });
     }
   });
-  // unWatch();
   return unWatch;
 };

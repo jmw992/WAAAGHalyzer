@@ -4,11 +4,14 @@ import {
   DOMINATION,
   END_BATTLE,
   HOME,
+  OPPONENT,
   OTHER,
+  PLAYER,
+  RESULT,
   TOTAL_WAR_WARHAMMER_3,
-  VICTORY,
 } from "@/constants";
 import type {
+  ArmySetupType,
   Faction,
   MatchTypes,
   Page,
@@ -33,26 +36,15 @@ export interface Screenshot {
   type: ScreenshotType;
 }
 
-export interface RecordingState {
-  isRecording: boolean;
-  recordingStartTime: Date | null;
-  recordingUlid: string | null;
-  unwatchAutoSaveFn: UnwatchFn;
-  unwatchScreenshotFn: UnwatchFn;
-  matchType: MatchTypes | null;
-  autoSaveFile: string | null;
-  screenshots: Screenshot[];
-  recordingGame: SupportedGames | null;
-  recordingMod: string | null;
-  recordingWin: boolean | null;
-  playerFaction: Faction | null;
-  opponentFaction: Faction | null;
-  map: string | null;
-  notes: string | null;
-  links: string[] | null;
+export interface ArmySetup {
+  /** Filename without extension */
+  filename: string;
+  origFilename: string;
+  type: ArmySetupType;
 }
 
 export interface RecordedMatch {
+  index: number;
   playerFaction: Faction;
   opponentFaction: Faction;
   game: PersistedState["game"];
@@ -65,7 +57,37 @@ export interface RecordedMatch {
   map: string;
   notes: RecordingState["notes"];
   links: RecordingState["links"];
+  armySetups: RecordingState["armySetups"];
+  screenshots: RecordingState["screenshots"];
 }
+
+interface StartRecordingProps {
+  recordingUlid: string | null;
+  unwatchAutoSaveFn: UnwatchFn;
+  unwatchScreenshotFn: UnwatchFn;
+  unwatchArmySetup: UnwatchFn;
+  recordingGame: SupportedGames | null;
+  recordingMod: string | null;
+  matchType: MatchTypes | null;
+}
+
+export type RecordingState = StartRecordingProps & {
+  index: number;
+  isRecording: boolean;
+  recordingStartTime: Date | null;
+
+  autoSaveFile: string | null;
+  screenshots: Screenshot[];
+  armySetups: ArmySetup[];
+  recordingGame: SupportedGames | null;
+  recordingMod: string | null;
+  recordingWin: boolean | null;
+  playerFaction: Faction | null;
+  opponentFaction: Faction | null;
+  map: string | null;
+  notes: string | null;
+  links: string[] | null;
+};
 
 /** Transient state items that get reset between app close & open */
 export type TransientState = RecordingState & {
@@ -75,15 +97,6 @@ export type TransientState = RecordingState & {
 
 /** Full application state */
 type State = PersistedState & TransientState;
-
-interface StartRecordingProps {
-  recordingUlid: RecordingState["recordingUlid"];
-  unwatchScreenshotFn: RecordingState["unwatchScreenshotFn"];
-  unwatchAutoSaveFn: RecordingState["unwatchAutoSaveFn"];
-  recordingGame: RecordingState["recordingGame"];
-  recordingMod: RecordingState["recordingMod"];
-  matchType: RecordingState["matchType"];
-}
 
 export interface Action {
   setPage: (page: State["page"]) => void;
@@ -95,23 +108,28 @@ export interface Action {
     opponentFaction: RecordingState["opponentFaction"],
   ) => void;
   setRecordingWin: (recordingWin: RecordingState["recordingWin"]) => void;
+  setRecordingMod: (recordingWin: RecordingState["recordingMod"]) => void;
   setIsRecording: (isRecording: RecordingState["isRecording"]) => void;
   setRecordingStartTime: (
     startTime: RecordingState["recordingStartTime"],
   ) => void;
-  setRecordingUlid: (ulid: RecordingState["recordingUlid"]) => void;
+  setRecordingUlid: (ulid: StartRecordingProps["recordingUlid"]) => void;
   setRecordingState: (recordingState: RecordingState) => void;
   setRecordingStartState: (startRecordingProps: StartRecordingProps) => void;
   setAutoSaveFile: (file: RecordingState["autoSaveFile"]) => void;
   updateScreenshot: (index: number, screenshot: Screenshot) => void;
   addScreenshot: (filename: string) => void;
   deleteScreenshot: (file: string) => void;
+  addArmySetup: (filename: string, origFilename: string) => void;
+  deleteArmySetup: (file: string) => void;
+  updateArmySetup: (index: number, armySetup: ArmySetup) => void;
   addRecordedMatch: (match: RecordedMatch) => void;
   addRecordingToMatches: (recordingEndTime: Date) => void;
 
   setGame: (game: SupportedGames) => void;
   setGameDirectory: (gameDirectory: State["gameDirectory"]) => void;
   setMod: (mod: State["mod"]) => void;
+  setNotes: (notes: State["notes"]) => void;
   setScreenshotsDirectory: (
     gameDirectory: State["screenshotsDirectory"],
   ) => void;
@@ -122,6 +140,7 @@ export interface Action {
 export type ZustandStateAction = State & Action;
 
 export const useZustandStore = create<ZustandStateAction>((set, get) => ({
+  index: 0,
   page: HOME,
   matches: [],
   defaultMatchType: DOMINATION,
@@ -137,8 +156,11 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
     set({ isRecording: value });
   },
   mod: DEFAULT,
-  setMod(value: string) {
+  setMod(value) {
     set({ mod: value });
+  },
+  setNotes(value) {
+    set({ notes: value });
   },
   game: TOTAL_WAR_WARHAMMER_3,
   setGame(value: SupportedGames) {
@@ -156,8 +178,11 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   setRecordingStartTime: (value: Date | null) => {
     set({ recordingStartTime: value });
   },
-  setRecordingWin: (recordingWin: RecordingState["recordingWin"]) => {
+  setRecordingWin: (recordingWin) => {
     set({ recordingWin });
+  },
+  setRecordingMod: (recordingMod) => {
+    set({ recordingMod });
   },
   recordingUlid: null,
   setRecordingUlid: (ulid: string | null) => {
@@ -165,8 +190,10 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   },
   autoSaveFile: null,
   screenshots: [],
+  armySetups: [],
   unwatchAutoSaveFn: () => {},
   unwatchScreenshotFn: () => {},
+  unwatchArmySetup: () => {},
   recordingGame: TOTAL_WAR_WARHAMMER_3,
   recordingMod: DEFAULT,
   recordingWin: null,
@@ -204,6 +231,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   },
   setRecordingStartState: (state: StartRecordingProps) => {
     set({
+      index: get().matches.length + 1,
       recordingStartTime: new Date(),
       recordingUlid: state.recordingUlid,
       unwatchAutoSaveFn: state.unwatchAutoSaveFn,
@@ -230,11 +258,18 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       ),
     }));
   },
+  updateArmySetup: (index: number, armySetup: ArmySetup) => {
+    set((state) => ({
+      armySetups: state.armySetups.map((aS, ii) =>
+        ii === index ? armySetup : aS,
+      ),
+    }));
+  },
   addScreenshot: (filename: string) => {
     set((state) => {
       const type =
         state.screenshots.length === 0
-          ? VICTORY
+          ? RESULT
           : state.screenshots.length === 1
             ? END_BATTLE
             : OTHER;
@@ -246,6 +281,35 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
             type,
           },
         ],
+      };
+    });
+  },
+  addArmySetup: (filename: string, origFilename: string) => {
+    set((state) => {
+      const type =
+        state.screenshots.length === 0
+          ? PLAYER
+          : state.screenshots.length === 1
+            ? OPPONENT
+            : OTHER;
+      return {
+        armySetups: [
+          ...state.armySetups,
+          {
+            origFilename,
+            filename,
+            type,
+          },
+        ],
+      };
+    });
+  },
+  deleteArmySetup: (delFile: string) => {
+    set((state) => {
+      return {
+        armySetups: state.armySetups.filter(
+          ({ filename }) => filename !== delFile,
+        ),
       };
     });
   },
@@ -272,6 +336,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
         matches: [
           ...state.matches,
           {
+            index: state.index,
             game: state.recordingGame ?? TOTAL_WAR_WARHAMMER_3,
             mod: state.recordingMod ?? DEFAULT,
             recordingUlid: state.recordingUlid ?? "",
@@ -284,6 +349,8 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
             notes: state.notes,
             map: state.map ?? "",
             links: state.links,
+            screenshots: state.screenshots,
+            armySetups: state.armySetups,
           },
         ],
       };

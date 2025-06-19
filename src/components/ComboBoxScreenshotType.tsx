@@ -35,7 +35,6 @@ export default function ComboBoxScreenshotType({
   initialValue,
   onSelectCb,
 }: ComboBoxScreenshotTypeProps) {
-  console.log("jmw FactionComboBox initialValue", initialValue);
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(initialValue);
 

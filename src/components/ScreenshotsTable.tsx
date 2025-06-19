@@ -7,7 +7,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { OTHER } from "@/constants";
 import { deleteSreenshotFile, getScreenshotSrc } from "@/lib/fileHandling";
 import { useZustandStore } from "@/lib/useZustandStore";
 import {
@@ -82,13 +81,12 @@ export function ScreenshotsTable() {
   // State for modal
   const [modalSrc, setModalSrc] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  console.log("jmw modalSrc, modalOpen", modalSrc, modalOpen);
 
   // Handler to view screenshot in modal
   const handleView = useCallback(
     (file: string) => {
       getScreenshotSrc({
-        screenshotFile: file,
+        filename: file,
         subDir: recordingUlid ?? "",
       })
         .then((src) => {
@@ -96,7 +94,7 @@ export function ScreenshotsTable() {
           setModalOpen(true);
         })
         .catch((err: unknown) => {
-          console.error("jmw getScreenshotSrc", err);
+          console.error("handleView getScreenshotSrc err:", err);
         });
     },
     [recordingUlid],
@@ -110,14 +108,14 @@ export function ScreenshotsTable() {
 
   const handleDelete = (file: string) => {
     deleteSreenshotFile({
-      screenshotFile: file,
+      filename: file,
       subDir: recordingUlid ?? "",
     })
       .then(() => {
         deleteScreenshot(file);
       })
       .catch((e: unknown) => {
-        console.error("jmw delete file errror", e);
+        console.error("deleteSreenshotFile errror", e);
       });
   };
 
@@ -130,8 +128,8 @@ export function ScreenshotsTable() {
         cell: ({ row }) => row.index + 1,
       },
       {
-        accessorKey: "file",
-        header: "File",
+        accessorKey: "Screenshot",
+        header: "Screenshot",
         cell: ({ row }) => row.original.filename,
       },
       {
@@ -195,41 +193,46 @@ export function ScreenshotsTable() {
 
   return (
     <>
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+                  </TableHead>
                 ))}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="text-center">
-                No screenshots found.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="text-center">
+                  No screenshots found.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
       <ScreenshotModal
         src={modalSrc}
         open={modalOpen}

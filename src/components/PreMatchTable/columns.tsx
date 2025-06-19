@@ -2,8 +2,6 @@
 import ComboBoxFaction from "@/components/ComboBoxFaction";
 import ComboBoxMaps from "@/components/ComboBoxMaps";
 import ComboBoxMatchType from "@/components/ComboBoxMatchType";
-import ComboBoxWin from "@/components/ComboBoxWin";
-import { LOSS, WIN } from "@/constants";
 import type { RecordingState } from "@/lib/useZustandStore";
 import { useZustandStore } from "@/lib/useZustandStore";
 import type { CellContext, ColumnDef, RowData } from "@tanstack/react-table";
@@ -26,50 +24,31 @@ export interface RecordingMatchColumns {
   recordingWin: RecordingState["recordingWin"];
 }
 
-const playerCell = ({
+const matchCell = ({
   getValue,
 }: CellContext<RecordingMatchColumns, unknown>) => {
   const initialValue = getValue();
-  const setPlayerFaction = useZustandStore((state) => state.setPlayerFaction);
+  const setMatchType = useZustandStore((state) => state.setMatchType);
 
   return (
-    <ComboBoxFaction
+    <ComboBoxMatchType
       initialValue={initialValue as null}
       onSelectCb={(val) => {
-        setPlayerFaction(val);
+        setMatchType(val);
       }}
     />
   );
 };
 
-const opponentCell = ({
-  getValue,
-}: CellContext<RecordingMatchColumns, unknown>) => {
+const mapCell = ({ getValue }: CellContext<RecordingMatchColumns, unknown>) => {
   const initialValue = getValue();
-  const setOpponentFaction = useZustandStore(
-    (state) => state.setOpponentFaction,
-  );
+  const setMap = useZustandStore((state) => state.setMap);
 
   return (
-    <ComboBoxFaction
+    <ComboBoxMaps
       initialValue={initialValue as null}
       onSelectCb={(val) => {
-        setOpponentFaction(val);
-      }}
-    />
-  );
-};
-
-const recordingWinCell = ({
-  getValue,
-}: CellContext<RecordingMatchColumns, unknown>) => {
-  const initialValue = getValue();
-  const setRecordingWin = useZustandStore((state) => state.setRecordingWin);
-  return (
-    <ComboBoxWin
-      initialValue={initialValue as null}
-      onSelectCb={(val) => {
-        setRecordingWin(val);
+        setMap(val);
       }}
     />
   );
@@ -77,18 +56,13 @@ const recordingWinCell = ({
 
 export const columns: ColumnDef<RecordingMatchColumns>[] = [
   {
-    accessorKey: "playerFaction",
-    header: "Player Faction",
-    cell: playerCell,
+    accessorKey: "matchType",
+    header: "Match Type",
+    cell: matchCell,
   },
   {
-    accessorKey: "opponentFaction",
-    header: "Opponent Faction",
-    cell: opponentCell,
-  },
-  {
-    accessorKey: "recordingWin",
-    header: "Result",
-    cell: recordingWinCell,
+    accessorKey: "map",
+    header: "Map",
+    cell: mapCell,
   },
 ];

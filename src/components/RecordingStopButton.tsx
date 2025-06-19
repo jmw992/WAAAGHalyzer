@@ -1,7 +1,9 @@
 "use client";
 import { useZustandStore } from "@/lib/useZustandStore";
 import type { Action, RecordingState } from "@/lib/useZustandStore";
-import { StopIcon } from "@heroicons/react/24/outline";
+import { Square } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "./ui/button";
 
 interface StopHandlerProps {
   autoSaveFile: RecordingState["autoSaveFile"];
@@ -9,6 +11,7 @@ interface StopHandlerProps {
   screenshots: RecordingState["screenshots"];
   unwatchAutoSaveFn: RecordingState["unwatchAutoSaveFn"];
   unwatchScreenshotFn: RecordingState["unwatchScreenshotFn"];
+  unwatchArmySetup: RecordingState["unwatchArmySetup"];
 
   setIsRecording: Action["setIsRecording"];
   addRecordingToMatches: Action["addRecordingToMatches"];
@@ -20,31 +23,30 @@ const stopHandler = ({
   autoSaveFile,
   unwatchScreenshotFn,
   unwatchAutoSaveFn,
-
+  unwatchArmySetup,
   setIsRecording,
   addRecordingToMatches,
 }: StopHandlerProps) => {
-  console.log("jmw stopHandler started");
   try {
     // Stop recording logic here
     unwatchScreenshotFn();
     unwatchAutoSaveFn();
+    unwatchArmySetup();
   } catch (err) {
-    console.error("jmw error");
+    console.error("stopHandler error:", err);
   }
-  console.log("jmw unwatched");
-  // Only add recorded match if files were captured
+  // Only add recorded match if files were captured or win loss added
   if (autoSaveFile || screenshots.length > 0 || recordingWin) {
-    if (autoSaveFile !== null) {
-      addRecordingToMatches(new Date());
-    }
+    addRecordingToMatches(new Date());
+    toast.success("Match added to history");
+  } else {
+    toast.warning("Match missing info, not added to history");
   }
   setIsRecording(false);
   console.log("stopHandler finiish");
 };
 
 export default function RecordingStopButton() {
-  console.log("jmw RecordingStopButton");
   const screenshots = useZustandStore((state) => state.screenshots);
   const autoSaveFile = useZustandStore((state) => state.autoSaveFile);
   const recordingWin = useZustandStore((state) => state.recordingWin);
@@ -53,15 +55,17 @@ export default function RecordingStopButton() {
   const unwatchScreenshotFn = useZustandStore(
     (state) => state.unwatchScreenshotFn,
   );
+  const unwatchArmySetup = useZustandStore((state) => state.unwatchArmySetup);
   const addRecordingToMatches = useZustandStore(
     (state) => state.addRecordingToMatches,
   );
   const setIsRecording = useZustandStore((state) => state.setIsRecording);
 
   return (
-    <button
+    <Button
+      variant={"ghost"}
       type="button"
-      className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
+      className="relative text-red-500 hover:text-red-300 p-1"
       onClick={() => {
         stopHandler({
           autoSaveFile,
@@ -69,12 +73,13 @@ export default function RecordingStopButton() {
           screenshots,
           unwatchScreenshotFn,
           unwatchAutoSaveFn,
+          unwatchArmySetup,
           addRecordingToMatches,
           setIsRecording,
         });
       }}
     >
-      <StopIcon className="size-6 text-red-500" />
-    </button>
+      <Square className="size-6 " />
+    </Button>
   );
 }

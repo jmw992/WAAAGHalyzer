@@ -17,28 +17,27 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { LOSS, RESULT_ARRAY, WIN } from "@/constants";
-import type { RecordingState } from "@/lib/useZustandStore";
+import { ARMY_SETUP_TYPES, OTHER } from "@/constants";
 import { cn } from "@/lib/utils";
+import type { ArmySetupType } from "@/types";
 
-const resultOptions = RESULT_ARRAY.map((result) => ({
-  value: result,
-  label: result,
+const armySetupOptions = ARMY_SETUP_TYPES.map((faction) => ({
+  value: faction as ArmySetupType,
+  label: faction as ArmySetupType,
 }));
 
-interface ComboBoxWinProps {
-  onSelectCb: (value: RecordingState["recordingWin"]) => void;
-  initialValue: RecordingState["recordingWin"];
+interface ComboBoxArmySetupTypeProps {
+  onSelectCb: (value: ArmySetupType) => void;
+  initialValue: ArmySetupType;
 }
 
-export default function ComboBoxWin({
+export default function ComboBoxArmySetupType({
   initialValue,
   onSelectCb,
-}: ComboBoxWinProps) {
+}: ComboBoxArmySetupTypeProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(
-    initialValue === null ? "" : initialValue ? WIN : LOSS,
-  );
+  const [value, setValue] = React.useState(initialValue);
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -47,27 +46,28 @@ export default function ComboBoxWin({
           // biome-ignore lint/a11y/useSemanticElements: <explanation>
           role="combobox"
           aria-expanded={open}
-          className="w-[1  100px] justify-between"
+          className="w-[200px] justify-between"
         >
-          {resultOptions.find((map) => map.value === value)?.label ??
-            "Select..."}
+          {value}
           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[150px] p-0">
+      <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Win or Loss?" />
+          <CommandInput placeholder="Search..." />
           <CommandList>
-            <CommandEmpty>Was it a draw?</CommandEmpty>
+            <CommandEmpty>None found</CommandEmpty>
             <CommandGroup>
-              {resultOptions.map((framework) => (
+              {armySetupOptions.map((option) => (
                 <CommandItem
-                  key={framework.value}
-                  value={framework.value}
+                  key={option.value}
+                  value={option.value}
                   onSelect={(currentValue) => {
                     const cV =
-                      currentValue === value ? null : currentValue === WIN;
-                    setValue(cV === null ? "" : currentValue);
+                      currentValue === value
+                        ? OTHER
+                        : (currentValue as ArmySetupType);
+                    setValue(cV);
                     onSelectCb(cV);
 
                     setOpen(false);
@@ -76,10 +76,10 @@ export default function ComboBoxWin({
                   <CheckIcon
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === framework.value ? "opacity-100" : "opacity-0",
+                      value === option.value ? "opacity-100" : "opacity-0",
                     )}
                   />
-                  {framework.label}
+                  {option.label}
                 </CommandItem>
               ))}
             </CommandGroup>
