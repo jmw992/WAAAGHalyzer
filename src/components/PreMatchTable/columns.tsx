@@ -14,18 +14,13 @@ declare module "@tanstack/react-table" {
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export interface RecordingMatchColumns {
+export interface PreMatchColumns {
   matchType: RecordingState["matchType"];
   map: RecordingState["map"];
-  playerFaction: RecordingState["playerFaction"];
-  opponentFaction: RecordingState["opponentFaction"];
-  recordingWin: RecordingState["recordingWin"];
   matchNum: number;
 }
 
-const matchCell = ({
-  getValue,
-}: CellContext<RecordingMatchColumns, unknown>) => {
+const matchCell = ({ getValue }: CellContext<PreMatchColumns, unknown>) => {
   const initialValue = getValue();
   const setMatchType = useZustandStore((state) => state.setMatchType);
 
@@ -39,7 +34,7 @@ const matchCell = ({
   );
 };
 
-const mapCell = ({ getValue }: CellContext<RecordingMatchColumns, unknown>) => {
+const mapCell = ({ getValue }: CellContext<PreMatchColumns, unknown>) => {
   const initialValue = getValue();
   const setMap = useZustandStore((state) => state.setMap);
 
@@ -53,7 +48,7 @@ const mapCell = ({ getValue }: CellContext<RecordingMatchColumns, unknown>) => {
   );
 };
 
-export const columns: ColumnDef<RecordingMatchColumns>[] = [
+export const columns: ColumnDef<PreMatchColumns>[] = [
   {
     accessorKey: "matchNum",
     header: "#",

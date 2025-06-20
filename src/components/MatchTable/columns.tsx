@@ -18,18 +18,13 @@ declare module "@tanstack/react-table" {
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export interface RecordingMatchColumns {
-  matchType: RecordingState["matchType"];
-  map: RecordingState["map"];
+export interface MatchColumns {
   playerFaction: RecordingState["playerFaction"];
   opponentFaction: RecordingState["opponentFaction"];
   recordingWin: RecordingState["recordingWin"];
-  matchNum: number;
 }
 
-const playerCell = ({
-  getValue,
-}: CellContext<RecordingMatchColumns, unknown>) => {
+const playerCell = ({ getValue }: CellContext<MatchColumns, unknown>) => {
   const initialValue = getValue();
   const setPlayerFaction = useZustandStore((state) => state.setPlayerFaction);
 
@@ -43,9 +38,7 @@ const playerCell = ({
   );
 };
 
-const opponentCell = ({
-  getValue,
-}: CellContext<RecordingMatchColumns, unknown>) => {
+const opponentCell = ({ getValue }: CellContext<MatchColumns, unknown>) => {
   const initialValue = getValue();
   const setOpponentFaction = useZustandStore(
     (state) => state.setOpponentFaction,
@@ -61,9 +54,7 @@ const opponentCell = ({
   );
 };
 
-const recordingWinCell = ({
-  getValue,
-}: CellContext<RecordingMatchColumns, unknown>) => {
+const recordingWinCell = ({ getValue }: CellContext<MatchColumns, unknown>) => {
   const initialValue = getValue();
   const setRecordingWin = useZustandStore((state) => state.setRecordingWin);
   return (
@@ -76,7 +67,7 @@ const recordingWinCell = ({
   );
 };
 
-export const columns: ColumnDef<RecordingMatchColumns>[] = [
+export const columns: ColumnDef<MatchColumns>[] = [
   {
     accessorKey: "playerFaction",
     header: "Player Faction",

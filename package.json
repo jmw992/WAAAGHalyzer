@@ -10,7 +10,8 @@
     "lint": "biome check src/ && next lint",
     "lint:fix": "biome check --fix src/ && next lint --fix",
     "lint:fix:unsafe": "biome check --fix --unsafe ./src && next lint --fix",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "types": "tsc --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
