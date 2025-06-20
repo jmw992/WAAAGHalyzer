@@ -8,8 +8,6 @@ import {
 } from "@/lib/fileHandling";
 import { useZustandStore } from "@/lib/useZustandStore";
 import type { Page } from "@/types";
-import { Disclosure } from "@headlessui/react";
-import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { Settings } from "lucide-react";
 
 const classNames = (...classes: string[]) => {
@@ -26,10 +24,7 @@ export default function TopNav() {
 
   return (
     <>
-      <Disclosure
-        as="nav"
-        className="bg-gray-800 fixed top-0 left-0 w-full z-50 shadow"
-      >
+      <div className="bg-gray-800 fixed top-0 left-0 w-full z-50 shadow">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center">
@@ -44,12 +39,12 @@ export default function TopNav() {
                     alt="Waaaghlyzer logo"
                     src="/WA-NoBackground.svg"
                     // src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-                    className="size-10"
+                    className="size-8"
                   />
                 </div>
               </button>
               <div className="hidden md:block">
-                <div className="ml-10 flex items-baseline space-x-4">
+                <div className="ml-5 flex items-baseline space-x-4">
                   {/* Page Buttons */}
                   {navigation.map((name) => (
                     <button
@@ -142,7 +137,7 @@ export default function TopNav() {
             </div>
           </div>
         </div>
-      </Disclosure>
+      </div>
       {/** Since top nav is fixed size need to give some room so page content don't get occluded */}
       <div className="pb-15" />
     </>

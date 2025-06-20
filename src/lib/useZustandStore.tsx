@@ -246,6 +246,8 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       map: null,
       notes: null,
       links: null,
+      screenshots: [],
+      armySetups: [],
     });
   },
   setAutoSaveFile: (file: string | null) => {
