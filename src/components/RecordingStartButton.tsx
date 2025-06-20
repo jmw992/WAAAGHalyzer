@@ -4,7 +4,6 @@ import type { Action, PersistedState } from "@/lib/useZustandStore";
 import { watchNewArmySetup } from "@/lib/watchNewArmySetup";
 import { watchNewAutoSave } from "@/lib/watchNewAutoSave";
 import { watchNewScreenshot } from "@/lib/watchNewScreenshot";
-// import { PlayIcon } from "@heroicons/react/24/outline";
 import { PlayIcon } from "lucide-react";
 import { ulid } from "ulid";
 import { Button } from "./ui/button";

@@ -3,11 +3,9 @@ import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
 export default function MatchTable() {
-  const playerFaction = useZustandStore((state) => state.playerFaction);
-  const opponentFaction = useZustandStore((state) => state.opponentFaction);
   const map = useZustandStore((state) => state.map);
-  const recordingWin = useZustandStore((state) => state.recordingWin);
   const matchType = useZustandStore((state) => state.matchType);
+  const matches = useZustandStore((state) => state.matches);
 
   return (
     <div className="container mx-auto py-5">
@@ -15,11 +13,9 @@ export default function MatchTable() {
         columns={columns}
         data={[
           {
+            matchNum: matches.length + 1,
             matchType,
-            playerFaction,
-            opponentFaction,
             map,
-            recordingWin,
           },
         ]}
       />

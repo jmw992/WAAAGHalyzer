@@ -84,7 +84,8 @@ export const RESULT_ARRAY = [WIN, LOSS];
 export const DOMINATION = "Domination";
 export const LAND_BATTLE = "Land Battle";
 export const CONQUEST = "Conquest";
-export const MATCH_TYPES = [DOMINATION, LAND_BATTLE, CONQUEST];
+export const FREE_FOR_ALL = "Free for All";
+export const MATCH_TYPES = [DOMINATION, LAND_BATTLE, CONQUEST, FREE_FOR_ALL];
 
 export const LOADING = "Loading";
 export const RESULT = "Result";

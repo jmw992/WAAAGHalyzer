@@ -1,12 +1,10 @@
 "use client";
-import ComboBoxFaction from "@/components/ComboBoxFaction";
 import ComboBoxMaps from "@/components/ComboBoxMaps";
 import ComboBoxMatchType from "@/components/ComboBoxMatchType";
 import type { RecordingState } from "@/lib/useZustandStore";
 import { useZustandStore } from "@/lib/useZustandStore";
 import type { CellContext, ColumnDef, RowData } from "@tanstack/react-table";
 import React from "react";
-// ComboBoxMaps
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
@@ -22,6 +20,7 @@ export interface RecordingMatchColumns {
   playerFaction: RecordingState["playerFaction"];
   opponentFaction: RecordingState["opponentFaction"];
   recordingWin: RecordingState["recordingWin"];
+  matchNum: number;
 }
 
 const matchCell = ({
@@ -55,6 +54,10 @@ const mapCell = ({ getValue }: CellContext<RecordingMatchColumns, unknown>) => {
 };
 
 export const columns: ColumnDef<RecordingMatchColumns>[] = [
+  {
+    accessorKey: "matchNum",
+    header: "#",
+  },
   {
     accessorKey: "matchType",
     header: "Match Type",

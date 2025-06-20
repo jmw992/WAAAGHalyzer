@@ -24,6 +24,7 @@ export interface RecordingMatchColumns {
   playerFaction: RecordingState["playerFaction"];
   opponentFaction: RecordingState["opponentFaction"];
   recordingWin: RecordingState["recordingWin"];
+  matchNum: number;
 }
 
 const playerCell = ({

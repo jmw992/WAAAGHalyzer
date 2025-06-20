@@ -47,7 +47,7 @@ export default function MapComboBox({
           // biome-ignore lint/a11y/useSemanticElements: <explanation>
           role="combobox"
           aria-expanded={open}
-          className="w-[150px] justify-between"
+          className="w-[300px] justify-between"
         >
           {value
             ? mapOptions.find((framework) => framework.value === value)?.label
@@ -55,7 +55,7 @@ export default function MapComboBox({
           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[150px] p-0">
+      <PopoverContent className="w-[300px] p-0">
         <Command>
           <CommandInput placeholder="Search maps..." />
           <CommandList>

@@ -40,6 +40,7 @@ export default function Match() {
   const notes = useZustandStore((state) => state.notes);
   const setNotes = useZustandStore((state) => state.setNotes);
   const setRecordingMod = useZustandStore((state) => state.setRecordingMod);
+  const matches = useZustandStore((state) => state.matches);
 
   return (
     <div>
@@ -47,7 +48,7 @@ export default function Match() {
       <MatchTable />
       <ScreenshotsMatchSection />
       <ArmySetupMatchSection />
-
+      {/* Combo Box Row - Game & Mod */}
       <div className="flex flex-row pb-4">
         <div>
           <label htmlFor="recording-game">Game</label>
@@ -83,12 +84,13 @@ export default function Match() {
           />
         </div>
       </div>
+      {/* Fixed info row */}
       <div className="flex flex-row pb-4">
-        <div className="pl-2">
+        <div className="border rounded-md px-2">
           <label htmlFor="recordingUlid">Recording Id</label>
           <p id="recordingUlid">{recordingUlid ?? "..."}</p>
         </div>
-        <div className="pl-2">
+        <div className="border rounded-md ml-2 px-2">
           <label htmlFor="autoSaveFile">AutoSave</label>
           <p id="autoSaveFile">{autoSaveFile ?? "..."}</p>
         </div>

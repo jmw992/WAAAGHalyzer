@@ -49,7 +49,7 @@ export function ArmySetupTable() {
     () => [
       {
         accessorKey: "index",
-        header: "",
+        header: "#",
         cell: ({ row }) => row.index + 1,
       },
       {

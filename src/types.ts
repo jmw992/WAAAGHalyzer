@@ -9,6 +9,7 @@ import type {
   DWARFS,
   EMPIRE,
   END_BATTLE,
+  FREE_FOR_ALL,
   GRAND_CATHAY,
   GREENSKINS,
   HIGH_ELVES,
@@ -50,6 +51,7 @@ export type SupportedGames = typeof TOTAL_WAR_WARHAMMER_3;
 export type MatchTypes =
   | typeof CONQUEST
   | typeof DOMINATION
+  | typeof FREE_FOR_ALL
   | typeof LAND_BATTLE;
 
 export type Faction =

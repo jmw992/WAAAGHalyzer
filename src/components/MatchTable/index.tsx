@@ -8,6 +8,8 @@ export default function MatchTable() {
   const map = useZustandStore((state) => state.map);
   const recordingWin = useZustandStore((state) => state.recordingWin);
   const matchType = useZustandStore((state) => state.matchType);
+  const matches = useZustandStore((state) => state.matches);
+  console.log("jmw matches", matches);
 
   return (
     <div className="container mx-auto py-5">
@@ -15,6 +17,7 @@ export default function MatchTable() {
         columns={columns}
         data={[
           {
+            matchNum: matches.length + 1,
             matchType,
             playerFaction,
             opponentFaction,
