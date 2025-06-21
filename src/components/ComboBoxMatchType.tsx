@@ -20,7 +20,7 @@ import {
 import { MATCH_TYPES } from "@/constants";
 import type { RecordingState } from "@/lib/useZustandStore";
 import { cn } from "@/lib/utils";
-import type { Faction, MatchTypes } from "@/types";
+import type { MatchTypes } from "@/types";
 
 const matchOptions = MATCH_TYPES.map((matchType) => ({
   value: matchType,
@@ -37,8 +37,7 @@ export default function MapComboBox({
   onSelectCb,
 }: FactionComboBoxProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(initialValue ?? "");
-
+  const value = initialValue ?? "";
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -70,7 +69,6 @@ export default function MapComboBox({
                       currentValue === value
                         ? null
                         : (currentValue as MatchTypes);
-                    setValue(cV ?? "");
                     onSelectCb(cV);
 
                     setOpen(false);

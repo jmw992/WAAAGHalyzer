@@ -36,7 +36,7 @@ export default function ComboBoxArmySetupType({
   onSelectCb,
 }: ComboBoxArmySetupTypeProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(initialValue);
+  // const [value, setValue] = React.useState(initialValue);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -48,7 +48,7 @@ export default function ComboBoxArmySetupType({
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {value}
+          {initialValue}
           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -64,10 +64,9 @@ export default function ComboBoxArmySetupType({
                   value={option.value}
                   onSelect={(currentValue) => {
                     const cV =
-                      currentValue === value
+                      currentValue === initialValue
                         ? OTHER
                         : (currentValue as ArmySetupType);
-                    setValue(cV);
                     onSelectCb(cV);
 
                     setOpen(false);
@@ -76,7 +75,9 @@ export default function ComboBoxArmySetupType({
                   <CheckIcon
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === option.value ? "opacity-100" : "opacity-0",
+                      initialValue === option.value
+                        ? "opacity-100"
+                        : "opacity-0",
                     )}
                   />
                   {option.label}

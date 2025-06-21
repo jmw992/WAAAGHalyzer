@@ -116,6 +116,7 @@ export interface Action {
   setRecordingUlid: (ulid: StartRecordingProps["recordingUlid"]) => void;
   setRecordingState: (recordingState: RecordingState) => void;
   setRecordingStartState: (startRecordingProps: StartRecordingProps) => void;
+  setNullRecordingStartState: () => void;
   setAutoSaveFile: (file: RecordingState["autoSaveFile"]) => void;
   updateScreenshot: (index: number, screenshot: Screenshot) => void;
   addScreenshot: (filename: string) => void;
@@ -250,6 +251,27 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       armySetups: [],
     });
   },
+  setNullRecordingStartState: () => {
+    set({
+      index: get().matches.length + 1,
+      recordingStartTime: new Date(),
+      recordingUlid: null,
+      unwatchAutoSaveFn: () => {},
+      unwatchScreenshotFn: () => {},
+      recordingGame: get().game,
+      recordingMod: get().mod,
+      autoSaveFile: null,
+      recordingWin: null,
+      playerFaction: null,
+      opponentFaction: null,
+      map: null,
+      notes: null,
+      links: null,
+      screenshots: [],
+      armySetups: [],
+    });
+  },
+  // setNullRecordingStartState
   setAutoSaveFile: (file: string | null) => {
     set({ autoSaveFile: file });
   },
@@ -289,9 +311,9 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   addArmySetup: (filename: string, origFilename: string) => {
     set((state) => {
       const type =
-        state.screenshots.length === 0
+        state.armySetups.length === 0
           ? PLAYER
-          : state.screenshots.length === 1
+          : state.armySetups.length === 1
             ? OPPONENT
             : OTHER;
       return {

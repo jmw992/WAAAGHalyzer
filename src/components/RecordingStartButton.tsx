@@ -54,14 +54,14 @@ const asyncWatch = async ({
   }
 };
 
-type RecordingHandlerProps = PersistedState & {
+type StartRecordingHandlerProps = PersistedState & {
   addScreenshot: Action["addScreenshot"];
   addArmySetup: Action["addArmySetup"];
   setAutoSaveFile: Action["setAutoSaveFile"];
   setRecordingStartState: Action["setRecordingStartState"];
 };
 
-const recordingHandler = ({
+const startRecordingHandler = ({
   screenshotsDirectory,
   gameDirectory,
   mod,
@@ -71,7 +71,7 @@ const recordingHandler = ({
   addArmySetup,
   setAutoSaveFile,
   setRecordingStartState,
-}: RecordingHandlerProps) => {
+}: StartRecordingHandlerProps) => {
   const newRecordingUlid = ulid();
   // Start recording logic here
 
@@ -124,7 +124,7 @@ export default function RecordingStartButton() {
       variant={"ghost"}
       className="p-1 text-green-500 hover:text-green-300"
       onClick={() => {
-        recordingHandler({
+        startRecordingHandler({
           screenshotsDirectory,
           gameDirectory,
           mod,

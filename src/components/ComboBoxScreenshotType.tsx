@@ -36,7 +36,6 @@ export default function ComboBoxScreenshotType({
   onSelectCb,
 }: ComboBoxScreenshotTypeProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(initialValue);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -48,7 +47,7 @@ export default function ComboBoxScreenshotType({
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {value}
+          {initialValue}
           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -64,10 +63,9 @@ export default function ComboBoxScreenshotType({
                   value={option.value}
                   onSelect={(currentValue) => {
                     const cV =
-                      currentValue === value
+                      currentValue === initialValue
                         ? OTHER
                         : (currentValue as ScreenshotType);
-                    setValue(cV);
                     onSelectCb(cV);
 
                     setOpen(false);
@@ -76,7 +74,9 @@ export default function ComboBoxScreenshotType({
                   <CheckIcon
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === option.value ? "opacity-100" : "opacity-0",
+                      initialValue === option.value
+                        ? "opacity-100"
+                        : "opacity-0",
                     )}
                   />
                   {option.label}

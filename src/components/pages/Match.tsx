@@ -1,5 +1,6 @@
 "use client";
 import { ArmySetupMatchSection } from "@/components/ArmySetupMatchSection";
+import MatchSaveButton from "@/components/MatchSaveButton";
 import MatchTable from "@/components/MatchTable";
 import PreMatchTable from "@/components/PreMatchTable";
 import { ScreenshotsMatchSection } from "@/components/ScreenshotsMatchSection";
@@ -28,19 +29,14 @@ export function Notes() {
 }
 
 export default function Match() {
-  const screenshots = useZustandStore((state) => state.screenshots);
   const recordingGame = useZustandStore((state) => state.recordingGame);
   const recordingMod = useZustandStore((state) => state.recordingMod);
   const recordingUlid = useZustandStore((state) => state.recordingUlid);
   const autoSaveFile = useZustandStore((state) => state.autoSaveFile);
-  const recordingStartTime = useZustandStore(
-    (state) => state.recordingStartTime,
-  );
-  const links = useZustandStore((state) => state.links);
+
   const notes = useZustandStore((state) => state.notes);
   const setNotes = useZustandStore((state) => state.setNotes);
   const setRecordingMod = useZustandStore((state) => state.setRecordingMod);
-  const matches = useZustandStore((state) => state.matches);
 
   return (
     <div>
@@ -107,15 +103,7 @@ export default function Match() {
         />
       </>
       <div className="flex justify-between mt-4">
-        <Button
-          onClick={() => {
-            console.log("Submitting recording");
-          }}
-          size="lg"
-          type="submit"
-        >
-          Save
-        </Button>
+        <MatchSaveButton />
 
         <div className="flex items-start">
           <Button

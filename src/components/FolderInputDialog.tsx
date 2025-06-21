@@ -50,7 +50,6 @@ export const FolderInput: React.FC<FolderInputProps> = ({
         value={displayFile}
         style={{ width: "100%", minWidth: 0 }}
         onChange={(e) => {
-          console.log("jmw Input onChange", e.target.value);
           setDisplayFile(e.target.value);
           onChange(e.target.value);
         }}

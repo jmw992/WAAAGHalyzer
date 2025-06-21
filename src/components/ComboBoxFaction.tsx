@@ -37,7 +37,7 @@ export default function FactionComboBox({
   onSelectCb,
 }: FactionComboBoxProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(initialValue ?? "");
+  const value = initialValue ?? "";
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -69,7 +69,6 @@ export default function FactionComboBox({
                   onSelect={(currentValue) => {
                     const cV =
                       currentValue === value ? null : (currentValue as Faction);
-                    setValue(cV ?? "");
                     onSelectCb(cV);
 
                     setOpen(false);

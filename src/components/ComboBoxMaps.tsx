@@ -37,8 +37,7 @@ export default function MapComboBox({
   onSelectCb,
 }: FactionComboBoxProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(initialValue ?? "");
-
+  const value = initialValue ?? "";
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -68,7 +67,6 @@ export default function MapComboBox({
                   onSelect={(currentValue) => {
                     const cV =
                       currentValue === value ? null : (currentValue as Faction);
-                    setValue(cV ?? "");
                     onSelectCb(cV);
 
                     setOpen(false);

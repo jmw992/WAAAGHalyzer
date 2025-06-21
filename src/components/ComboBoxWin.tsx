@@ -36,9 +36,8 @@ export default function ComboBoxWin({
   onSelectCb,
 }: ComboBoxWinProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(
-    initialValue === null ? "" : initialValue ? WIN : LOSS,
-  );
+  const value = initialValue === null ? "" : initialValue ? WIN : LOSS;
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -67,7 +66,6 @@ export default function ComboBoxWin({
                   onSelect={(currentValue) => {
                     const cV =
                       currentValue === value ? null : currentValue === WIN;
-                    setValue(cV === null ? "" : currentValue);
                     onSelectCb(cV);
 
                     setOpen(false);
