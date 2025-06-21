@@ -34,28 +34,61 @@ export const getScreenshotSrc = async ({ filename, subDir }: FileProps) => {
     await appLocalDataDir(),
     MATCHES,
     subDir,
-    `${filename}.png`,
+    `${filename}.png`
   );
   return convertFileSrc(file);
 };
+const WINDOWS_DEBUG_ROOT =
+  "C:\\Users\\jmw99\\OneDrive\\Documents\\BayswaterPC\\WAAAGHalyzer\\test";
+//C:\Users\jmw99\OneDrive\Documents\BayswaterPC\WAAAGHalyzer
+const MAC_DEBUG_ROOT = "/Users/jwilliams/Documents/GitHub/WAAAGHalyzer/test";
+
+const onWindows = true;
+
+const DEBUG_GAME_ROOT = onWindows ? WINDOWS_DEBUG_ROOT : MAC_DEBUG_ROOT;
 
 export const copyScreenshotDebug = async () => {
-  const sourceFile =
-    "/Users/jwilliams/Documents/GitHub/WAAAGHalyzer/test/mockScreenshots/mockScreenshot.png";
-  const targetFile = `/Users/jwilliams/Documents/GitHub/WAAAGHalyzer/test/mockScreenshots/${ulid()}.png`;
+  const sourceFile = await join(
+    DEBUG_GAME_ROOT,
+    "mockScreenshots",
+    "mockScreenshot.png"
+  );
+  // const targetFile = `${DEBUG_GAME_ROOT}/mockScreenshots/${ulid()}.png`;
+  const targetFile = await join(
+    DEBUG_GAME_ROOT,
+    "mockScreenshots",
+    `${ulid()}.png`
+  );
+
   await copyFile(sourceFile, targetFile);
 };
 
 export const copyAutoSaveDebug = async () => {
-  const targetFile =
-    "/Users/jwilliams/Documents/GitHub/WAAAGHalyzer/test/mockTww3/replays/Auto-save.replay";
-  await writeTextFile(targetFile, "debug auto-save");
+  // const targetFile = `${DEBUG_GAME_ROOT}/mockTww3/replays/Auto-save.replay`;
+  const targetFile = await join(
+    DEBUG_GAME_ROOT,
+    "mockTww3",
+    "replays",
+    "Auto-save.replay"
+  );
+  await writeTextFile(targetFile, "debug auto-save copied...");
 };
 
 export const copyArmySetupDebug = async () => {
-  const sourceFile =
-    "/Users/jwilliams/Documents/GitHub/WAAAGHalyzer/test/mockTww3/army_setups/mock.army_setup";
-  const targetFile = `/Users/jwilliams/Documents/GitHub/WAAAGHalyzer/test/mockTww3/army_setups/${ulid()}.army_setup`;
+  // const sourceFile = `${DEBUG_GAME_ROOT}/mockTww3/army_setups/mock.army_setup`;
+  const sourceFile = await join(
+    DEBUG_GAME_ROOT,
+    "mockTww3",
+    "army_setups",
+    "mock.army_setup"
+  );
+  // const targetFile = `${DEBUG_GAME_ROOT}/mockTww3/army_setups/${ulid()}.army_setup`;
+  const targetFile = await join(
+    DEBUG_GAME_ROOT,
+    "mockTww3",
+    "army_setups",
+    `${ulid()}.army_setup`
+  );
   await copyFile(sourceFile, targetFile);
 };
 
@@ -69,7 +102,7 @@ export const copyArmySetupDebug = async () => {
  * - `extension`: The file extension (e.g., ".txt", ".jpg"), including the dot, or an empty string if no extension.
  */
 export const splitFilePath = (
-  filePath: string,
+  filePath: string
 ): {
   directory: string;
   filename: string;
