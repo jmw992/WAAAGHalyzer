@@ -30,7 +30,7 @@ const saveHandler = ({
 }: SaveHandlerProps) => {
   console.log("saveHandler called");
   // Only add recorded match if files were captured or win loss added
-  if (autoSaveFile || screenshots.length > 0 || recordingWin) {
+  if (autoSaveFile || screenshots.length > 0 || recordingWin !== null) {
     try {
       // Stop recording logic here
       unwatchScreenshotFn();
