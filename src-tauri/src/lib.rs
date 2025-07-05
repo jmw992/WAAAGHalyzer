@@ -12,10 +12,7 @@ fn greet() -> String {
 fn gudgitz() -> String {
   let now = SystemTime::now();
   let epoch_ms = now.duration_since(UNIX_EPOCH).unwrap().as_millis();
-  format!(
-    "Gudgitz says hello world from Rust! Current epoch: {epoch_ms}",
-    epoch_ms
-  )
+  format!("Gudgitz says hello world from Rust! Current epoch: {epoch_ms}")
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
