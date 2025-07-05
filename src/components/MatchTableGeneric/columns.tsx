@@ -1,14 +1,10 @@
 "use client";
 import ComboBoxFaction from "@/components/ComboBoxFaction";
-import ComboBoxMaps from "@/components/ComboBoxMaps";
-import ComboBoxMatchType from "@/components/ComboBoxMatchType";
 import ComboBoxWin from "@/components/ComboBoxWin";
-import { LOSS, WIN } from "@/constants";
 import type { RecordingState } from "@/lib/useZustandStore";
 import { useZustandStore } from "@/lib/useZustandStore";
 import type { CellContext, ColumnDef, RowData } from "@tanstack/react-table";
 import React from "react";
-// ComboBoxMaps
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {

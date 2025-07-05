@@ -127,6 +127,7 @@ export interface Action {
   updateArmySetup: (index: number, armySetup: ArmySetup) => void;
   addRecordedMatch: (match: RecordedMatch) => void;
   addRecordingToMatches: (recordingEndTime: Date) => void;
+  setMatch: (ii: number, match: RecordedMatch) => void;
 
   setGame: (game: SupportedGames) => void;
   setGameDirectory: (gameDirectory: State["gameDirectory"]) => void;
@@ -382,6 +383,14 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       };
     });
   },
+  setMatch: (ii: number, match: RecordedMatch) => {
+    set((state) => {
+      const matches = [...state.matches];
+      matches[ii] = match;
+      return { matches };
+    });
+  },
+  // getPersistedState
   getPersistedState: () => ({
     game: get().game,
     mod: get().mod,
