@@ -1,3 +1,11 @@
+import {
+  type ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Eye, Trash2 } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ComboBoxScreenshotType from "@/components/ComboBoxScreenshotType";
 import {
   Table,
@@ -9,15 +17,6 @@ import {
 } from "@/components/ui/table";
 import { deleteSreenshotFile, getScreenshotSrc } from "@/lib/fileHandling";
 import { useZustandStore } from "@/lib/useZustandStore";
-import {
-  type ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Eye, Trash2 } from "lucide-react";
-import { useMemo } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
 
 // Modal component for displaying the screenshot image
 function ScreenshotModal({
@@ -50,7 +49,6 @@ function ScreenshotModal({
       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
       tabIndex={-1}
       aria-modal="true"
-      // biome-ignore lint/a11y/useSemanticElements: <explanation>
       role="dialog"
     >
       <div className="rounded shadow-lg p-4 max-w-full max-h-full flex flex-col items-center">

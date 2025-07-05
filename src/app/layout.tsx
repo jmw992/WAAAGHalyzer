@@ -1,6 +1,6 @@
 "use client";
-import AppLayout from "@/components/AppLayout";
 import { Geist, Geist_Mono } from "next/font/google";
+import AppLayout from "@/components/AppLayout";
 import "@/styles/globals.css";
 import AppState from "@/components/AppState";
 

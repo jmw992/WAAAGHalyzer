@@ -1,20 +1,17 @@
 "use client";
 
+import { configDir, join, pictureDir } from "@tauri-apps/api/path";
+import type React from "react";
+import { useEffect } from "react";
 import {
   DEFAULT_GAME_DIRECTORY,
   DEFAULT_SCREENSHOTS_DIRECTORY,
 } from "@/constants";
 import { getStorePersistedSettings } from "@/lib/persistStorage";
 import {
-  type ZustandStateAction,
   useZustandStore,
+  type ZustandStateAction,
 } from "@/lib/useZustandStore";
-import type React from "react";
-import { useEffect } from "react";
-
-import { watch } from "@tauri-apps/plugin-fs";
-
-import { configDir, join, pictureDir } from "@tauri-apps/api/path";
 
 // /** These state items get persisted between app close & open */
 // export type PersistedState = {

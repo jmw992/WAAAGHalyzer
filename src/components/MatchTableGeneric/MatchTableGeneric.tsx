@@ -1,13 +1,13 @@
 "use client";
 
+import type { CellContext, ColumnDef, RowData } from "@tanstack/react-table";
 import ComboBoxFaction from "@/components/ComboBoxFaction";
 import ComboBoxWin from "@/components/ComboBoxWin";
 import type { RecordingState, ZustandStateAction } from "@/lib/useZustandStore";
-import type { CellContext, ColumnDef, RowData } from "@tanstack/react-table";
-import React from "react";
 import { DataTable } from "./data-table";
 
 declare module "@tanstack/react-table" {
+  // biome-ignore lint/correctness/noUnusedVariables: skip
   interface TableMeta<TData extends RowData> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void;
   }

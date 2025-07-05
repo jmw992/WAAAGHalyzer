@@ -1,4 +1,5 @@
 "use client";
+import type React from "react";
 import History from "@/components/pages/History";
 import Home from "@/components/pages/Home";
 import Match from "@/components/pages/Match";
@@ -6,7 +7,6 @@ import Settings from "@/components/pages/Settings";
 import { HISTORY, HOME, MATCH, SETTINGS } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
 import type { Page } from "@/types";
-import type React from "react";
 
 const PageMap: Record<Page, React.FC> = {
   [HOME]: Home,

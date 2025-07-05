@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -10,8 +12,6 @@ import {
 import { MATCH_TYPES, SUPPORTED_GAMES } from "@/constants";
 import { setStorePersistedSettings } from "@/lib/persistStorage";
 import { type PersistedState, useZustandStore } from "@/lib/useZustandStore";
-import { useState } from "react";
-import { toast } from "sonner";
 import { FolderInput } from "./FolderInputDialog";
 
 export const SettingsForm = ({

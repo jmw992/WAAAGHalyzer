@@ -1,4 +1,11 @@
-// import ComboBoxScreenshotType from "@/components/ComboBoxScreenshotType";
+import {
+  type ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Trash2 } from "lucide-react";
+import { useMemo } from "react";
 import ComboBoxArmySetupType from "@/components/ComboBoxArmySetupType";
 import {
   Table,
@@ -10,31 +17,12 @@ import {
 } from "@/components/ui/table";
 import { deleteArmySetupFile } from "@/lib/fileHandling";
 import { useZustandStore } from "@/lib/useZustandStore";
-import {
-  type ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Trash2 } from "lucide-react";
-import { useMemo } from "react";
-import { useCallback, useState } from "react";
 
 export function ArmySetupTable() {
   const armySetups = useZustandStore((s) => s.armySetups);
   const recordingUlid = useZustandStore((s) => s.recordingUlid);
   const deleteArmySetup = useZustandStore((s) => s.deleteArmySetup);
   const updateArmySetup = useZustandStore((s) => s.updateArmySetup);
-
-  // State for modal
-  const [_modalSrc, setModalSrc] = useState<string | null>(null);
-  const [_modalOpen, setModalOpen] = useState(false);
-
-  // Handler to close modal
-  const handleCloseModal = useCallback(() => {
-    setModalOpen(false);
-    setModalSrc(null);
-  }, []);
 
   const handleDelete = async (file: string) => {
     await deleteArmySetupFile({

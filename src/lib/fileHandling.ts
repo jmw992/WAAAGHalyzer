@@ -1,14 +1,13 @@
+import { convertFileSrc } from "@tauri-apps/api/core";
+import { appLocalDataDir, join } from "@tauri-apps/api/path";
 import {
   BaseDirectory,
   copyFile,
   remove,
   writeTextFile,
 } from "@tauri-apps/plugin-fs";
-
-import { MATCHES } from "@/constants";
-import { convertFileSrc } from "@tauri-apps/api/core";
-import { appLocalDataDir, join } from "@tauri-apps/api/path";
 import { ulid } from "ulid";
+import { MATCHES } from "@/constants";
 
 interface FileProps {
   filename: string;

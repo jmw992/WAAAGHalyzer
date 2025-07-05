@@ -1,5 +1,6 @@
+// biome-ignore-all lint/style/useComponentExportOnlyModules: code auto generated from shadCn leave as is
 import { Slot } from "@radix-ui/react-slot";
-import { type VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import type * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -56,5 +57,4 @@ function Button({
   );
 }
 
-// biome-ignore lint/nursery/useComponentExportOnlyModules: code auto generated from shadCn leave as is
 export { Button, buttonVariants };

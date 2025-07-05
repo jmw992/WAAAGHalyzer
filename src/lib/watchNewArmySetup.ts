@@ -1,14 +1,14 @@
-import { ARMY_SETUPS, MATCHES } from "@/constants";
 import { join } from "@tauri-apps/api/path";
 import {
   BaseDirectory,
-  type UnwatchFn,
   copyFile,
   exists,
   mkdir,
+  type UnwatchFn,
   watch,
 } from "@tauri-apps/plugin-fs";
 import { ulid } from "ulid";
+import { ARMY_SETUPS, MATCHES } from "@/constants";
 import { splitFilePath } from "./fileHandling";
 import type { WatchGameDirProps } from "./watchNewAutoSave";
 

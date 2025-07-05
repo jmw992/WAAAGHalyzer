@@ -1,3 +1,4 @@
+// biome-ignore-all lint/style/useComponentExportOnlyModules: code auto generated from shadCn leave as is
 "use client";
 
 import type * as LabelPrimitive from "@radix-ui/react-label";
@@ -156,7 +157,6 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
 }
 
 export {
-  // biome-ignore lint/nursery/useComponentExportOnlyModules: code auto generated from shadCn leave as is
   useFormField,
   Form,
   FormItem,
