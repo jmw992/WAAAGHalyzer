@@ -5,7 +5,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 fn greet() -> String {
   let now = SystemTime::now();
   let epoch_ms = now.duration_since(UNIX_EPOCH).unwrap().as_millis();
-  format!("Hello world from Rust! Current epoch: {}", epoch_ms)
+  format!("Hello world from Rust! Current epoch: {epoch_ms}")
 }
 
 #[tauri::command]
@@ -13,7 +13,7 @@ fn gudgitz() -> String {
   let now = SystemTime::now();
   let epoch_ms = now.duration_since(UNIX_EPOCH).unwrap().as_millis();
   format!(
-    "Gudgitz says hello world from Rust! Current epoch: {}",
+    "Gudgitz says hello world from Rust! Current epoch: {epoch_ms}",
     epoch_ms
   )
 }
