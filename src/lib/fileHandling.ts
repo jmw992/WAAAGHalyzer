@@ -40,11 +40,11 @@ export const getScreenshotSrc = async ({ filename, subDir }: FileProps) => {
 };
 const WINDOWS_DEBUG_ROOT =
   "C:\\Users\\jmw99\\OneDrive\\Documents\\BayswaterPC\\WAAAGHalyzer\\test";
-//C:\Users\jmw99\OneDrive\Documents\BayswaterPC\WAAAGHalyzer
 const MAC_DEBUG_ROOT = "/Users/jwilliams/Documents/GitHub/WAAAGHalyzer/test";
 
 const onWindows = false;
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 const DEBUG_GAME_ROOT = onWindows ? WINDOWS_DEBUG_ROOT : MAC_DEBUG_ROOT;
 
 export const copyScreenshotDebug = async () => {

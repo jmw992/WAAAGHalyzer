@@ -1,8 +1,6 @@
 "use client";
 
-import ExampleComboBox from "@/components/ExampleComboBox";
-import ExampleTable from "@/components/ExampleTable/ExampleTable";
-import MatchTable from "@/components/MatchTable";
+import { MatchesTable } from "@/components/MatchesTable";
 import { useZustandStore } from "@/lib/useZustandStore";
 
 export default function History() {
@@ -10,10 +8,7 @@ export default function History() {
   return (
     <>
       <h1>History</h1>
-      <p>{JSON.stringify(matches, null, 2)}</p>
-      <ExampleComboBox />
-      <MatchTable />
-      <ExampleTable />
+      <MatchesTable matches={matches} />
     </>
   );
 }

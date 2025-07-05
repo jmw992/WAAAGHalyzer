@@ -1,0 +1,17 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: RPC Service boilerplate
+globs: 
+alwaysApply: false
+---
+- Always use typescript for front end code
+- Always use tailwind for styling
+- Try to re-use shadcn Radix components
+- Try to use icons from lucide-react
+
+
+@base-rules

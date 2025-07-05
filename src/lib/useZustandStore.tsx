@@ -45,16 +45,17 @@ export interface ArmySetup {
 
 export interface RecordedMatch {
   index: number;
+  matchType: MatchTypes;
   playerFaction: Faction;
   opponentFaction: Faction;
+  win: boolean;
+  map: string;
   game: PersistedState["game"];
   mod: PersistedState["mod"];
   recordingUlid: string;
   autoSaveFile: string;
   recordingStartTime: Date;
   recordingEndTime: Date;
-  win: boolean;
-  map: string;
   notes: RecordingState["notes"];
   links: RecordingState["links"];
   armySetups: RecordingState["armySetups"];
@@ -126,6 +127,7 @@ export interface Action {
   updateArmySetup: (index: number, armySetup: ArmySetup) => void;
   addRecordedMatch: (match: RecordedMatch) => void;
   addRecordingToMatches: (recordingEndTime: Date) => void;
+  setMatch: (ii: number, match: RecordedMatch) => void;
 
   setGame: (game: SupportedGames) => void;
   setGameDirectory: (gameDirectory: State["gameDirectory"]) => void;
@@ -375,11 +377,20 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
             links: state.links,
             screenshots: state.screenshots,
             armySetups: state.armySetups,
+            matchType: state.matchType ?? DOMINATION,
           },
         ],
       };
     });
   },
+  setMatch: (ii: number, match: RecordedMatch) => {
+    set((state) => {
+      const matches = [...state.matches];
+      matches[ii] = match;
+      return { matches };
+    });
+  },
+  // getPersistedState
   getPersistedState: () => ({
     game: get().game,
     mod: get().mod,

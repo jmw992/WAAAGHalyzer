@@ -1,8 +1,9 @@
 "use client";
 import { ArmySetupMatchSection } from "@/components/ArmySetupMatchSection";
 import MatchSaveButton from "@/components/MatchSaveButton";
-import MatchTable from "@/components/MatchTable";
-import PreMatchTable from "@/components/PreMatchTable";
+import { MatchTableRecordingMatch } from "@/components/MatchTableGeneric/MatchTableRecording";
+// import PreMatchTable from "@/components/PreMatchTable";
+import { PreMatchTableRecording } from "@/components/PreMatchTableGeneric/PreMatchTableRecording";
 import { ScreenshotsMatchSection } from "@/components/ScreenshotsMatchSection";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,8 +41,8 @@ export default function Match() {
 
   return (
     <div>
-      <PreMatchTable />
-      <MatchTable />
+      <PreMatchTableRecording />
+      <MatchTableRecordingMatch />
       <ScreenshotsMatchSection />
       <ArmySetupMatchSection />
       {/* Combo Box Row - Game & Mod */}
