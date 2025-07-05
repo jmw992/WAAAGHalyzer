@@ -1,4 +1,3 @@
-import * as path from "@tauri-apps/api/path";
 import {
   BaseDirectory,
   copyFile,

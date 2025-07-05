@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.0.5/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -7,15 +7,25 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["dist/*"]
+    "includes": [
+      "**",
+      "!**/dist/**",
+      "!**/node_modules/**",
+      "!**/src-tauri/**",
+      "!**/.next/**"
+    ]
   },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
     "indentWidth": 2
   },
-  "organizeImports": {
-    "enabled": true
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "linter": {
     "enabled": true,
@@ -24,18 +34,17 @@
       "correctness": {
         "useHookAtTopLevel": "error"
       },
-      "nursery": {
-        "useGoogleFontDisplay": "error",
-        "noDocumentImportInPage": "error",
-        "noHeadElement": "error",
+      "style": {
+        "useComponentExportOnlyModules": "error",
+        "noHeadElement": "error"
+      },
+      "suspicious": {
         "noHeadImportInDocument": "error",
-        "noImgElement": "off",
-        "useComponentExportOnlyModules": {
-          "level": "error",
-          "options": {
-            "allowExportNames": ["metadata"]
-          }
-        }
+        "noDocumentImportInPage": "error",
+        "useGoogleFontDisplay": "error"
+      },
+      "performance": {
+        "noImgElement": "off"
       }
     }
   },

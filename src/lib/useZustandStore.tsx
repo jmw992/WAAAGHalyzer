@@ -1,3 +1,5 @@
+import type { UnwatchFn } from "@tauri-apps/plugin-fs";
+import { create } from "zustand";
 import {
   BEASTMEN,
   DEFAULT,
@@ -18,8 +20,6 @@ import type {
   ScreenshotType,
   SupportedGames,
 } from "@/types";
-import type { UnwatchFn } from "@tauri-apps/plugin-fs";
-import { create } from "zustand";
 
 /** These state items get persisted between app close & open */
 export interface PersistedState {

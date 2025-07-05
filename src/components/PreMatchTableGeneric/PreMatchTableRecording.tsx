@@ -1,7 +1,6 @@
 "use client";
 
 import { useZustandStore } from "@/lib/useZustandStore";
-import React from "react";
 
 import PreMatchTableGeneric from "./PreMatchTableGeneric";
 

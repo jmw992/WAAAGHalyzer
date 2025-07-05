@@ -1,9 +1,8 @@
 "use client";
 
 import { DOMINATION } from "@/constants";
-import { useZustandStore } from "@/lib/useZustandStore";
 import type { RecordingState } from "@/lib/useZustandStore";
-import React from "react";
+import { useZustandStore } from "@/lib/useZustandStore";
 import PreMatchTableGeneric from "./PreMatchTableGeneric";
 
 export const PreMatchTableMatch = ({ index: idx }: { index: number }) => {

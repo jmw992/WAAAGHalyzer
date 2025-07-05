@@ -1,5 +1,12 @@
 "use client";
 
+import type { ColumnDef } from "@tanstack/react-table";
+import {
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Eye, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -10,13 +17,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { RecordedMatch } from "@/lib/useZustandStore";
-import type { ColumnDef } from "@tanstack/react-table";
-import {
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Eye, Trash2 } from "lucide-react";
 
 interface MatchesTableProps {
   matches: RecordedMatch[];

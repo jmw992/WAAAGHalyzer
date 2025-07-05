@@ -1,4 +1,5 @@
 "use client";
+import { Clipboard, DownloadIcon } from "lucide-react";
 import { ArmySetupMatchSection } from "@/components/ArmySetupMatchSection";
 import MatchSaveButton from "@/components/MatchSaveButton";
 import { MatchTableRecordingMatch } from "@/components/MatchTableGeneric/MatchTableRecording";
@@ -18,7 +19,6 @@ import { Textarea } from "@/components/ui/textarea";
 // import { FolderInput } from "@/components/FolderInputDialog";
 import { SUPPORTED_GAMES } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
-import { Clipboard, DownloadIcon } from "lucide-react";
 
 export function Notes() {
   return (

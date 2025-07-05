@@ -1,15 +1,13 @@
+import { join } from "@tauri-apps/api/path";
 import {
   BaseDirectory,
-  type UnwatchFn,
   copyFile,
   exists,
   mkdir,
+  type UnwatchFn,
   watch,
 } from "@tauri-apps/plugin-fs";
-
 import { MATCHES } from "@/constants";
-import { appLocalDataDir, join } from "@tauri-apps/api/path";
-import { ulid } from "ulid";
 
 export interface WatchGameDirProps {
   /**  The source file path to copy from the root */

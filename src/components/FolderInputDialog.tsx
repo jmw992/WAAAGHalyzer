@@ -1,8 +1,8 @@
+import { open } from "@tauri-apps/plugin-dialog";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TOTAL_WAR_WARHAMMER_3 } from "@/constants";
-import { open } from "@tauri-apps/plugin-dialog";
-import { useState } from "react";
 
 interface FolderInputProps {
   initialValue?: string;
