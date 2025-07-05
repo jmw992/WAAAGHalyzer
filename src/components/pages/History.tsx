@@ -1,7 +1,7 @@
 "use client";
 
-import { useZustandStore } from "@/lib/useZustandStore";
 import { MatchesTable } from "@/components/MatchesTable";
+import { useZustandStore } from "@/lib/useZustandStore";
 
 export default function History() {
   const matches = useZustandStore((state) => state.matches);

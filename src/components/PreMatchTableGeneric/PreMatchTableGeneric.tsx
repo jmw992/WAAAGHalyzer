@@ -23,13 +23,13 @@ export interface PreMatchColumns {
 
 import { DataTable } from "./data-table";
 
-type PreMatchTableProps = {
+interface PreMatchTableProps {
   map: RecordingState["map"];
   matchType: RecordingState["matchType"];
   matchNum: number;
   setMap: Action["setMap"];
   setMatchType: Action["setMatchType"];
-};
+}
 
 export default function PreMatchTable({
   map,
