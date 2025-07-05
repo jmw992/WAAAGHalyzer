@@ -92,17 +92,15 @@ export default function Match() {
           <p id="autoSaveFile">{autoSaveFile ?? "..."}</p>
         </div>
       </div>
-      <>
-        <label htmlFor="notesInput">Notes</label>
-        <Textarea
-          id="notesInput"
-          placeholder="Type your message here."
-          value={notes ?? "Type your message here."}
-          onChange={(event) => {
-            setNotes(event.target.value);
-          }}
-        />
-      </>
+      <label htmlFor="notesInput">Notes</label>
+      <Textarea
+        id="notesInput"
+        placeholder="Type your message here."
+        value={notes ?? "Type your message here."}
+        onChange={(event) => {
+          setNotes(event.target.value);
+        }}
+      />
       <div className="flex justify-between mt-4">
         <MatchSaveButton />
 
