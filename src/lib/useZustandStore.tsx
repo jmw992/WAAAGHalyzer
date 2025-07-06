@@ -62,7 +62,7 @@ export interface RecordedMatch {
   screenshots: RecordingState["screenshots"];
 }
 
-interface StartRecordingProps {
+export interface StartRecordingProps {
   recordingUlid: string | null;
   unwatchAutoSaveFn: UnwatchFn;
   unwatchScreenshotFn: UnwatchFn;

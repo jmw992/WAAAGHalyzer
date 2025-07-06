@@ -7,107 +7,28 @@ import { MatchTableRecordingMatch } from "@/components/MatchTableGeneric/MatchTa
 import { PreMatchTableRecording } from "@/components/PreMatchTableGeneric/PreMatchTableRecording";
 import { ScreenshotsSectionRecording } from "@/components/ScreenshotsMatchSection/ScreenshotsSectionRecording";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-// import { FolderInput } from "@/components/FolderInputDialog";
-import { SUPPORTED_GAMES } from "@/constants";
+import NotesRecording from "@/components/Notes/NotesRecording";
 import { useZustandStore } from "@/lib/useZustandStore";
-
-export function Notes() {
-  return (
-    <>
-      <label htmlFor="notesInput">Notes</label>
-      <Textarea id="notesInput" placeholder="Type your message here." />{" "}
-    </>
-  );
-}
+import { GameModSectionRecording } from "@/components/GameModSection/GameModSectionRecording";
+import RecordingSectionRecording from "@/components/RecordingSection/RecordingSectionRecording";
 
 export default function Match() {
-  const recordingGame = useZustandStore((state) => state.recordingGame);
-  const recordingMod = useZustandStore((state) => state.recordingMod);
-  const recordingUlid = useZustandStore((state) => state.recordingUlid);
-  const autoSaveFile = useZustandStore((state) => state.autoSaveFile);
-
-  const notes = useZustandStore((state) => state.notes);
-  const setNotes = useZustandStore((state) => state.setNotes);
-  const setRecordingMod = useZustandStore((state) => state.setRecordingMod);
-
   return (
     <div>
       <PreMatchTableRecording />
       <MatchTableRecordingMatch />
       <ScreenshotsSectionRecording />
       <ArmySetupSectionRecording />
-      {/* Combo Box Row - Game & Mod */}
-      <div className="flex flex-row pb-4">
-        <div>
-          <label htmlFor="recording-game">Game</label>
-          <Select
-            value={recordingGame ?? undefined}
-            onValueChange={(value) => {
-              console.log("TODO value", value);
-            }}
-          >
-            <SelectTrigger id="recording-game">
-              <SelectValue placeholder={recordingGame} />
-            </SelectTrigger>
-            <SelectContent>
-              {...SUPPORTED_GAMES.map((game) => (
-                <SelectItem key={game} value={game}>
-                  {game}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="pl-2">
-          <label htmlFor="recording-mod">Mod</label>
-          <Input
-            id="recording-mod"
-            type="text"
-            value={recordingMod ?? undefined}
-            onChange={(e) => {
-              console.log("mod", e.target.value);
-              setRecordingMod(e.target.value);
-            }}
-          />
-        </div>
-      </div>
-      {/* Fixed info row */}
-      <div className="flex flex-row pb-4">
-        <div className="border rounded-md px-2">
-          <label htmlFor="recordingUlid">Recording Id</label>
-          <p id="recordingUlid">{recordingUlid ?? "..."}</p>
-        </div>
-        <div className="border rounded-md ml-2 px-2">
-          <label htmlFor="autoSaveFile">AutoSave</label>
-          <p id="autoSaveFile">{autoSaveFile ?? "..."}</p>
-        </div>
-      </div>
-      <label htmlFor="notesInput">Notes</label>
-      <Textarea
-        id="notesInput"
-        placeholder="Type your message here."
-        value={notes ?? "Type your message here."}
-        onChange={(event) => {
-          setNotes(event.target.value);
-        }}
-      />
+      <GameModSectionRecording />
+      <RecordingSectionRecording />
+      <NotesRecording />
       <div className="flex justify-between mt-4">
         <MatchSaveButton />
 
         <div className="flex items-start">
           <Button
             onClick={() => {
-              console.log("Submitting recording");
+              console.log("Copying recording to clipboard");
             }}
             size="sm"
             type="button"
@@ -118,7 +39,7 @@ export default function Match() {
           <Button
             className="ml-1"
             onClick={() => {
-              console.log("Submitting recording");
+              console.log("Downloading Icon");
             }}
             size="sm"
             type="reset"
