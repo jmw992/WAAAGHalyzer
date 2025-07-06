@@ -1,16 +1,21 @@
-import { PlusIcon } from "lucide-react";
-import { useZustandStore } from "@/lib/useZustandStore";
-import { ScreenshotsTable } from "./ScreenshotsTable";
-import { Button } from "./ui/button";
-import { copyScreenshot } from "@/lib/watchNewScreenshot";
 import { open } from "@tauri-apps/plugin-dialog";
+import { PlusIcon } from "lucide-react";
+import { copyScreenshot } from "@/lib/watchNewScreenshot";
 import { MATCHES } from "@/constants";
 import { join } from "@tauri-apps/api/path";
+import { Button } from "../ui/button";
 
-export const ScreenshotsMatchSection = () => {
-  const recordingUlid = useZustandStore((state) => state.recordingUlid);
-  const addScreenshot = useZustandStore((state) => state.addScreenshot);
+interface ScreenshotsSectionGenericProps {
+  addScreenshot: (id: string) => void;
+  recordingUlid: string | null;
+  ScreenshotsTable: React.ReactNode;
+}
 
+export const ScreenshotsSectionGeneric = ({
+  addScreenshot,
+  recordingUlid,
+  ScreenshotsTable,
+}: ScreenshotsSectionGenericProps) => {
   const onClickAsync = async () => {
     const file = await open({
       multiple: false,
@@ -31,13 +36,12 @@ export const ScreenshotsMatchSection = () => {
 
   return (
     <>
-      <ScreenshotsTable />
+      {ScreenshotsTable}
       <div className="flex justify-end mt-2">
         <Button
           disabled={recordingUlid === null}
           onClick={() => {
-            console.log("Add Army setup");
-            onClickAsync();
+            void onClickAsync();
           }}
           size="icon"
           variant={"secondary"}

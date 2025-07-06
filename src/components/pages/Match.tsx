@@ -5,7 +5,7 @@ import MatchSaveButton from "@/components/MatchSaveButton";
 import { MatchTableRecordingMatch } from "@/components/MatchTableGeneric/MatchTableRecording";
 // import PreMatchTable from "@/components/PreMatchTable";
 import { PreMatchTableRecording } from "@/components/PreMatchTableGeneric/PreMatchTableRecording";
-import { ScreenshotsMatchSection } from "@/components/ScreenshotsMatchSection";
+import { ScreenshotsSectionRecording } from "@/components/ScreenshotsMatchSection/ScreenshotsSectionRecording";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -43,7 +43,7 @@ export default function Match() {
     <div>
       <PreMatchTableRecording />
       <MatchTableRecordingMatch />
-      <ScreenshotsMatchSection />
+      <ScreenshotsSectionRecording />
       <ArmySetupSectionRecording />
       {/* Combo Box Row - Game & Mod */}
       <div className="flex flex-row pb-4">
