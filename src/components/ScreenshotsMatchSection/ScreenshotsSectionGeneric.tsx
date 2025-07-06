@@ -1,8 +1,8 @@
+import { join } from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/plugin-dialog";
 import { PlusIcon } from "lucide-react";
-import { copyScreenshot } from "@/lib/watchNewScreenshot";
 import { MATCHES } from "@/constants";
-import { join } from "@tauri-apps/api/path";
+import { copyScreenshot } from "@/lib/watchNewScreenshot";
 import { Button } from "../ui/button";
 
 interface ScreenshotsSectionGenericProps {

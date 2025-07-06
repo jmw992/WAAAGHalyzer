@@ -1,5 +1,5 @@
-import { useZustandStore } from "@/lib/useZustandStore";
 import { ScreenshotsTable } from "@/components/ScreenshotsTable/ScreenshotsTable";
+import { useZustandStore } from "@/lib/useZustandStore";
 import { ScreenshotsSectionGeneric } from "./ScreenshotsSectionGeneric";
 
 export const ScreenshotsSectionRecording = () => {

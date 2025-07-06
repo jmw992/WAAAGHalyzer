@@ -1,7 +1,7 @@
 "use client";
 
-import { useZustandStore } from "@/lib/useZustandStore";
 import NotesGeneric from "@/components/Notes/NotesGeneric";
+import { useZustandStore } from "@/lib/useZustandStore";
 
 export default function Match() {
   const notes = useZustandStore((state) => state.notes);

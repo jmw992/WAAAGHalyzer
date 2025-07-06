@@ -1,11 +1,11 @@
+import { join } from "@tauri-apps/api/path";
+import { open } from "@tauri-apps/plugin-dialog";
 import { PlusIcon } from "lucide-react";
+import { MATCHES } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
+import { copyScreenshot } from "@/lib/watchNewScreenshot";
 import { ScreenshotsTable } from "../ScreenshotsTable/ScreenshotsTable";
 import { Button } from "../ui/button";
-import { copyScreenshot } from "@/lib/watchNewScreenshot";
-import { open } from "@tauri-apps/plugin-dialog";
-import { MATCHES } from "@/constants";
-import { join } from "@tauri-apps/api/path";
 
 export const ScreenshotsMatchSection = () => {
   const recordingUlid = useZustandStore((state) => state.recordingUlid);
@@ -37,7 +37,7 @@ export const ScreenshotsMatchSection = () => {
           disabled={recordingUlid === null}
           onClick={() => {
             console.log("Add Army setup");
-            onClickAsync();
+            void onClickAsync();
           }}
           size="icon"
           variant={"secondary"}

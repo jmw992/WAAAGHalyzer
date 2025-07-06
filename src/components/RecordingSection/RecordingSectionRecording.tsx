@@ -1,7 +1,7 @@
 "use client";
 
-import { useZustandStore } from "@/lib/useZustandStore";
 import RecordingSectionGeneric from "@/components/RecordingSection/RecordingSectionGeneric";
+import { useZustandStore } from "@/lib/useZustandStore";
 
 export default function RecordingSectionRecording() {
   const recordingUlid = useZustandStore((state) => state.recordingUlid);

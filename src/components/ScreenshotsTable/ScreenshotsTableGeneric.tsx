@@ -1,3 +1,4 @@
+import { DialogTitle } from "@radix-ui/react-dialog";
 import {
   type ColumnDef,
   flexRender,
@@ -5,7 +6,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Eye, Trash2 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ComboBoxScreenshotType from "@/components/ComboBoxScreenshotType";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -18,7 +19,6 @@ import {
 } from "@/components/ui/table";
 import { deleteSreenshotFile, getScreenshotSrc } from "@/lib/fileHandling";
 import type { Action, RecordingState } from "@/lib/useZustandStore";
-import { DialogTitle } from "@radix-ui/react-dialog";
 
 interface ScreenshotsTableProps {
   screenshots: RecordingState["screenshots"];
@@ -106,7 +106,9 @@ export function ScreenshotsTableGeneric({
                 type="button"
                 className="p-1 hover:text-primary rounded-2xl hover:bg-gray-700 "
                 title="View"
-                onClick={() => setSelectedScreenshot(row.original.filename)}
+                onClick={() => {
+                  setSelectedScreenshot(row.original.filename);
+                }}
               >
                 <Eye size={18} />
               </button>
@@ -145,7 +147,7 @@ export function ScreenshotsTableGeneric({
         ),
       },
     ],
-    [handleDelete, modalSrc],
+    [modalSrc],
   );
 
   const table = useReactTable({

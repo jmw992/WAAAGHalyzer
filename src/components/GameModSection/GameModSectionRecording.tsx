@@ -1,7 +1,7 @@
 "use client";
 
-import { useZustandStore } from "@/lib/useZustandStore";
 import GameModSectionGeneric from "@/components/GameModSection/GameModSectionGeneric";
+import { useZustandStore } from "@/lib/useZustandStore";
 
 export function GameModSectionRecording() {
   const recordingGame = useZustandStore((state) => state.recordingGame);
