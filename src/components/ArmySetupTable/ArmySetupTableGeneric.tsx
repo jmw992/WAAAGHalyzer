@@ -16,14 +16,21 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { deleteArmySetupFile } from "@/lib/fileHandling";
-import { useZustandStore } from "@/lib/useZustandStore";
+import type { Action, RecordingState } from "@/lib/useZustandStore";
 
-export function ArmySetupTable() {
-  const armySetups = useZustandStore((s) => s.armySetups);
-  const recordingUlid = useZustandStore((s) => s.recordingUlid);
-  const deleteArmySetup = useZustandStore((s) => s.deleteArmySetup);
-  const updateArmySetup = useZustandStore((s) => s.updateArmySetup);
+interface ArmySetupTableProps {
+  armySetups: RecordingState["armySetups"];
+  recordingUlid: RecordingState["recordingUlid"];
+  deleteArmySetup: Action["deleteArmySetup"];
+  updateArmySetup: Action["updateArmySetup"];
+}
 
+export function ArmySetupTableGeneric({
+  armySetups,
+  recordingUlid,
+  deleteArmySetup,
+  updateArmySetup,
+}: ArmySetupTableProps) {
   const handleDelete = async (file: string) => {
     await deleteArmySetupFile({
       filename: file,

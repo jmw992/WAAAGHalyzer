@@ -1,16 +1,21 @@
 import { open } from "@tauri-apps/plugin-dialog";
 import { PlusIcon } from "lucide-react";
-import { ulid } from "ulid";
 import { splitFilePath } from "@/lib/fileHandling";
-import { useZustandStore } from "@/lib/useZustandStore";
 import { copyAutoSaveToMatchDir } from "@/lib/watchNewArmySetup";
-import { ArmySetupTable } from "./ArmySetupTable";
-import { Button } from "./ui/button";
+// import { ArmySetupTable } from "../ArmySetupTable/ArmySetupTable";
+import { Button } from "../ui/button";
 
-export const ArmySetupMatchSection = () => {
-  const addArmySetup = useZustandStore((state) => state.addArmySetup);
-  const recordingUlid = useZustandStore((state) => state.recordingUlid);
+interface ArmySetupMatchSectionGenericProps {
+  addArmySetup: (id: string, filename: string) => void;
+  recordingUlid: string | null;
+  ArmySetupTable: React.ReactNode;
+}
 
+export const ArmySetupSectionGeneric = ({
+  addArmySetup,
+  recordingUlid,
+  ArmySetupTable,
+}: ArmySetupMatchSectionGenericProps) => {
   const onClickAsync = async () => {
     const file = await open({
       multiple: false,
@@ -22,14 +27,16 @@ export const ArmySetupMatchSection = () => {
       await copyAutoSaveToMatchDir({
         sourceFile: file,
         matchId: recordingUlid ?? "",
+        onCopy: (ulid, origFilename) => {
+          addArmySetup(ulid, origFilename ?? originalFile);
+        },
       });
-      addArmySetup(ulid(), originalFile);
     }
   };
 
   return (
     <>
-      <ArmySetupTable />
+      {ArmySetupTable}
       <div className="flex justify-end mt-2">
         <Button
           disabled={recordingUlid === null}

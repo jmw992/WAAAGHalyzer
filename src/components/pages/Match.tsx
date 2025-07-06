@@ -1,6 +1,6 @@
 "use client";
 import { Clipboard, DownloadIcon } from "lucide-react";
-import { ArmySetupMatchSection } from "@/components/ArmySetupMatchSection";
+import { ArmySetupSectionRecording } from "@/components/ArmySetupMatchSection/ArmySetupSectionRecording";
 import MatchSaveButton from "@/components/MatchSaveButton";
 import { MatchTableRecordingMatch } from "@/components/MatchTableGeneric/MatchTableRecording";
 // import PreMatchTable from "@/components/PreMatchTable";
@@ -44,7 +44,7 @@ export default function Match() {
       <PreMatchTableRecording />
       <MatchTableRecordingMatch />
       <ScreenshotsMatchSection />
-      <ArmySetupMatchSection />
+      <ArmySetupSectionRecording />
       {/* Combo Box Row - Game & Mod */}
       <div className="flex flex-row pb-4">
         <div>
