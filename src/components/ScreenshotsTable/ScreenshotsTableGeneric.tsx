@@ -1,4 +1,3 @@
-
 import {
   type ColumnDef,
   flexRender,
@@ -6,8 +5,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Eye, Trash2 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import ComboBoxScreenshotType from "@/components/ComboBoxScreenshotType";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -18,58 +18,7 @@ import {
 } from "@/components/ui/table";
 import { deleteSreenshotFile, getScreenshotSrc } from "@/lib/fileHandling";
 import type { Action, RecordingState } from "@/lib/useZustandStore";
-
-// Modal component for displaying the screenshot image
-function ScreenshotModal({
-  src,
-  open,
-  onClose,
-}: {
-  src: string | null;
-  open: boolean;
-  onClose: () => void;
-}) {
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  // Close on Escape key
-  useEffect(() => {
-    if (!open) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open, onClose]);
-
-  if (!open || !src) return null;
-  return (
-    <div
-      ref={modalRef}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
-      tabIndex={-1}
-      aria-modal="true"
-      role="dialog"
-    >
-      <div className="rounded shadow-lg p-4 max-w-full max-h-full flex flex-col items-center">
-        <button
-          type="button"
-          className="self-end mb-2 px-2 py-1 rounded bg-red-400 hover:bg-gray-300"
-          onClick={onClose}
-          aria-label="Close"
-        >
-          ×
-        </button>
-        <img
-          src={src}
-          alt="Screenshot"
-          className="max-w-[80vw] max-h-[80vh] rounded"
-        />
-      </div>
-    </div>
-  );
-}
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 interface ScreenshotsTableProps {
   screenshots: RecordingState["screenshots"];
@@ -84,33 +33,25 @@ export function ScreenshotsTableGeneric({
   deleteScreenshot,
   updateScreenshot,
 }: ScreenshotsTableProps) {
-  // State for modal
   const [modalSrc, setModalSrc] = useState<string | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(
+    null,
+  );
 
-  // Handler to view screenshot in modal
-  const handleView = useCallback(
-    (file: string) => {
+  useEffect(() => {
+    if (selectedScreenshot) {
       getScreenshotSrc({
-        filename: file,
+        filename: selectedScreenshot,
         subDir: recordingUlid ?? "",
       })
-        .then((src) => {
-          setModalSrc(src);
-          setModalOpen(true);
-        })
+        .then(setModalSrc)
         .catch((err: unknown) => {
           console.error("handleView getScreenshotSrc err:", err);
         });
-    },
-    [recordingUlid],
-  );
-
-  // Handler to close modal
-  const handleCloseModal = useCallback(() => {
-    setModalOpen(false);
-    setModalSrc(null);
-  }, []);
+    } else {
+      setModalSrc(null);
+    }
+  }, [selectedScreenshot, recordingUlid]);
 
   const handleDelete = (file: string) => {
     deleteSreenshotFile({
@@ -159,16 +100,32 @@ export function ScreenshotsTableGeneric({
         id: "view",
         header: "",
         cell: ({ row }) => (
-          <button
-            type="button"
-            className="p-1 hover:text-primary rounded-2xl hover:bg-gray-700 "
-            title="View"
-            onClick={() => {
-              handleView(row.original.filename);
-            }}
-          >
-            <Eye size={18} />
-          </button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button
+                type="button"
+                className="p-1 hover:text-primary rounded-2xl hover:bg-gray-700 "
+                title="View"
+                onClick={() => setSelectedScreenshot(row.original.filename)}
+              >
+                <Eye size={18} />
+              </button>
+            </DialogTrigger>
+            <DialogContent className="h-9/10 w-9/10">
+              <DialogTitle className="text-lg font-semibold">
+                Screenshot: {row.original.filename}
+              </DialogTitle>
+              {modalSrc ? (
+                <img
+                  src={modalSrc}
+                  alt="Screenshot"
+                  className="max-w-full max-h-full rounded"
+                />
+              ) : (
+                <p>Loading...</p>
+              )}
+            </DialogContent>
+          </Dialog>
         ),
       },
       {
@@ -188,7 +145,7 @@ export function ScreenshotsTableGeneric({
         ),
       },
     ],
-    [],
+    [handleDelete, modalSrc],
   );
 
   const table = useReactTable({
@@ -198,52 +155,42 @@ export function ScreenshotsTableGeneric({
   });
 
   return (
-    <>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext(),
-                    )}
-                  </TableHead>
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <TableHead key={header.id}>
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext(),
+                  )}
+                </TableHead>
+              ))}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
                 ))}
               </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="text-center">
-                  No screenshots found.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <ScreenshotModal
-        src={modalSrc}
-        open={modalOpen}
-        onClose={handleCloseModal}
-      />
-    </>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="text-center">
+                No screenshots found.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 }
