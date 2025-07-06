@@ -1,15 +1,15 @@
+import { join } from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/plugin-dialog";
 import { PlusIcon } from "lucide-react";
-import { ulid } from "ulid";
-import { splitFilePath } from "@/lib/fileHandling";
+import { MATCHES } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
-import { copyAutoSaveToMatchDir } from "@/lib/watchNewArmySetup";
-import { ArmySetupTable } from "./ArmySetupTable";
-import { Button } from "./ui/button";
+import { copyScreenshot } from "@/lib/watchNewScreenshot";
+import { ScreenshotsTable } from "../ScreenshotsTable/ScreenshotsTable";
+import { Button } from "../ui/button";
 
-export const ArmySetupMatchSection = () => {
-  const addArmySetup = useZustandStore((state) => state.addArmySetup);
+export const ScreenshotsMatchSection = () => {
   const recordingUlid = useZustandStore((state) => state.recordingUlid);
+  const addScreenshot = useZustandStore((state) => state.addScreenshot);
 
   const onClickAsync = async () => {
     const file = await open({
@@ -18,22 +18,25 @@ export const ArmySetupMatchSection = () => {
     });
     console.log("Selected file:", file);
     if (typeof file === "string") {
-      const originalFile = splitFilePath(file).filename;
-      await copyAutoSaveToMatchDir({
-        sourceFile: file,
-        matchId: recordingUlid ?? "",
+      const destinationDir = await join(MATCHES, recordingUlid ?? "");
+      await copyScreenshot({
+        screenshotsDir: file,
+        destinationDir,
+        onCopy: (ulid) => {
+          addScreenshot(ulid);
+        },
       });
-      addArmySetup(ulid(), originalFile);
     }
   };
 
   return (
     <>
-      <ArmySetupTable />
+      <ScreenshotsTable />
       <div className="flex justify-end mt-2">
         <Button
           disabled={recordingUlid === null}
           onClick={() => {
+            console.log("Add Army setup");
             void onClickAsync();
           }}
           size="icon"

@@ -19,7 +19,7 @@ interface WatchNewScreenshotProps {
   onCopy?: (ulid: string) => void;
 }
 
-const copyScreenshot = async ({
+export const copyScreenshot = async ({
   screenshotsDir: screenshotFile,
   destinationDir,
   onCopy,
