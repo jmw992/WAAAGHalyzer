@@ -24,6 +24,7 @@
     "core:path:allow-resolve-directory",
     "fs:read-app-specific-dirs-recursive",
     "core:path:default",
-    "sql:default"
+    "sql:default",
+    "sql:allow-execute"
   ]
 }
