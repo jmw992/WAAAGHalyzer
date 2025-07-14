@@ -24,9 +24,9 @@ import type {
   NORSCA,
   NURGLE,
   OGRE_KINGDOMS,
-  OPPONENT,
   OTHER,
-  PLAYER,
+  PLAYER1,
+  PLAYER2,
   RESULT,
   SETTINGS,
   SKAVEN,
@@ -86,4 +86,4 @@ export type ScreenshotType =
   | typeof LOADING
   | typeof RESULT;
 
-export type ArmySetupType = typeof OTHER | typeof PLAYER | typeof OPPONENT;
+export type ArmySetupType = typeof OTHER | typeof PLAYER1 | typeof PLAYER2;

@@ -78,6 +78,31 @@ export const SettingsForm = ({
       </div>
 
       <div>
+        <label htmlFor="settings-version">Version</label>
+        <Input
+          id="settings-version"
+          type="text"
+          value={form.version}
+          onChange={(e) => {
+            handleChange("version", e.target.value);
+          }}
+        />
+      </div>
+
+      <div>
+        <label htmlFor="settings-playerId">PlayerId</label>
+        <Input
+          id="settings-playerId"
+          className="normal-case"
+          type="text"
+          value={form.playerId ?? ""}
+          onChange={(e) => {
+            handleChange("playerId", e.target.value);
+          }}
+        />
+      </div>
+
+      <div>
         <label htmlFor="settings-defaultMatchType">Default Match Type</label>
         <Select
           value={form.defaultMatchType}

@@ -100,6 +100,6 @@ export const SCREENSHOT_TYPES = [
   OTHER,
 ];
 
-export const PLAYER = "Player";
-export const OPPONENT = "Opponent";
-export const ARMY_SETUP_TYPES = [PLAYER, OPPONENT, OTHER];
+export const PLAYER1 = "Player1";
+export const PLAYER2 = "Player2";
+export const ARMY_SETUP_TYPES = [PLAYER1, PLAYER2, OTHER];

@@ -16,46 +16,46 @@ declare module "@tanstack/react-table" {
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export interface MatchColumns {
-  playerFaction: RecordingState["playerFaction"];
-  opponentFaction: RecordingState["opponentFaction"];
+  player1Faction: RecordingState["player1Faction"];
+  player2Faction: RecordingState["player2Faction"];
   recordingWin: RecordingState["recordingWin"];
 }
 
 type MatchTableProps = MatchColumns & {
-  setPlayerFaction: ZustandStateAction["setPlayerFaction"];
-  setOpponentFaction: ZustandStateAction["setOpponentFaction"];
+  setPlayer1Faction: ZustandStateAction["setPlayer1Faction"];
+  setPlayer2Faction: ZustandStateAction["setPlayer2Faction"];
   setRecordingWin: ZustandStateAction["setRecordingWin"];
 };
 
 export default function MatchTable({
-  playerFaction,
-  opponentFaction,
+  player1Faction,
+  player2Faction,
   recordingWin,
-  setPlayerFaction,
-  setOpponentFaction,
+  setPlayer1Faction,
+  setPlayer2Faction,
   setRecordingWin,
 }: MatchTableProps) {
-  const playerCell = ({ getValue }: CellContext<MatchColumns, unknown>) => {
+  const player1Cell = ({ getValue }: CellContext<MatchColumns, unknown>) => {
     const initialValue = getValue();
 
     return (
       <ComboBoxFaction
         initialValue={initialValue as null}
         onSelectCb={(val) => {
-          setPlayerFaction(val);
+          setPlayer1Faction(val);
         }}
       />
     );
   };
 
-  const opponentCell = ({ getValue }: CellContext<MatchColumns, unknown>) => {
+  const player2Cell = ({ getValue }: CellContext<MatchColumns, unknown>) => {
     const initialValue = getValue();
 
     return (
       <ComboBoxFaction
         initialValue={initialValue as null}
         onSelectCb={(val) => {
-          setOpponentFaction(val);
+          setPlayer2Faction(val);
         }}
       />
     );
@@ -76,14 +76,14 @@ export default function MatchTable({
   };
   const columns: ColumnDef<MatchColumns>[] = [
     {
-      accessorKey: "playerFaction",
-      header: "Player Faction",
-      cell: playerCell,
+      accessorKey: "player1Faction",
+      header: "Player1 Faction",
+      cell: player1Cell,
     },
     {
-      accessorKey: "opponentFaction",
-      header: "Opponent Faction",
-      cell: opponentCell,
+      accessorKey: "player2Faction",
+      header: "Player2 Faction",
+      cell: player2Cell,
     },
     {
       accessorKey: "recordingWin",
@@ -98,8 +98,8 @@ export default function MatchTable({
         columns={columns}
         data={[
           {
-            playerFaction,
-            opponentFaction,
+            player1Faction,
+            player2Faction,
             recordingWin,
           },
         ]}
