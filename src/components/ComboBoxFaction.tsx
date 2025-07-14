@@ -28,8 +28,8 @@ const factionOptions = FACTIONS.map((faction) => ({
 }));
 
 interface FactionComboBoxProps {
-  onSelectCb: (value: RecordingState["playerFaction"]) => void;
-  initialValue: RecordingState["playerFaction"];
+  onSelectCb: (value: RecordingState["player1Faction"]) => void;
+  initialValue: RecordingState["player1Faction"];
 }
 
 export default function FactionComboBox({

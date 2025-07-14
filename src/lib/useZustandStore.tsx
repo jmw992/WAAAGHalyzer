@@ -6,9 +6,9 @@ import {
   DOMINATION,
   END_BATTLE,
   HOME,
-  OPPONENT,
   OTHER,
-  PLAYER,
+  PLAYER1,
+  PLAYER2,
   RESULT,
   TOTAL_WAR_WARHAMMER_3,
 } from "@/constants";
@@ -24,10 +24,12 @@ import type {
 /** These state items get persisted between app close & open */
 export interface PersistedState {
   game: SupportedGames;
-  defaultMatchType: MatchTypes;
   mod: string;
+  version: string;
   gameDirectory: string;
   screenshotsDirectory: string;
+  playerId: string | null;
+  defaultMatchType: MatchTypes;
 }
 
 export interface Screenshot {
@@ -44,10 +46,13 @@ export interface ArmySetup {
 }
 
 export interface RecordedMatch {
-  index: number;
+  recordingNumber: number;
   matchType: MatchTypes;
-  playerFaction: Faction;
-  opponentFaction: Faction;
+  player1Id: string;
+  player2Id: string;
+  player1Faction: Faction;
+  player2Faction: Faction;
+  /** Whether Player 1 won the match.*/
   win: boolean;
   map: string;
   game: PersistedState["game"];
@@ -70,10 +75,10 @@ export interface StartRecordingProps {
   recordingGame: SupportedGames | null;
   recordingMod: string | null;
   matchType: MatchTypes | null;
+  recordingVersion: string | null;
 }
 
 export type RecordingState = StartRecordingProps & {
-  index: number;
   isRecording: boolean;
   recordingStartTime: Date | null;
 
@@ -83,11 +88,14 @@ export type RecordingState = StartRecordingProps & {
   recordingGame: SupportedGames | null;
   recordingMod: string | null;
   recordingWin: boolean | null;
-  playerFaction: Faction | null;
-  opponentFaction: Faction | null;
+  player1Id: string | null;
+  player2Id: string | null;
+  player1Faction: Faction | null;
+  player2Faction: Faction | null;
   map: string | null;
   notes: string | null;
   links: string[] | null;
+  recordingNumber: number;
 };
 
 /** Transient state items that get reset between app close & open */
@@ -104,12 +112,13 @@ export interface Action {
 
   setMatchType: (matchType: RecordingState["matchType"]) => void;
   setMap: (map: RecordingState["map"]) => void;
-  setPlayerFaction: (playerFaction: RecordingState["playerFaction"]) => void;
-  setOpponentFaction: (
-    opponentFaction: RecordingState["opponentFaction"],
-  ) => void;
+  setPlayer1Faction: (player1Faction: RecordingState["player1Faction"]) => void;
+  setPlayer2Faction: (player2Faction: RecordingState["player2Faction"]) => void;
   setRecordingWin: (recordingWin: RecordingState["recordingWin"]) => void;
   setRecordingMod: (recordingWin: RecordingState["recordingMod"]) => void;
+  setRecordingVersion: (
+    recordingVersion: RecordingState["recordingVersion"],
+  ) => void;
   setIsRecording: (isRecording: RecordingState["isRecording"]) => void;
   setRecordingStartTime: (
     startTime: RecordingState["recordingStartTime"],
@@ -128,8 +137,12 @@ export interface Action {
   addRecordedMatch: (match: RecordedMatch) => void;
   addRecordingToMatches: (recordingEndTime: Date) => void;
   setMatch: (ii: number, match: RecordedMatch) => void;
+  setPlayer1Id: (player1Id: string | null) => void;
+  setPlayer2Id: (player2Id: string | null) => void;
 
   setGame: (game: SupportedGames) => void;
+  setVersion: (version: string) => void;
+  setPlayerId: (playerId: string) => void;
   setGameDirectory: (gameDirectory: State["gameDirectory"]) => void;
   setMod: (mod: State["mod"]) => void;
   setNotes: (notes: State["notes"]) => void;
@@ -147,6 +160,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   page: HOME,
   matches: [],
   defaultMatchType: DOMINATION,
+
   setPage: (value: Page) => {
     set({ page: value });
   },
@@ -169,6 +183,14 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   setGame(value: SupportedGames) {
     set({ game: value });
   },
+  playerId: null,
+  setPlayerId: (playerId) => {
+    set({ playerId });
+  },
+  version: "1.0.0", // Default version if not set
+  setVersion: (value: string) => {
+    set({ version: value });
+  },
   gameDirectory: "",
   setGameDirectory: (value: string) => {
     set({ gameDirectory: value });
@@ -178,6 +200,10 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
     set({ screenshotsDirectory: value });
   },
   recordingStartTime: null,
+  recordingVersion: null,
+  setRecordingVersion: (value: string | null) => {
+    set({ recordingVersion: value });
+  },
   setRecordingStartTime: (value: Date | null) => {
     set({ recordingStartTime: value });
   },
@@ -197,22 +223,31 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   unwatchAutoSaveFn: () => {},
   unwatchScreenshotFn: () => {},
   unwatchArmySetup: () => {},
+  recordingNumber: 0,
   recordingGame: TOTAL_WAR_WARHAMMER_3,
   recordingMod: DEFAULT,
   recordingWin: null,
-  playerFaction: null,
-  opponentFaction: null,
+  player1Id: null,
+  player2Id: null,
+  player1Faction: null,
+  player2Faction: null,
   map: null,
   notes: null,
   links: null,
   setMap: (map) => {
     set({ map });
   },
-  setPlayerFaction: (playerFaction) => {
-    set({ playerFaction });
+  setPlayer1Id: (player1Id) => {
+    set({ player1Id });
   },
-  setOpponentFaction: (opponentFaction) => {
-    set({ opponentFaction });
+  setPlayer2Id: (player2Id) => {
+    set({ player2Id });
+  },
+  setPlayer1Faction: (player1Faction) => {
+    set({ player1Faction });
+  },
+  setPlayer2Faction: (player2Faction) => {
+    set({ player2Faction });
   },
   setRecordingState: (state: RecordingState) => {
     set({
@@ -225,8 +260,10 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       recordingGame: state.recordingGame,
       recordingMod: state.recordingMod,
       recordingWin: state.recordingWin,
-      playerFaction: state.playerFaction,
-      opponentFaction: state.opponentFaction,
+      player1Id: state.player1Id,
+      player2Id: state.player2Id,
+      player1Faction: state.player1Faction,
+      player2Faction: state.player2Faction,
       map: state.map,
       notes: state.notes,
       links: state.links,
@@ -234,7 +271,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   },
   setRecordingStartState: (state: StartRecordingProps) => {
     set({
-      index: get().matches.length + 1,
+      recordingNumber: get().recordingNumber + 1,
       recordingStartTime: new Date(),
       recordingUlid: state.recordingUlid,
       unwatchAutoSaveFn: state.unwatchAutoSaveFn,
@@ -244,8 +281,8 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       recordingMod: state.recordingMod,
       autoSaveFile: null,
       recordingWin: null,
-      playerFaction: null,
-      opponentFaction: null,
+      player1Faction: null,
+      player2Faction: null,
       map: null,
       notes: null,
       links: null,
@@ -255,7 +292,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   },
   setNullRecordingStartState: () => {
     set({
-      index: get().matches.length + 1,
+      recordingNumber: get().recordingNumber + 1,
       recordingStartTime: new Date(),
       recordingUlid: null,
       unwatchAutoSaveFn: () => {},
@@ -264,8 +301,8 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       recordingMod: get().mod,
       autoSaveFile: null,
       recordingWin: null,
-      playerFaction: null,
-      opponentFaction: null,
+      player1Faction: null,
+      player2Faction: null,
       map: null,
       notes: null,
       links: null,
@@ -314,9 +351,9 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
     set((state) => {
       const type =
         state.armySetups.length === 0
-          ? PLAYER
+          ? PLAYER1
           : state.armySetups.length === 1
-            ? OPPONENT
+            ? PLAYER2
             : OTHER;
       return {
         armySetups: [
@@ -362,7 +399,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
         matches: [
           ...state.matches,
           {
-            index: state.index,
+            recordingNumber: state.recordingNumber,
             game: state.recordingGame ?? TOTAL_WAR_WARHAMMER_3,
             mod: state.recordingMod ?? DEFAULT,
             recordingUlid: state.recordingUlid ?? "",
@@ -370,8 +407,10 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
             recordingStartTime: state.recordingStartTime ?? recordingEndTime,
             recordingEndTime: recordingEndTime,
             win: state.recordingWin ?? false,
-            playerFaction: state.playerFaction ?? BEASTMEN,
-            opponentFaction: state.opponentFaction ?? BEASTMEN,
+            player1Id: state.player1Id ?? "",
+            player2Id: state.player2Id ?? "",
+            player1Faction: state.player1Faction ?? BEASTMEN,
+            player2Faction: state.player2Faction ?? BEASTMEN,
             notes: state.notes,
             map: state.map ?? "",
             links: state.links,
@@ -397,5 +436,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
     defaultMatchType: get().defaultMatchType,
     gameDirectory: get().gameDirectory,
     screenshotsDirectory: get().screenshotsDirectory,
+    playerId: get().playerId,
+    version: get().version || "1.0.0", // Default version if not set
   }),
 }));

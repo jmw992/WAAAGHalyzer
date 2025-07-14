@@ -15,12 +15,16 @@ interface GameModSectionGenericProps {
   recordingGame: StartRecordingProps["recordingGame"];
   recordingMod: StartRecordingProps["recordingMod"];
   setRecordingMod: Action["setRecordingMod"];
+  recordingVersion: StartRecordingProps["recordingVersion"];
+  setRecordingVersion: Action["setVersion"];
 }
 
 export default function GameModSectionGeneric({
   recordingGame,
   recordingMod,
   setRecordingMod,
+  recordingVersion,
+  setRecordingVersion,
 }: GameModSectionGenericProps) {
   return (
     <div className="flex flex-row pb-4">
@@ -54,6 +58,17 @@ export default function GameModSectionGeneric({
           onChange={(e) => {
             console.log("mod", e.target.value);
             setRecordingMod(e.target.value);
+          }}
+        />
+      </div>
+      <div className="pl-2">
+        <label htmlFor="recording-version">Version</label>
+        <Input
+          id="recording-version"
+          type="text"
+          value={recordingVersion ?? undefined}
+          onChange={(e) => {
+            setRecordingVersion(e.target.value);
           }}
         />
       </div>
