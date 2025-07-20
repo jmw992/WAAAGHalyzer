@@ -89,6 +89,7 @@ export type RecordingState = StartRecordingProps & {
   recordingMod: string | null;
   recordingWin: boolean | null;
   player1Id: string | null;
+
   player2Id: string | null;
   player1Faction: Faction | null;
   player2Faction: Faction | null;
@@ -267,6 +268,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       map: state.map,
       notes: state.notes,
       links: state.links,
+      recordingVersion: state.recordingVersion,
     });
   },
   setRecordingStartState: (state: StartRecordingProps) => {
@@ -281,6 +283,9 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       recordingMod: state.recordingMod,
       autoSaveFile: null,
       recordingWin: null,
+      recordingVersion: get().version,
+      player1Id: get().playerId,
+      player2Id: null,
       player1Faction: null,
       player2Faction: null,
       map: null,

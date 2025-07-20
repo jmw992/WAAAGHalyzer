@@ -69,6 +69,7 @@ const getPlayerCell = (
         }}
         onBlur={onBlur}
         placeholder={placeholder}
+        autoCapitalize="none"
       />
     );
   };
