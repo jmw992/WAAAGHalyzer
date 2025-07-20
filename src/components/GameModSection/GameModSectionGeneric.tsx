@@ -13,17 +13,21 @@ import type { Action, StartRecordingProps } from "@/lib/useZustandStore";
 
 interface GameModSectionGenericProps {
   recordingGame: StartRecordingProps["recordingGame"];
-  recordingMod: StartRecordingProps["recordingMod"];
+  recordingMod: string;
+  recordingVersion: string;
   setRecordingMod: Action["setRecordingMod"];
+  setRecordingVersion: Action["setVersion"];
 }
 
 export default function GameModSectionGeneric({
   recordingGame,
   recordingMod,
   setRecordingMod,
+  recordingVersion,
+  setRecordingVersion,
 }: GameModSectionGenericProps) {
   return (
-    <div className="flex flex-row pb-4">
+    <div className="flex flex-row pb-4 gap-2">
       <div>
         <label htmlFor="recording-game">Game</label>
         <Select
@@ -45,15 +49,26 @@ export default function GameModSectionGeneric({
         </Select>
       </div>
 
-      <div className="pl-2">
+      <div>
         <label htmlFor="recording-mod">Mod</label>
         <Input
           id="recording-mod"
           type="text"
-          value={recordingMod ?? undefined}
+          value={recordingMod}
           onChange={(e) => {
-            console.log("mod", e.target.value);
             setRecordingMod(e.target.value);
+          }}
+        />
+      </div>
+
+      <div>
+        <label htmlFor="recording-version">Version</label>
+        <Input
+          id="recording-version"
+          type="text"
+          value={recordingVersion}
+          onChange={(e) => {
+            setRecordingVersion(e.target.value);
           }}
         />
       </div>

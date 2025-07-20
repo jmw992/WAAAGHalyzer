@@ -71,8 +71,35 @@ export const SettingsForm = ({
           id="settings-mod"
           type="text"
           value={form.mod}
+          autoCapitalize="off"
           onChange={(e) => {
             handleChange("mod", e.target.value);
+          }}
+        />
+      </div>
+
+      <div>
+        <label htmlFor="settings-version">Version</label>
+        <Input
+          id="settings-version"
+          type="text"
+          value={form.version}
+          onChange={(e) => {
+            handleChange("version", e.target.value);
+          }}
+        />
+      </div>
+
+      <div>
+        <label htmlFor="settings-playerId">Player ID</label>
+        <Input
+          id="settings-playerId"
+          className="normal-case"
+          type="text"
+          value={form.playerId ?? ""}
+          autoCapitalize="none"
+          onChange={(e) => {
+            handleChange("playerId", e.target.value);
           }}
         />
       </div>

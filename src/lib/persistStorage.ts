@@ -11,6 +11,8 @@ export const getStorePersistedSettings = (): PersistedState => {
       DOMINATION) as MatchTypes,
     gameDirectory: localStorage.getItem("gameDirectory") ?? "",
     screenshotsDirectory: localStorage.getItem("screenshotsDirectory") ?? "",
+    playerId: localStorage.getItem("playerId") ?? null,
+    version: localStorage.getItem("version") ?? "",
   };
 };
 
@@ -20,4 +22,6 @@ export const setStorePersistedSettings = (state: PersistedState) => {
   localStorage.setItem("gameDirectory", state.gameDirectory);
   localStorage.setItem("screenshotsDirectory", state.screenshotsDirectory);
   localStorage.setItem("defaultMatchType", state.defaultMatchType);
+  localStorage.setItem("playerId", state.playerId ?? "");
+  localStorage.setItem("version", state.version);
 };

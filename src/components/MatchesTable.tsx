@@ -39,13 +39,13 @@ export function MatchesTable({ matches, onView, onDelete }: MatchesTableProps) {
       cell: ({ getValue }) => <div>{getValue() as string}</div>,
     },
     {
-      accessorKey: "playerFaction",
-      header: "Player Faction",
+      accessorKey: "player1Faction",
+      header: "Player1 Faction",
       cell: ({ getValue }) => <div>{getValue() as string}</div>,
     },
     {
-      accessorKey: "opponentFaction",
-      header: "Opponent Faction",
+      accessorKey: "player2Faction",
+      header: "Player2 Faction",
       cell: ({ getValue }) => <div>{getValue() as string}</div>,
     },
     {

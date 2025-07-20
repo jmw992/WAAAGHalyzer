@@ -7,13 +7,13 @@ export const MatchTableMatch = ({ index }: { index: number }) => {
   const matches = useZustandStore((state) => state.matches);
   const setMatch = useZustandStore((state) => state.setMatch);
   const match = matches[index];
-  const { playerFaction, opponentFaction, win } = match;
+  const { player1Faction, player2Faction, win } = match;
 
-  const setPlayer = (faction: Faction | null) => {
-    setMatch(index, { ...match, playerFaction: faction ?? BEASTMEN });
+  const setPlayer1 = (faction: Faction | null) => {
+    setMatch(index, { ...match, player1Faction: faction ?? BEASTMEN });
   };
-  const setOpponent = (faction: Faction | null) => {
-    setMatch(index, { ...match, opponentFaction: faction ?? BEASTMEN });
+  const setPlayer2 = (faction: Faction | null) => {
+    setMatch(index, { ...match, player2Faction: faction ?? BEASTMEN });
   };
   const setWin = (w: boolean | null) => {
     setMatch(index, { ...match, win: w ?? true });
@@ -21,11 +21,11 @@ export const MatchTableMatch = ({ index }: { index: number }) => {
 
   return (
     <MatchTable
-      playerFaction={playerFaction}
-      opponentFaction={opponentFaction}
+      player1Faction={player1Faction}
+      player2Faction={player2Faction}
       recordingWin={win}
-      setPlayerFaction={setPlayer}
-      setOpponentFaction={setOpponent}
+      setPlayer1Faction={setPlayer1}
+      setPlayer2Faction={setPlayer2}
       setRecordingWin={setWin}
     />
   );

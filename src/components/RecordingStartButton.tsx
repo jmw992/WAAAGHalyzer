@@ -67,6 +67,7 @@ const startRecordingHandler = ({
   mod,
   game,
   defaultMatchType,
+  version,
   addScreenshot,
   addArmySetup,
   setAutoSaveFile,
@@ -95,6 +96,7 @@ const startRecordingHandler = ({
         unwatchArmySetup: unwatchFns[2],
         recordingGame: game,
         recordingMod: mod,
+        recordingVersion: version,
       });
     })
     .catch((error: unknown) => {
