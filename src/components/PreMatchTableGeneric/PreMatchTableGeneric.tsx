@@ -1,7 +1,7 @@
 "use client";
 
 import type { CellContext, ColumnDef, RowData } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import ComboBoxMaps from "@/components/ComboBoxMaps";
 import ComboBoxMatchType from "@/components/ComboBoxMatchType";
 import { Input } from "@/components/ui/input";
@@ -90,72 +90,76 @@ export default function PreMatchTable({
   setPlayer2Id,
 }: PreMatchTableProps) {
   // Local state for input fields
+  const columns = useMemo(() => {
+    const matchCell = ({ getValue }: CellContext<PreMatchColumns, unknown>) => {
+      const initialValue = getValue();
+      return (
+        <ComboBoxMatchType
+          initialValue={initialValue as null}
+          onSelectCb={(val) => {
+            setMatchType(val);
+          }}
+        />
+      );
+    };
 
-  const matchCell = ({ getValue }: CellContext<PreMatchColumns, unknown>) => {
-    const initialValue = getValue();
-    return (
-      <ComboBoxMatchType
-        initialValue={initialValue as null}
-        onSelectCb={(val) => {
-          setMatchType(val);
-        }}
-      />
-    );
-  };
+    const mapCell = ({ getValue }: CellContext<PreMatchColumns, unknown>) => {
+      const initialValue = getValue();
+      return (
+        <ComboBoxMaps
+          initialValue={initialValue as null}
+          onSelectCb={(val) => {
+            setMap(val);
+          }}
+        />
+      );
+    };
 
-  const mapCell = ({ getValue }: CellContext<PreMatchColumns, unknown>) => {
-    const initialValue = getValue();
-    return (
-      <ComboBoxMaps
-        initialValue={initialValue as null}
-        onSelectCb={(val) => {
-          setMap(val);
-        }}
-      />
-    );
-  };
+    const clms: ColumnDef<PreMatchColumns>[] = [
+      {
+        accessorKey: "matchNum",
+        header: "#",
+      },
+      {
+        accessorKey: "matchType",
+        header: "Match Type",
+        cell: matchCell,
+      },
+      {
+        accessorKey: "map",
+        header: "Map",
+        cell: mapCell,
+      },
+      {
+        accessorKey: "player1Id",
+        header: PLAYER1,
+        cell: getPlayerCell(setPlayer1Id, PLAYER1, defaultPlayer1Id),
+      },
+      {
+        accessorKey: "player2Id",
+        header: PLAYER2,
+        cell: getPlayerCell(setPlayer2Id, PLAYER2),
+      },
+    ];
+    return clms;
+  }, [setPlayer1Id, setPlayer2Id, setMap, setMatchType]);
 
-  const columns: ColumnDef<PreMatchColumns>[] = [
-    {
-      accessorKey: "matchNum",
-      header: "#",
-    },
-    {
-      accessorKey: "matchType",
-      header: "Match Type",
-      cell: matchCell,
-    },
-    {
-      accessorKey: "map",
-      header: "Map",
-      cell: mapCell,
-    },
-    {
-      accessorKey: "player1Id",
-      header: PLAYER1,
-      cell: getPlayerCell(setPlayer1Id, PLAYER1, defaultPlayer1Id),
-    },
-    {
-      accessorKey: "player2Id",
-      header: PLAYER2,
-      cell: getPlayerCell(setPlayer2Id, PLAYER2),
-    },
-  ];
+  const data = useMemo(
+    () => [
+      {
+        matchNum,
+        matchType,
+        map,
+        player1Id,
+        player2Id,
+      },
+    ],
+    [matchNum, matchType, map, player1Id, player2Id],
+  );
 
   return (
     <div className="container mx-auto py-5">
-      <DataTable
-        columns={columns}
-        data={[
-          {
-            matchNum: matchNum,
-            matchType,
-            map,
-            player1Id,
-            player2Id,
-          },
-        ]}
-      />
+      <DataTable columns={columns} data={data} />
     </div>
   );
 }

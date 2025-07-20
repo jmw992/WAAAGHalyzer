@@ -5,6 +5,7 @@ import ComboBoxFaction from "@/components/ComboBoxFaction";
 import ComboBoxWin from "@/components/ComboBoxWin";
 import type { RecordingState, ZustandStateAction } from "@/lib/useZustandStore";
 import { DataTable } from "./data-table";
+import { useMemo } from "react";
 
 declare module "@tanstack/react-table" {
   // biome-ignore lint/correctness/noUnusedVariables: skip
@@ -35,75 +36,81 @@ export default function MatchTable({
   setPlayer2Faction,
   setRecordingWin,
 }: MatchTableProps) {
-  const player1Cell = ({ getValue }: CellContext<MatchColumns, unknown>) => {
-    const initialValue = getValue();
+  const columns = useMemo(() => {
+    // const
+    const player1Cell = ({ getValue }: CellContext<MatchColumns, unknown>) => {
+      const initialValue = getValue();
 
-    return (
-      <ComboBoxFaction
-        initialValue={initialValue as null}
-        onSelectCb={(val) => {
-          setPlayer1Faction(val);
-        }}
-      />
-    );
-  };
+      return (
+        <ComboBoxFaction
+          initialValue={initialValue as null}
+          onSelectCb={(val) => {
+            setPlayer1Faction(val);
+          }}
+        />
+      );
+    };
 
-  const player2Cell = ({ getValue }: CellContext<MatchColumns, unknown>) => {
-    const initialValue = getValue();
+    const player2Cell = ({ getValue }: CellContext<MatchColumns, unknown>) => {
+      const initialValue = getValue();
 
-    return (
-      <ComboBoxFaction
-        initialValue={initialValue as null}
-        onSelectCb={(val) => {
-          setPlayer2Faction(val);
-        }}
-      />
-    );
-  };
+      return (
+        <ComboBoxFaction
+          initialValue={initialValue as null}
+          onSelectCb={(val) => {
+            setPlayer2Faction(val);
+          }}
+        />
+      );
+    };
 
-  const recordingWinCell = ({
-    getValue,
-  }: CellContext<MatchColumns, unknown>) => {
-    const initialValue = getValue();
-    return (
-      <ComboBoxWin
-        initialValue={initialValue as null}
-        onSelectCb={(val) => {
-          setRecordingWin(val);
-        }}
-      />
-    );
-  };
-  const columns: ColumnDef<MatchColumns>[] = [
-    {
-      accessorKey: "player1Faction",
-      header: "Player1 Faction",
-      cell: player1Cell,
-    },
-    {
-      accessorKey: "player2Faction",
-      header: "Player2 Faction",
-      cell: player2Cell,
-    },
-    {
-      accessorKey: "recordingWin",
-      header: "Result",
-      cell: recordingWinCell,
-    },
-  ];
+    const recordingWinCell = ({
+      getValue,
+    }: CellContext<MatchColumns, unknown>) => {
+      const initialValue = getValue();
+      return (
+        <ComboBoxWin
+          initialValue={initialValue as null}
+          onSelectCb={(val) => {
+            setRecordingWin(val);
+          }}
+        />
+      );
+    };
+    const clms: ColumnDef<MatchColumns>[] = [
+      {
+        accessorKey: "player1Faction",
+        header: "Player1 Faction",
+        cell: player1Cell,
+      },
+      {
+        accessorKey: "player2Faction",
+        header: "Player2 Faction",
+        cell: player2Cell,
+      },
+      {
+        accessorKey: "recordingWin",
+        header: "Result",
+        cell: recordingWinCell,
+      },
+    ];
+    return clms;
+  }, [setPlayer1Faction, setPlayer2Faction, setRecordingWin]);
+
+  const data = useMemo(
+    () => [
+      {
+        player1Faction,
+        player2Faction,
+        recordingWin,
+      },
+    ],
+    [player1Faction, player2Faction, recordingWin],
+  );
 
   return (
     <div className="container mx-auto py-5">
-      <DataTable
-        columns={columns}
-        data={[
-          {
-            player1Faction,
-            player2Faction,
-            recordingWin,
-          },
-        ]}
-      />
+      <DataTable columns={columns} data={data} />
     </div>
   );
 }
