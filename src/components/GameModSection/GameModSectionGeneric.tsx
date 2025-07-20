@@ -54,7 +54,7 @@ export default function GameModSectionGeneric({
         <Input
           id="recording-mod"
           type="text"
-          value={recordingMod ?? ""}
+          value={recordingMod}
           onChange={(e) => {
             setRecordingMod(e.target.value);
           }}

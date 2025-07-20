@@ -23,5 +23,5 @@ export const setStorePersistedSettings = (state: PersistedState) => {
   localStorage.setItem("screenshotsDirectory", state.screenshotsDirectory);
   localStorage.setItem("defaultMatchType", state.defaultMatchType);
   localStorage.setItem("playerId", state.playerId ?? "");
-  localStorage.setItem("version", state.version ?? "");
+  localStorage.setItem("version", state.version);
 };

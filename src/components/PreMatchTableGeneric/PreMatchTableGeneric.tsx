@@ -1,7 +1,7 @@
 "use client";
 
 import type { CellContext, ColumnDef, RowData } from "@tanstack/react-table";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ComboBoxMaps from "@/components/ComboBoxMaps";
 import ComboBoxMatchType from "@/components/ComboBoxMatchType";
 import { Input } from "@/components/ui/input";
@@ -142,7 +142,7 @@ export default function PreMatchTable({
       },
     ];
     return clms;
-  }, [setPlayer1Id, setPlayer2Id, setMap, setMatchType]);
+  }, [setPlayer1Id, setPlayer2Id, setMap, setMatchType, defaultPlayer1Id]);
 
   const data = useMemo(
     () => [
