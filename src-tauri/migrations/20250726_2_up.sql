@@ -1,8 +1,10 @@
 CREATE TABLE IF NOT EXISTS matches (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     match_type TEXT NOT NULL,
-    player_faction TEXT NOT NULL,
-    opponent_faction TEXT NOT NULL,
+    player1_id TEXT NOT NULL,
+    player2_id TEXT NOT NULL,
+    player1_faction TEXT NOT NULL,
+    player2_faction TEXT NOT NULL,
     win BOOLEAN NOT NULL,
     map TEXT NOT NULL,
     game TEXT NOT NULL,

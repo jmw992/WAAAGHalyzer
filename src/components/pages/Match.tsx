@@ -9,6 +9,7 @@ import NotesRecording from "@/components/Notes/NotesRecording";
 import { PreMatchTableRecording } from "@/components/PreMatchTableGeneric/PreMatchTableRecording";
 import RecordingSectionRecording from "@/components/RecordingSection/RecordingSectionRecording";
 import { ScreenshotsSectionRecording } from "@/components/ScreenshotsMatchSection/ScreenshotsSectionRecording";
+import { LinksTableRecording } from "@/components/LinksTable/LinksTableRecord";
 import { Button } from "@/components/ui/button";
 
 export default function Match() {
@@ -18,6 +19,7 @@ export default function Match() {
       <MatchTableRecordingMatch />
       <ScreenshotsSectionRecording />
       <ArmySetupSectionRecording />
+      <LinksTableRecording />
       <GameModSectionRecording />
       <RecordingSectionRecording />
       <NotesRecording />

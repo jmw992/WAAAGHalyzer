@@ -47,7 +47,6 @@ const getPlayerCell = (
 ) => {
   const playerCell = ({ getValue }: CellContext<PreMatchColumns, unknown>) => {
     const initialValue = (getValue() ?? defaultValue ?? "") as string;
-    console.log("jmw initialValue", initialValue, "value", initialValue);
     // We need to keep and update the state of the cell normally
     const [localValue, setLocalValue] = useState(initialValue);
 

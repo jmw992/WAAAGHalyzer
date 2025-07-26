@@ -44,7 +44,7 @@ export default function TopNav() {
                 </div>
               </button>
               <div className="hidden md:block">
-                <div className="ml-5 flex items-baseline space-x-4">
+                <div className="ml-5 flex items-center items-baseline space-x-4">
                   {/* Page Buttons */}
                   {navigation.map((name) => (
                     <button

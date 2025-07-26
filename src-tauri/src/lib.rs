@@ -18,12 +18,20 @@ fn gudgitz() -> String {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-  let migrations = vec![Migration {
-    version: 1,
-    description: "initial-setup",
-    sql: include_str!("../migrations/20250706_up.sql"),
-    kind: MigrationKind::Up,
-  }];
+  let migrations = vec![
+    Migration {
+      version: 1,
+      description: "table reset",
+      sql: include_str!("../migrations/20250726_1_reset_db.sql"),
+      kind: MigrationKind::Up,
+    },
+    Migration {
+      version: 2,
+      description: "initial-setup",
+      sql: include_str!("../migrations/20250726_2_up.sql"),
+      kind: MigrationKind::Up,
+    },
+  ];
 
   tauri::Builder::default()
     .plugin(

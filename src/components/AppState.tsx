@@ -12,6 +12,7 @@ import {
   useZustandStore,
   type ZustandStateAction,
 } from "@/lib/useZustandStore";
+import Database from "@tauri-apps/plugin-sql";
 
 // /** These state items get persisted between app close & open */
 // export type PersistedState = {
@@ -65,6 +66,12 @@ export default function RootPage({
 }>) {
   const setPersistedState = useZustandStore((state) => state.setPersistedState);
   const setMatchType = useZustandStore((state) => state.setMatchType);
+  const setDb = useZustandStore((state) => state.setDb);
+  const db = useZustandStore((state) => state.db);
+  const setLatestRecordingNumberDb = useZustandStore(
+    (state) => state.setLatestRecordingNumberDb,
+  );
+
   useEffect(() => {
     // Set default from localStorage on first load
     const persistedState = getStorePersistedSettings();
@@ -74,7 +81,6 @@ export default function RootPage({
       persistedState.gameDirectory === "" ||
       persistedState.screenshotsDirectory === ""
     ) {
-      // console.log();
       void asyncDirsUpdate({
         gameDirectory: persistedState.gameDirectory,
         screenshotsDirectory: persistedState.screenshotsDirectory,
@@ -83,7 +89,22 @@ export default function RootPage({
           useZustandStore.getState().setScreenshotsDirectory,
       });
     }
-  }, [setPersistedState, setMatchType]);
+
+    // Initialize the database connection
+    Database.load("sqlite:mydatabase.db")
+      .then((db) => {
+        setDb(db);
+      })
+      .catch((err) => {
+        console.error("Failed to load database:", err);
+      });
+  }, [setPersistedState, setMatchType, setDb]);
+
+  useEffect(() => {
+    if (db) {
+      setLatestRecordingNumberDb();
+    }
+  }, [db, setLatestRecordingNumberDb]);
 
   return children;
 }
