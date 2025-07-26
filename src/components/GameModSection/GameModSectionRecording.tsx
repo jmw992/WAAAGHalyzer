@@ -16,7 +16,7 @@ export function GameModSectionRecording() {
     <GameModSectionGeneric
       recordingGame={recordingGame}
       recordingMod={recordingMod ?? ""}
-      recordingVersion={recordingVersion ?? ""}
+      recordingVersion={recordingVersion}
       setRecordingMod={setRecordingMod}
       setRecordingVersion={setRecordingVersion}
     />
