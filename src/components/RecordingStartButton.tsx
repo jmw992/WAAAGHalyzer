@@ -48,23 +48,13 @@ const asyncWatch = async ({
         },
       }),
     ]);
-    const unwatchFns = unwatchPromisesFns
-      .filter((result) => {
-        if (result.status === "fulfilled") {
-          return true;
-        } else {
-          console.error("Error setting up watch:", result.reason);
-          return false;
-        }
-      })
-      .map((result) => {
-        if (result.status === "fulfilled") {
-          return result.value;
-        } else {
-          console.error("Error setting up watch:", result.reason);
-          return () => {}; // Return a no-op function if the watch setup failed
-        }
-      });
+    const unwatchFns = unwatchPromisesFns.map((result) => {
+      if (result.status === "fulfilled") {
+        return result.value;
+      }
+      console.error("Error setting up watch:", result.reason);
+      return () => {}; // Return a no-op function if the watch setup failed
+    });
     return unwatchFns;
   } catch (error) {
     console.error("asyncWatch error:", error);
