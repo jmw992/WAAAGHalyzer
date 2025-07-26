@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-table";
 import { Trash2 } from "lucide-react";
 import { useMemo } from "react";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -15,7 +16,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Link } from "@/lib/useZustandStore";
-import { Input } from "@/components/ui/input";
 
 interface LinksTableProps {
   links: Link[];

@@ -2,6 +2,7 @@
 import { Clipboard, DownloadIcon } from "lucide-react";
 import { ArmySetupSectionRecording } from "@/components/ArmySetupMatchSection/ArmySetupSectionRecording";
 import { GameModSectionRecording } from "@/components/GameModSection/GameModSectionRecording";
+import { LinksTableRecording } from "@/components/LinksTable/LinksTableRecord";
 import MatchSaveButton from "@/components/MatchSaveButton";
 import { MatchTableRecordingMatch } from "@/components/MatchTableGeneric/MatchTableRecording";
 import NotesRecording from "@/components/Notes/NotesRecording";
@@ -9,7 +10,6 @@ import NotesRecording from "@/components/Notes/NotesRecording";
 import { PreMatchTableRecording } from "@/components/PreMatchTableGeneric/PreMatchTableRecording";
 import RecordingSectionRecording from "@/components/RecordingSection/RecordingSectionRecording";
 import { ScreenshotsSectionRecording } from "@/components/ScreenshotsMatchSection/ScreenshotsSectionRecording";
-import { LinksTableRecording } from "@/components/LinksTable/LinksTableRecord";
 import { Button } from "@/components/ui/button";
 
 export default function Match() {

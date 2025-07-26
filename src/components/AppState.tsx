@@ -1,6 +1,7 @@
 "use client";
 
 import { configDir, join, pictureDir } from "@tauri-apps/api/path";
+import Database from "@tauri-apps/plugin-sql";
 import type React from "react";
 import { useEffect } from "react";
 import {
@@ -12,7 +13,6 @@ import {
   useZustandStore,
   type ZustandStateAction,
 } from "@/lib/useZustandStore";
-import Database from "@tauri-apps/plugin-sql";
 
 // /** These state items get persisted between app close & open */
 // export type PersistedState = {
@@ -95,14 +95,14 @@ export default function RootPage({
       .then((db) => {
         setDb(db);
       })
-      .catch((err) => {
+      .catch((err: unknown) => {
         console.error("Failed to load database:", err);
       });
   }, [setPersistedState, setMatchType, setDb]);
 
   useEffect(() => {
     if (db) {
-      setLatestRecordingNumberDb();
+      void setLatestRecordingNumberDb();
     }
   }, [db, setLatestRecordingNumberDb]);
 

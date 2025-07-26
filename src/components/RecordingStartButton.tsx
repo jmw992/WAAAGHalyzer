@@ -71,7 +71,7 @@ const asyncWatch = async ({
   }
 };
 
-type StartRecordingHandlerProps = {
+interface StartRecordingHandlerProps {
   screenshotsDirectory: PersistedState["screenshotsDirectory"];
   gameDirectory: PersistedState["gameDirectory"];
   addScreenshot: Action["addScreenshot"];
@@ -79,7 +79,7 @@ type StartRecordingHandlerProps = {
   setAutoSaveFile: Action["setAutoSaveFile"];
   setRecordingStartState: Action["setRecordingStartState"];
   setLatestRecordingNumberDb: DbActions["setLatestRecordingNumberDb"];
-};
+}
 
 const startRecordingHandler = async ({
   screenshotsDirectory,
@@ -110,7 +110,7 @@ const startRecordingHandler = async ({
       unwatchAutoSaveFn: unwatchFns[1],
       unwatchArmySetup: unwatchFns[2],
     });
-    setLatestRecordingNumberDb();
+    await setLatestRecordingNumberDb();
   } catch (error) {
     console.error("Error starting recording:", error);
   }
@@ -138,7 +138,7 @@ export default function RecordingStartButton() {
       variant={"ghost"}
       className="p-1 text-green-500 hover:text-green-300"
       onClick={() => {
-        startRecordingHandler({
+        void startRecordingHandler({
           screenshotsDirectory,
           gameDirectory,
           addScreenshot,

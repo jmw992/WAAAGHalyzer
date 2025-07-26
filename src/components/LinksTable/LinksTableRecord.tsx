@@ -1,7 +1,7 @@
-import { useZustandStore } from "@/lib/useZustandStore";
 import { PlusIcon } from "lucide-react";
-import { LinksTableGeneric } from "./LinksTableGeneric";
 import { Button } from "@/components/ui/button";
+import { useZustandStore } from "@/lib/useZustandStore";
+import { LinksTableGeneric } from "./LinksTableGeneric";
 
 export function LinksTableRecording() {
   const links = useZustandStore((s) => s.links);
@@ -19,7 +19,9 @@ export function LinksTableRecording() {
       />
       <div className="flex justify-end mt-2">
         <Button
-          onClick={() => addLink({ url: "", title: "" })}
+          onClick={() => {
+            addLink({ url: "", title: "" });
+          }}
           size="icon"
           variant={"secondary"}
           disabled={recordingUlid === null}

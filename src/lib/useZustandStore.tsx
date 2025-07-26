@@ -1,4 +1,5 @@
 import type { UnwatchFn } from "@tauri-apps/plugin-fs";
+import type Database from "@tauri-apps/plugin-sql";
 import { create } from "zustand";
 import {
   BEASTMEN,
@@ -20,7 +21,6 @@ import type {
   ScreenshotType,
   SupportedGames,
 } from "@/types";
-import Database from "@tauri-apps/plugin-sql";
 
 export interface AppMeta {
   db: Database | null;
@@ -551,7 +551,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       return;
     }
     try {
-      get().addMatchDb({
+      await get().addMatchDb({
         matchType: get().matchType ?? DOMINATION,
         player1Id: get().player1Id ?? "",
         player2Id: get().player2Id ?? "",

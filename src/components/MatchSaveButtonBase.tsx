@@ -30,7 +30,6 @@ const saveHandler = async ({
   setNullRecordingStartState,
   addRecordingMatchDb,
 }: SaveHandlerProps) => {
-  console.log("saveHandler called");
   // Only add recorded match if files were captured or win loss added
   if (autoSaveFile || screenshots.length > 0 || recordingWin !== null) {
     const addRecordingMatchDbPromise = addRecordingMatchDb();
@@ -90,7 +89,7 @@ export default function MatchSaveButtonBase({
       type="submit"
       className={buttonClassName}
       onClick={() => {
-        saveHandler({
+        void saveHandler({
           autoSaveFile,
           recordingWin,
           screenshots,
