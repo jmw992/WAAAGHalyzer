@@ -26,7 +26,10 @@ export const SettingsForm = ({
   // Local state for form
   const [form, setForm] = useState<PersistedState>(initialState);
 
-  const handleChange = (key: keyof PersistedState, value: unknown) => {
+  const handleChange = <K extends keyof PersistedState>(
+    key: K,
+    value: PersistedState[K],
+  ) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
   const handleSubmit = () => {
@@ -50,7 +53,7 @@ export const SettingsForm = ({
         <Select
           value={form.game}
           onValueChange={(value) => {
-            handleChange("game", value);
+            handleChange("game", value as PersistedState["game"]);
           }}
           defaultValue={form.game}
         >
@@ -111,7 +114,10 @@ export const SettingsForm = ({
         <Select
           value={form.defaultMatchType}
           onValueChange={(value) => {
-            handleChange("defaultMatchType", value);
+            handleChange(
+              "defaultMatchType",
+              value as PersistedState["defaultMatchType"],
+            );
           }}
           defaultValue={form.defaultMatchType}
         >
