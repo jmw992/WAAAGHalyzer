@@ -2,7 +2,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { PlayIcon } from "lucide-react";
 import { ulid } from "ulid";
-import type { Action, DbActions, PersistedState } from "@/lib/useZustandStore";
+import type { Action, DbActions, PersistedState } from "@/lib/types";
 import { useZustandStore } from "@/lib/useZustandStore";
 import { watchNewArmySetup } from "@/lib/watchNewArmySetup";
 import { watchNewAutoSave } from "@/lib/watchNewAutoSave";

@@ -18,7 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { MATCH_TYPES } from "@/constants";
-import type { RecordingState } from "@/lib/useZustandStore";
+import type { RecordingState } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import type { MatchTypes } from "@/types";
 

@@ -18,7 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { MAPS } from "@/constants/maps";
-import type { RecordingState } from "@/lib/useZustandStore";
+import type { RecordingState } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import type { Faction } from "@/types";
 

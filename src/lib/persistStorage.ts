@@ -1,6 +1,6 @@
 import { DEFAULT, DOMINATION, TOTAL_WAR_WARHAMMER_3 } from "@/constants";
 import type { MatchTypes, SupportedGames } from "@/types";
-import type { PersistedState } from "./useZustandStore";
+import type { PersistedState } from "./types";
 
 export const getStorePersistedSettings = (): PersistedState => {
   return {

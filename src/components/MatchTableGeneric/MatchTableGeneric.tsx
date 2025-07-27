@@ -4,7 +4,7 @@ import type { CellContext, ColumnDef, RowData } from "@tanstack/react-table";
 import { useMemo } from "react";
 import ComboBoxFaction from "@/components/ComboBoxFaction";
 import ComboBoxWin from "@/components/ComboBoxWin";
-import type { RecordingState, ZustandStateAction } from "@/lib/useZustandStore";
+import type { RecordingState, ZustandStateAction } from "@/lib/types";
 import { DataTable } from "./data-table";
 
 declare module "@tanstack/react-table" {

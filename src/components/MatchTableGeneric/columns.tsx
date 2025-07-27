@@ -2,7 +2,7 @@
 import type { CellContext, ColumnDef, RowData } from "@tanstack/react-table";
 import ComboBoxFaction from "@/components/ComboBoxFaction";
 import ComboBoxWin from "@/components/ComboBoxWin";
-import type { RecordingState } from "@/lib/useZustandStore";
+import type { RecordingState } from "@/lib/types";
 import { useZustandStore } from "@/lib/useZustandStore";
 
 declare module "@tanstack/react-table" {

@@ -1,7 +1,7 @@
 "use client";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import type { Action, DbActions, RecordingState } from "@/lib/useZustandStore";
+import type { Action, DbActions, RecordingState } from "@/lib/types";
 import { useZustandStore } from "@/lib/useZustandStore";
 import { Button, type ButtonProps } from "./ui/button";
 

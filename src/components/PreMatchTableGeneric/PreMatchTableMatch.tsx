@@ -1,7 +1,7 @@
 "use client";
 
 import { DOMINATION } from "@/constants";
-import type { RecordingState } from "@/lib/useZustandStore";
+import type { RecordingState } from "@/lib/types";
 import { useZustandStore } from "@/lib/useZustandStore";
 import PreMatchTableGeneric from "./PreMatchTableGeneric";
 

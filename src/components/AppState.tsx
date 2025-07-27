@@ -10,10 +10,8 @@ import {
   DEFAULT_SCREENSHOTS_DIRECTORY,
 } from "@/constants";
 import { getStorePersistedSettings } from "@/lib/persistStorage";
-import {
-  useZustandStore,
-  type ZustandStateAction,
-} from "@/lib/useZustandStore";
+import type { ZustandStateAction } from "@/lib/types";
+import { useZustandStore } from "@/lib/useZustandStore";
 
 // /** These state items get persisted between app close & open */
 // export type PersistedState = {
@@ -73,6 +71,8 @@ export default function RootPage({
   const setLatestRecordingNumberDb = useZustandStore(
     (state) => state.setLatestRecordingNumberDb,
   );
+  const getMatchesDb = useZustandStore((state) => state.getMatchesDb);
+  const setMatches = useZustandStore((state) => state.setMatches);
 
   useEffect(() => {
     // Set default from localStorage on first load
@@ -105,8 +105,13 @@ export default function RootPage({
   useEffect(() => {
     if (db) {
       void setLatestRecordingNumberDb();
+      void getMatchesDb().then((matches) => {
+        if (matches) {
+          setMatches(matches);
+        }
+      });
     }
-  }, [db, setLatestRecordingNumberDb]);
+  }, [db, setLatestRecordingNumberDb, getMatchesDb, setMatches]);
 
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
