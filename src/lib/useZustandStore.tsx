@@ -1,7 +1,7 @@
 import type { UnwatchFn } from "@tauri-apps/plugin-fs";
+import type Database from "@tauri-apps/plugin-sql";
 import { create } from "zustand";
 import {
-  BEASTMEN,
   DEFAULT,
   DOMINATION,
   END_BATTLE,
@@ -20,6 +20,10 @@ import type {
   ScreenshotType,
   SupportedGames,
 } from "@/types";
+
+export interface AppMeta {
+  db: Database | null;
+}
 
 /** These state items get persisted between app close & open */
 export interface PersistedState {
@@ -45,26 +49,32 @@ export interface ArmySetup {
   type: ArmySetupType;
 }
 
+export interface Link {
+  title: string;
+  url: string;
+}
+
 export interface RecordedMatch {
   recordingNumber: number;
   matchType: MatchTypes;
-  player1Id: string;
-  player2Id: string;
-  player1Faction: Faction;
-  player2Faction: Faction;
+  player1Id: string | null;
+  player2Id: string | null;
+  player1Faction: Faction | null;
+  player2Faction: Faction | null;
+  autoSaveFile: string | null;
+  map: string | null;
   /** Whether Player 1 won the match.*/
   win: boolean;
-  map: string;
   game: PersistedState["game"];
   mod: PersistedState["mod"];
   recordingUlid: string;
-  autoSaveFile: string;
   recordingStartTime: Date;
   recordingEndTime: Date;
   notes: RecordingState["notes"];
   links: RecordingState["links"];
   armySetups: RecordingState["armySetups"];
   screenshots: RecordingState["screenshots"];
+  version: RecordingState["recordingVersion"];
 }
 
 export interface StartRecordingProps {
@@ -72,10 +82,6 @@ export interface StartRecordingProps {
   unwatchAutoSaveFn: UnwatchFn;
   unwatchScreenshotFn: UnwatchFn;
   unwatchArmySetup: UnwatchFn;
-  recordingGame: SupportedGames | null;
-  recordingMod: string | null;
-  matchType: MatchTypes | null;
-  recordingVersion: string | null;
 }
 
 export type RecordingState = StartRecordingProps & {
@@ -83,11 +89,11 @@ export type RecordingState = StartRecordingProps & {
   recordingStartTime: Date | null;
 
   autoSaveFile: string | null;
-  screenshots: Screenshot[];
-  armySetups: ArmySetup[];
   recordingGame: SupportedGames | null;
   recordingMod: string | null;
   recordingWin: boolean | null;
+  matchType: MatchTypes | null;
+  recordingVersion: string;
   player1Id: string | null;
 
   player2Id: string | null;
@@ -95,8 +101,11 @@ export type RecordingState = StartRecordingProps & {
   player2Faction: Faction | null;
   map: string | null;
   notes: string | null;
-  links: string[] | null;
-  recordingNumber: number;
+  recordingNumber: number | null;
+
+  links: Link[];
+  screenshots: Screenshot[];
+  armySetups: ArmySetup[];
 };
 
 /** Transient state items that get reset between app close & open */
@@ -110,7 +119,6 @@ type State = PersistedState & TransientState;
 
 export interface Action {
   setPage: (page: State["page"]) => void;
-
   setMatchType: (matchType: RecordingState["matchType"]) => void;
   setMap: (map: RecordingState["map"]) => void;
   setPlayer1Faction: (player1Faction: RecordingState["player1Faction"]) => void;
@@ -125,7 +133,7 @@ export interface Action {
     startTime: RecordingState["recordingStartTime"],
   ) => void;
   setRecordingUlid: (ulid: StartRecordingProps["recordingUlid"]) => void;
-  setRecordingState: (recordingState: RecordingState) => void;
+
   setRecordingStartState: (startRecordingProps: StartRecordingProps) => void;
   setNullRecordingStartState: () => void;
   setAutoSaveFile: (file: RecordingState["autoSaveFile"]) => void;
@@ -141,6 +149,10 @@ export interface Action {
   setPlayer1Id: (player1Id: string | null) => void;
   setPlayer2Id: (player2Id: string | null) => void;
 
+  addLink: (link: Link) => void;
+  deleteLink: (index: number) => void;
+  updateLink: (index: number, link: Link) => void;
+
   setGame: (game: SupportedGames) => void;
   setVersion: (version: string) => void;
   setPlayerId: (playerId: string) => void;
@@ -152,11 +164,25 @@ export interface Action {
   ) => void;
   setPersistedState: (value: PersistedState) => void;
   getPersistedState: () => PersistedState;
+
+  setDb: (db: Database) => void;
 }
 
-export type ZustandStateAction = State & Action;
+export interface DbActions {
+  getLatestRecordingNumberDb: () => Promise<number | null>;
+  setLatestRecordingNumberDb: () => Promise<void>;
+  /** Adds Match to Db, rely on Db to auto-increment */
+  addMatchDb: (match: Omit<RecordedMatch, "recordingNumber">) => Promise<void>;
+  addRecordingMatchDb: () => Promise<void>;
+}
+
+export type ZustandStateAction = State & Action & AppMeta & DbActions;
 
 export const useZustandStore = create<ZustandStateAction>((set, get) => ({
+  db: null,
+  setDb: (db: Database) => {
+    set({ db });
+  },
   index: 0,
   page: HOME,
   matches: [],
@@ -201,8 +227,8 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
     set({ screenshotsDirectory: value });
   },
   recordingStartTime: null,
-  recordingVersion: null,
-  setRecordingVersion: (value: string | null) => {
+  recordingVersion: "1.0.0", // Default version if not set
+  setRecordingVersion: (value: string) => {
     set({ recordingVersion: value });
   },
   setRecordingStartTime: (value: Date | null) => {
@@ -234,7 +260,22 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   player2Faction: null,
   map: null,
   notes: null,
-  links: null,
+  links: [],
+  addLink: (link: Link) => {
+    set((state) => ({
+      links: [...state.links, link],
+    }));
+  },
+  deleteLink: (index: number) => {
+    set((state) => ({
+      links: state.links.filter((_, i) => i !== index),
+    }));
+  },
+  updateLink: (index: number, link: Link) => {
+    set((state) => ({
+      links: state.links.map((l, i) => (i === index ? link : l)),
+    }));
+  },
   setMap: (map) => {
     set({ map });
   },
@@ -250,37 +291,14 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   setPlayer2Faction: (player2Faction) => {
     set({ player2Faction });
   },
-  setRecordingState: (state: RecordingState) => {
-    set({
-      isRecording: state.isRecording,
-      recordingStartTime: state.recordingStartTime,
-      recordingUlid: state.recordingUlid,
-      unwatchAutoSaveFn: state.unwatchAutoSaveFn,
-      unwatchScreenshotFn: state.unwatchScreenshotFn,
-      autoSaveFile: state.autoSaveFile,
-      recordingGame: state.recordingGame,
-      recordingMod: state.recordingMod,
-      recordingWin: state.recordingWin,
-      player1Id: state.player1Id,
-      player2Id: state.player2Id,
-      player1Faction: state.player1Faction,
-      player2Faction: state.player2Faction,
-      map: state.map,
-      notes: state.notes,
-      links: state.links,
-      recordingVersion: state.recordingVersion,
-    });
-  },
   setRecordingStartState: (state: StartRecordingProps) => {
     set({
-      recordingNumber: get().recordingNumber + 1,
       recordingStartTime: new Date(),
       recordingUlid: state.recordingUlid,
       unwatchAutoSaveFn: state.unwatchAutoSaveFn,
       unwatchScreenshotFn: state.unwatchScreenshotFn,
+      unwatchArmySetup: state.unwatchArmySetup,
       isRecording: true,
-      recordingGame: state.recordingGame,
-      recordingMod: state.recordingMod,
       autoSaveFile: null,
       recordingWin: null,
       recordingVersion: get().version,
@@ -290,14 +308,14 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       player2Faction: null,
       map: null,
       notes: null,
-      links: null,
+      links: [],
       screenshots: [],
       armySetups: [],
     });
   },
   setNullRecordingStartState: () => {
     set({
-      recordingNumber: get().recordingNumber + 1,
+      recordingNumber: null,
       recordingStartTime: new Date(),
       recordingUlid: null,
       unwatchAutoSaveFn: () => {},
@@ -310,9 +328,10 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       player2Faction: null,
       map: null,
       notes: null,
-      links: null,
+      links: [],
       screenshots: [],
       armySetups: [],
+      recordingVersion: get().recordingVersion,
     });
   },
   // setNullRecordingStartState
@@ -404,24 +423,25 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
         matches: [
           ...state.matches,
           {
-            recordingNumber: state.recordingNumber,
+            recordingNumber: state.recordingNumber ?? 0,
             game: state.recordingGame ?? TOTAL_WAR_WARHAMMER_3,
             mod: state.recordingMod ?? DEFAULT,
             recordingUlid: state.recordingUlid ?? "",
-            autoSaveFile: state.autoSaveFile ?? "",
+            autoSaveFile: state.autoSaveFile,
             recordingStartTime: state.recordingStartTime ?? recordingEndTime,
             recordingEndTime: recordingEndTime,
             win: state.recordingWin ?? false,
-            player1Id: state.player1Id ?? "",
-            player2Id: state.player2Id ?? "",
-            player1Faction: state.player1Faction ?? BEASTMEN,
-            player2Faction: state.player2Faction ?? BEASTMEN,
+            player1Id: state.player1Id,
+            player2Id: state.player2Id,
+            player1Faction: state.player1Faction,
+            player2Faction: state.player2Faction,
             notes: state.notes,
-            map: state.map ?? "",
+            map: state.map,
             links: state.links,
             screenshots: state.screenshots,
             armySetups: state.armySetups,
             matchType: state.matchType ?? DOMINATION,
+            version: state.recordingVersion,
           },
         ],
       };
@@ -434,7 +454,6 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       return { matches };
     });
   },
-  // getPersistedState
   getPersistedState: () => ({
     game: get().game,
     mod: get().mod,
@@ -444,4 +463,125 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
     playerId: get().playerId,
     version: get().version || "1.0.0", // Default version if not set
   }),
+
+  getLatestRecordingNumberDb: async () => {
+    const db = get().db;
+    if (!db) {
+      console.error("Database not initialized");
+      return null;
+    }
+    try {
+      const result: Record<string, number | null>[] = await db.select(
+        "SELECT MAX(id) FROM matches",
+      );
+      console.log("Latest match result:", result);
+      const latestMatchId = result[0]["MAX(id)"] ?? 0;
+      return latestMatchId;
+    } catch (error) {
+      console.error("Error fetching latest match:", error);
+      return null;
+    }
+  },
+  setLatestRecordingNumberDb: async () => {
+    const latestRecordingNumber =
+      ((await get().getLatestRecordingNumberDb()) ?? 0) + 1;
+    console.log("Setting latest recording number to:", latestRecordingNumber);
+    // Update the Zustand state with the latest
+    set({ recordingNumber: latestRecordingNumber });
+  },
+  addMatchDb: async (match: Omit<RecordedMatch, "recordingNumber">) => {
+    const {
+      matchType,
+      player1Id,
+      player2Id,
+      player1Faction,
+      player2Faction,
+      win,
+      map,
+      game,
+      mod,
+      recordingUlid,
+      autoSaveFile,
+      recordingStartTime,
+      recordingEndTime,
+      notes,
+      links,
+      armySetups,
+      screenshots,
+      version,
+    } = match;
+    const db = get().db;
+    if (!db) {
+      console.error("Database not initialized");
+      return;
+    }
+    try {
+      await db.execute(
+        "INSERT INTO matches (match_type, " +
+          "player1_id, player2_id, player1_faction, player2_faction, " +
+          "win, map, game, mod, recording_ulid, auto_save_file, " +
+          "recording_start_time, recording_end_time, notes, " +
+          "links, army_setups, screenshots, vrsn) " +
+          "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)",
+        [
+          matchType,
+          player1Id,
+          player2Id,
+          player1Faction,
+          player2Faction,
+          win,
+          map,
+          game,
+          mod,
+          recordingUlid,
+          autoSaveFile,
+          recordingStartTime.toISOString(),
+          recordingEndTime.toISOString(),
+          notes,
+          links.length ? JSON.stringify(links) : null,
+          armySetups.length ? JSON.stringify(armySetups) : null,
+          screenshots.length ? JSON.stringify(screenshots) : null,
+          version,
+        ],
+      );
+    } catch (error) {
+      console.error("Error adding match:", error);
+    }
+  },
+  addRecordingMatchDb: async () => {
+    const db = get().db;
+    if (!db) {
+      console.error("Database not initialized");
+      return;
+    }
+    try {
+      // player1Id: string | null;
+      // player2Id: string | null;
+      // player1Faction: Faction | null;
+      // player2Faction: Faction | null;
+      // autoSaveFile: string | null;
+      await get().addMatchDb({
+        matchType: get().matchType ?? DOMINATION,
+        player1Id: get().player1Id,
+        player2Id: get().player2Id,
+        player1Faction: get().player1Faction,
+        player2Faction: get().player2Faction,
+        win: get().recordingWin ?? false,
+        map: get().map,
+        game: get().recordingGame ?? TOTAL_WAR_WARHAMMER_3,
+        mod: get().recordingMod ?? DEFAULT,
+        recordingUlid: get().recordingUlid ?? "",
+        autoSaveFile: get().autoSaveFile,
+        recordingStartTime: get().recordingStartTime ?? new Date(),
+        recordingEndTime: new Date(),
+        notes: get().notes,
+        links: get().links,
+        armySetups: get().armySetups,
+        screenshots: get().screenshots,
+        version: get().recordingVersion,
+      });
+    } catch (error) {
+      console.error("Error adding recording:", error);
+    }
+  },
 }));

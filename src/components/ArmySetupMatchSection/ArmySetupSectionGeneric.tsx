@@ -21,7 +21,6 @@ export const ArmySetupSectionGeneric = ({
       multiple: false,
       directory: false,
     });
-    console.log("Selected file:", file);
     if (typeof file === "string") {
       const originalFile = splitFilePath(file).filename;
       await copyAutoSaveToMatchDir({

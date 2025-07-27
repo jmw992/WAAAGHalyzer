@@ -1,5 +1,4 @@
 import MatchTable from "@/components/MatchTableGeneric/MatchTableGeneric";
-import { BEASTMEN } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
 import type { Faction } from "@/types";
 
@@ -10,10 +9,10 @@ export const MatchTableMatch = ({ index }: { index: number }) => {
   const { player1Faction, player2Faction, win } = match;
 
   const setPlayer1 = (faction: Faction | null) => {
-    setMatch(index, { ...match, player1Faction: faction ?? BEASTMEN });
+    setMatch(index, { ...match, player1Faction: faction });
   };
   const setPlayer2 = (faction: Faction | null) => {
-    setMatch(index, { ...match, player2Faction: faction ?? BEASTMEN });
+    setMatch(index, { ...match, player2Faction: faction });
   };
   const setWin = (w: boolean | null) => {
     setMatch(index, { ...match, win: w ?? true });

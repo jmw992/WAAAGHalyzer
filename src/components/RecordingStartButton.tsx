@@ -1,7 +1,7 @@
 "use client";
 import { PlayIcon } from "lucide-react";
 import { ulid } from "ulid";
-import type { Action, PersistedState } from "@/lib/useZustandStore";
+import type { Action, DbActions, PersistedState } from "@/lib/useZustandStore";
 import { useZustandStore } from "@/lib/useZustandStore";
 import { watchNewArmySetup } from "@/lib/watchNewArmySetup";
 import { watchNewAutoSave } from "@/lib/watchNewAutoSave";
@@ -25,7 +25,7 @@ const asyncWatch = async ({
   addArmySetup,
 }: AsyncWatchProps) => {
   try {
-    const unwatchFns = await Promise.all([
+    const unwatchPromisesFns = await Promise.allSettled([
       watchNewScreenshot({
         screenshotsDir: screenshotsDirectory,
         destinationDir: newRecordingUlid,
@@ -48,60 +48,62 @@ const asyncWatch = async ({
         },
       }),
     ]);
+    const unwatchFns = unwatchPromisesFns.map((result) => {
+      if (result.status === "fulfilled") {
+        return result.value;
+      }
+      console.error("Error setting up watch:", result.reason);
+      return () => {}; // Return a no-op function if the watch setup failed
+    });
     return unwatchFns;
   } catch (error) {
     console.error("asyncWatch error:", error);
   }
 };
 
-type StartRecordingHandlerProps = PersistedState & {
+interface StartRecordingHandlerProps {
+  screenshotsDirectory: PersistedState["screenshotsDirectory"];
+  gameDirectory: PersistedState["gameDirectory"];
   addScreenshot: Action["addScreenshot"];
   addArmySetup: Action["addArmySetup"];
   setAutoSaveFile: Action["setAutoSaveFile"];
   setRecordingStartState: Action["setRecordingStartState"];
-};
+  setLatestRecordingNumberDb: DbActions["setLatestRecordingNumberDb"];
+}
 
-const startRecordingHandler = ({
+const startRecordingHandler = async ({
   screenshotsDirectory,
   gameDirectory,
-  mod,
-  game,
-  defaultMatchType,
-  version,
   addScreenshot,
   addArmySetup,
   setAutoSaveFile,
   setRecordingStartState,
+  setLatestRecordingNumberDb,
 }: StartRecordingHandlerProps) => {
   const newRecordingUlid = ulid();
   // Start recording logic here
-
-  asyncWatch({
-    newRecordingUlid,
-    screenshotsDirectory,
-    gameDirectory,
-    addScreenshot,
-    addArmySetup,
-    setAutoSaveFile,
-  })
-    .then((unwatchFns) => {
-      if (!unwatchFns) {
-        throw new Error("recordingHandler unwatchFns not set up correctly");
-      }
-      setRecordingStartState({
-        matchType: defaultMatchType,
-        recordingUlid: newRecordingUlid,
-        unwatchScreenshotFn: unwatchFns[0],
-        unwatchAutoSaveFn: unwatchFns[1],
-        unwatchArmySetup: unwatchFns[2],
-        recordingGame: game,
-        recordingMod: mod,
-        recordingVersion: version,
-      });
-    })
-    .catch((error: unknown) => {
-      console.error("recordingHandler error:", error);
+  try {
+    const unwatchFns = await asyncWatch({
+      newRecordingUlid,
+      screenshotsDirectory,
+      gameDirectory,
+      addScreenshot,
+      addArmySetup,
+      setAutoSaveFile,
     });
+    if (!unwatchFns) {
+      throw new Error("recordingHandler unwatchFns not set up correctly");
+    }
+    setRecordingStartState({
+      recordingUlid: newRecordingUlid,
+      unwatchScreenshotFn: unwatchFns[0],
+      unwatchAutoSaveFn: unwatchFns[1],
+      unwatchArmySetup: unwatchFns[2],
+    });
+    await setLatestRecordingNumberDb();
+  } catch (error) {
+    console.error("Error starting recording:", error);
+  }
 };
 
 export default function RecordingStartButton() {
@@ -109,9 +111,6 @@ export default function RecordingStartButton() {
     (state) => state.screenshotsDirectory,
   );
   const gameDirectory = useZustandStore((state) => state.gameDirectory);
-  const game = useZustandStore((state) => state.game);
-  const mod = useZustandStore((state) => state.mod);
-  const defaultMatchType = useZustandStore((state) => state.defaultMatchType);
 
   const setRecordingStartState = useZustandStore(
     (state) => state.setRecordingStartState,
@@ -119,6 +118,9 @@ export default function RecordingStartButton() {
   const addScreenshot = useZustandStore((state) => state.addScreenshot);
   const addArmySetup = useZustandStore((state) => state.addArmySetup);
   const setAutoSaveFile = useZustandStore((state) => state.setAutoSaveFile);
+  const setLatestRecordingNumberDb = useZustandStore(
+    (state) => state.setLatestRecordingNumberDb,
+  );
 
   return (
     <Button
@@ -126,16 +128,14 @@ export default function RecordingStartButton() {
       variant={"ghost"}
       className="p-1 text-green-500 hover:text-green-300"
       onClick={() => {
-        startRecordingHandler({
+        void startRecordingHandler({
           screenshotsDirectory,
           gameDirectory,
-          mod,
-          game,
-          defaultMatchType,
           addScreenshot,
           addArmySetup,
           setAutoSaveFile,
           setRecordingStartState,
+          setLatestRecordingNumberDb,
         });
       }}
     >

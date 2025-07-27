@@ -7,7 +7,7 @@ import PreMatchTableGeneric from "./PreMatchTableGeneric";
 export const PreMatchTableRecording = () => {
   const map = useZustandStore((state) => state.map);
   const matchType = useZustandStore((state) => state.matchType);
-  const matchNum = useZustandStore((state) => state.recordingNumber + 1);
+  const matchNum = useZustandStore((state) => state.recordingNumber ?? 0);
   const player1Id = useZustandStore((state) => state.player1Id);
   const player2Id = useZustandStore((state) => state.player2Id);
   const setPlayer1Id = useZustandStore((state) => state.setPlayer1Id);

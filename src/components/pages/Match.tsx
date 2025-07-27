@@ -2,6 +2,7 @@
 import { Clipboard, DownloadIcon } from "lucide-react";
 import { ArmySetupSectionRecording } from "@/components/ArmySetupMatchSection/ArmySetupSectionRecording";
 import { GameModSectionRecording } from "@/components/GameModSection/GameModSectionRecording";
+import { LinksTableRecording } from "@/components/LinksTable/LinksTableRecord";
 import MatchSaveButton from "@/components/MatchSaveButton";
 import { MatchTableRecordingMatch } from "@/components/MatchTableGeneric/MatchTableRecording";
 import NotesRecording from "@/components/Notes/NotesRecording";
@@ -18,6 +19,7 @@ export default function Match() {
       <MatchTableRecordingMatch />
       <ScreenshotsSectionRecording />
       <ArmySetupSectionRecording />
+      <LinksTableRecording />
       <GameModSectionRecording />
       <RecordingSectionRecording />
       <NotesRecording />

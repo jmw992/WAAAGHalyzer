@@ -22,7 +22,6 @@ export const FolderInput: React.FC<FolderInputProps> = ({
       multiple: false,
       directory: true,
     });
-    console.log("Selected file:", file);
     if (typeof file === "string") {
       setDisplayFile(file);
       onChange(file);
