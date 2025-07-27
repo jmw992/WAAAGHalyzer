@@ -34,6 +34,7 @@ export interface PersistedState {
   screenshotsDirectory: string;
   playerId: string | null;
   defaultMatchType: MatchTypes;
+  demoMode: boolean;
 }
 
 export interface Screenshot {
@@ -164,6 +165,7 @@ export interface Action {
   ) => void;
   setPersistedState: (value: PersistedState) => void;
   getPersistedState: () => PersistedState;
+  setDemoMode: (demoMode: boolean) => void;
 
   setDb: (db: Database) => void;
 }
@@ -187,6 +189,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   page: HOME,
   matches: [],
   defaultMatchType: DOMINATION,
+  demoMode: false,
 
   setPage: (value: Page) => {
     set({ page: value });
@@ -195,7 +198,6 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   setMatchType(matchType: RecordingState["matchType"]) {
     set({ matchType });
   },
-  isRecording: false,
   setIsRecording: (value: boolean) => {
     set({ isRecording: value });
   },
@@ -251,6 +253,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   unwatchScreenshotFn: () => {},
   unwatchArmySetup: () => {},
   recordingNumber: 0,
+  isRecording: false,
   recordingGame: TOTAL_WAR_WARHAMMER_3,
   recordingMod: DEFAULT,
   recordingWin: null,
@@ -462,7 +465,11 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
     screenshotsDirectory: get().screenshotsDirectory,
     playerId: get().playerId,
     version: get().version || "1.0.0", // Default version if not set
+    demoMode: get().demoMode,
   }),
+  setDemoMode: (demoMode) => {
+    set({ demoMode });
+  },
 
   getLatestRecordingNumberDb: async () => {
     const db = get().db;

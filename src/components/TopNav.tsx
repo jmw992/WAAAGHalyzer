@@ -14,11 +14,10 @@ const classNames = (...classes: string[]) => {
   return classes.filter(Boolean).join(" ");
 };
 
-const DEBUG = true;
-
 export default function TopNav() {
   const page = useZustandStore((state) => state.page);
   const setPage = useZustandStore((state) => state.setPage);
+  const demoMode = useZustandStore((state) => state.demoMode);
 
   const navigation: Page[] = [HISTORY, MATCH];
 
@@ -66,7 +65,7 @@ export default function TopNav() {
                   ))}
                   {
                     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                    DEBUG ? (
+                    demoMode ? (
                       <>
                         <button
                           className={classNames(
