@@ -539,8 +539,8 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
           recordingEndTime.toISOString(),
           notes,
           links.length ? JSON.stringify(links) : null,
-          links.length ? JSON.stringify(armySetups) : null,
-          links.length ? JSON.stringify(screenshots) : null,
+          armySetups.length ? JSON.stringify(armySetups) : null,
+          screenshots.length ? JSON.stringify(screenshots) : null,
           version,
         ],
       );

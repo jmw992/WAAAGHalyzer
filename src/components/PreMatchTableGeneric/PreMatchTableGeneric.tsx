@@ -17,7 +17,7 @@ declare module "@tanstack/react-table" {
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export interface PreMatchColumns {
-  matchNum: number;
+  matchNum: string;
   matchType: RecordingState["matchType"];
   map: RecordingState["map"];
   player1Id: RecordingState["player1Id"];
@@ -146,7 +146,7 @@ export default function PreMatchTable({
   const data = useMemo(
     () => [
       {
-        matchNum,
+        matchNum: matchNum ? `${matchNum}` : "-",
         matchType,
         map,
         player1Id,
