@@ -1,6 +1,13 @@
 "use client";
 import { Settings } from "lucide-react";
 import RecordingButton from "@/components/RecordingButton";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { HISTORY, HOME, MATCH, SETTINGS } from "@/constants";
 import {
   copyArmySetupDebug,
@@ -14,11 +21,10 @@ const classNames = (...classes: string[]) => {
   return classes.filter(Boolean).join(" ");
 };
 
-const DEBUG = true;
-
 export default function TopNav() {
   const page = useZustandStore((state) => state.page);
   const setPage = useZustandStore((state) => state.setPage);
+  const demoMode = useZustandStore((state) => state.demoMode);
 
   const navigation: Page[] = [HISTORY, MATCH];
 
@@ -64,49 +70,41 @@ export default function TopNav() {
                       {name}
                     </button>
                   ))}
-                  {
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                    DEBUG ? (
-                      <>
-                        <button
-                          className={classNames(
-                            "text-gray-300 hover:bg-gray-700 hover:text-white",
-                            "rounded-md px-3 py-2 text-sm font-medium",
-                          )}
-                          type="button"
+                  {demoMode ? (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                        >
+                          Demo
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-56">
+                        <DropdownMenuItem
                           onClick={() => {
                             void copyAutoSaveDebug();
                           }}
                         >
                           Copy Replay
-                        </button>
-                        <button
-                          className={classNames(
-                            "text-gray-300 hover:bg-gray-700 hover:text-white",
-                            "rounded-md px-3 py-2 text-sm font-medium",
-                          )}
-                          type="button"
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
                           onClick={() => {
                             void copyScreenshotDebug();
                           }}
                         >
                           Copy Screenshot
-                        </button>
-                        <button
-                          className={classNames(
-                            "text-gray-300 hover:bg-gray-700 hover:text-white",
-                            "rounded-md px-3 py-2 text-sm font-medium",
-                          )}
-                          type="button"
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
                           onClick={() => {
                             void copyArmySetupDebug();
                           }}
                         >
                           Copy Army Setup
-                        </button>
-                      </>
-                    ) : null
-                  }
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  ) : null}
                 </div>
               </div>
             </div>

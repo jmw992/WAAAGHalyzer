@@ -18,4 +18,5 @@ WAAAGHalyzer is a desktop application built with Tauri and Next.js. It is a tool
 
 - **Run the application**: `pnpm tauri dev`
 - **Run linters**: `pnpm lint`
+- **Run & fix lints**: `pnpm lint:fix`
 - **Run type checker**: `pnpm types`

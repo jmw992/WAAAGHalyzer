@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -9,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { MATCH_TYPES, SUPPORTED_GAMES } from "@/constants";
 import { setStorePersistedSettings } from "@/lib/persistStorage";
 import { type PersistedState, useZustandStore } from "@/lib/useZustandStore";
@@ -24,7 +26,10 @@ export const SettingsForm = ({
   // Local state for form
   const [form, setForm] = useState<PersistedState>(initialState);
 
-  const handleChange = (key: keyof PersistedState, value: string) => {
+  const handleChange = <K extends keyof PersistedState>(
+    key: K,
+    value: PersistedState[K],
+  ) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
   const handleSubmit = () => {
@@ -48,7 +53,7 @@ export const SettingsForm = ({
         <Select
           value={form.game}
           onValueChange={(value) => {
-            handleChange("game", value);
+            handleChange("game", value as PersistedState["game"]);
           }}
           defaultValue={form.game}
         >
@@ -109,7 +114,10 @@ export const SettingsForm = ({
         <Select
           value={form.defaultMatchType}
           onValueChange={(value) => {
-            handleChange("defaultMatchType", value);
+            handleChange(
+              "defaultMatchType",
+              value as PersistedState["defaultMatchType"],
+            );
           }}
           defaultValue={form.defaultMatchType}
         >
@@ -145,6 +153,18 @@ export const SettingsForm = ({
           }}
         />
       </div>
+
+      <div className="flex items-center space-x-2">
+        <Switch
+          id="demo-mode"
+          checked={form.demoMode}
+          onCheckedChange={(checked: boolean) => {
+            handleChange("demoMode", checked);
+          }}
+        />
+        <Label htmlFor="demo-mode">Demo Mode</Label>
+      </div>
+
       <Button
         onClick={handleSubmit}
         size="lg"

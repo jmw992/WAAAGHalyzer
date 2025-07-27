@@ -13,6 +13,7 @@ export const getStorePersistedSettings = (): PersistedState => {
     screenshotsDirectory: localStorage.getItem("screenshotsDirectory") ?? "",
     playerId: localStorage.getItem("playerId") ?? null,
     version: localStorage.getItem("version") ?? "",
+    demoMode: localStorage.getItem("demoMode") === "true",
   };
 };
 
@@ -24,4 +25,5 @@ export const setStorePersistedSettings = (state: PersistedState) => {
   localStorage.setItem("defaultMatchType", state.defaultMatchType);
   localStorage.setItem("playerId", state.playerId ?? "");
   localStorage.setItem("version", state.version);
+  localStorage.setItem("demoMode", state.demoMode.toString());
 };
