@@ -1,9 +1,10 @@
 "use client";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { configDir, join, pictureDir } from "@tauri-apps/api/path";
 import Database from "@tauri-apps/plugin-sql";
 import type React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   DEFAULT_GAME_DIRECTORY,
   DEFAULT_SCREENSHOTS_DIRECTORY,
@@ -64,6 +65,7 @@ export default function RootPage({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [queryClient] = useState(() => new QueryClient());
   const setPersistedState = useZustandStore((state) => state.setPersistedState);
   const setMatchType = useZustandStore((state) => state.setMatchType);
   const setDb = useZustandStore((state) => state.setDb);
@@ -106,5 +108,7 @@ export default function RootPage({
     }
   }, [db, setLatestRecordingNumberDb]);
 
-  return children;
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
 }

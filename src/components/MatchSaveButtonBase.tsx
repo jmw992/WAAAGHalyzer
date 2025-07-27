@@ -1,4 +1,5 @@
 "use client";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import type { Action, DbActions, RecordingState } from "@/lib/useZustandStore";
 import { useZustandStore } from "@/lib/useZustandStore";
@@ -56,6 +57,7 @@ export default function MatchSaveButtonBase({
   buttonClassName,
   variant = "default",
   children,
+  type = "submit",
 }: {
   buttonClassName?: string;
   variant?: ButtonProps["variant"];
@@ -82,14 +84,19 @@ export default function MatchSaveButtonBase({
     (state) => state.addRecordingMatchDb,
   );
 
+  const mutation = useMutation({
+    mutationFn: saveHandler,
+  });
+
   return (
     <Button
       variant={variant}
       size="lg"
-      type="submit"
+      type={type}
       className={buttonClassName}
+      disabled={mutation.isPending}
       onClick={() => {
-        void saveHandler({
+        mutation.mutate({
           autoSaveFile,
           recordingWin,
           screenshots,

@@ -1,4 +1,5 @@
 "use client";
+import { useMutation } from "@tanstack/react-query";
 import { PlayIcon } from "lucide-react";
 import { ulid } from "ulid";
 import type { Action, DbActions, PersistedState } from "@/lib/useZustandStore";
@@ -122,13 +123,18 @@ export default function RecordingStartButton() {
     (state) => state.setLatestRecordingNumberDb,
   );
 
+  const mutation = useMutation({
+    mutationFn: startRecordingHandler,
+  });
+
   return (
     <Button
       type="button"
       variant={"ghost"}
       className="p-1 text-green-500 hover:text-green-300"
+      disabled={mutation.isPending}
       onClick={() => {
-        void startRecordingHandler({
+        mutation.mutate({
           screenshotsDirectory,
           gameDirectory,
           addScreenshot,
