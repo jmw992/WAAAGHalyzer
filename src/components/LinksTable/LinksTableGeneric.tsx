@@ -51,7 +51,7 @@ export function LinksTableGeneric({
         header: "Link",
         cell: ({ row }) => (
           <Input
-            type="text"
+            type="url"
             value={row.original.url}
             onChange={(e) => {
               updateLink(row.index, {

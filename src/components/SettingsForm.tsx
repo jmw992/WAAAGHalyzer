@@ -75,7 +75,7 @@ export const SettingsForm = ({
         <label htmlFor="settings-mod">Mod</label>
         <Input
           id="settings-mod"
-          type="text"
+          type="email"
           value={form.mod}
           autoCapitalize="off"
           onChange={(e) => {
@@ -88,7 +88,7 @@ export const SettingsForm = ({
         <label htmlFor="settings-version">Version</label>
         <Input
           id="settings-version"
-          type="text"
+          type="email"
           value={form.version}
           onChange={(e) => {
             handleChange("version", e.target.value);
@@ -100,8 +100,7 @@ export const SettingsForm = ({
         <label htmlFor="settings-playerId">Player ID</label>
         <Input
           id="settings-playerId"
-          className="normal-case"
-          type="text"
+          type="email"
           value={form.playerId ?? ""}
           autoCapitalize="none"
           onChange={(e) => {

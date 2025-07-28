@@ -62,13 +62,13 @@ const getPlayerCell = (
 
     return (
       <Input
+        type="email"
         value={localValue}
         onChange={(e) => {
           setLocalValue(e.target.value);
         }}
         onBlur={onBlur}
         placeholder={placeholder}
-        autoCapitalize="none"
       />
     );
   };

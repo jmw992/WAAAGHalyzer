@@ -53,7 +53,7 @@ export default function GameModSectionGeneric({
         <label htmlFor="recording-mod">Mod</label>
         <Input
           id="recording-mod"
-          type="text"
+          type="email"
           value={recordingMod}
           onChange={(e) => {
             setRecordingMod(e.target.value);
@@ -65,7 +65,7 @@ export default function GameModSectionGeneric({
         <label htmlFor="recording-version">Version</label>
         <Input
           id="recording-version"
-          type="text"
+          type="email"
           value={recordingVersion}
           onChange={(e) => {
             setRecordingVersion(e.target.value);
