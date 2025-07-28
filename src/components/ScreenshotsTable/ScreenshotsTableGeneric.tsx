@@ -5,10 +5,22 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Eye, Trash2 } from "lucide-react";
+import { Eye, MoreHorizontal, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import ComboBoxScreenshotType from "@/components/ComboBoxScreenshotType";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -97,54 +109,54 @@ export function ScreenshotsTableGeneric({
         },
       },
       {
-        id: "view",
-        header: "",
-        cell: ({ row }) => (
-          <Dialog>
-            <DialogTrigger asChild>
-              <button
-                type="button"
-                className="p-1 hover:text-primary rounded-2xl hover:bg-gray-700 "
-                title="View"
-                onClick={() => {
-                  setSelectedScreenshot(row.original.filename);
-                }}
-              >
-                <Eye size={18} />
-              </button>
-            </DialogTrigger>
-            <DialogContent className="h-9/10 w-9/10">
-              <DialogTitle className="text-lg font-semibold">
-                Screenshot: {row.original.filename}
-              </DialogTitle>
-              {modalSrc ? (
-                <img
-                  src={modalSrc}
-                  alt="Screenshot"
-                  className="max-w-full max-h-full rounded"
-                />
-              ) : (
-                <p>Loading...</p>
-              )}
-            </DialogContent>
-          </Dialog>
-        ),
-      },
-      {
-        id: "delete",
-        header: "",
-        cell: ({ row }) => (
-          <button
-            type="button"
-            className="p-1 hover:text-destructive"
-            title="Delete"
-            onClick={() => {
-              handleDelete(row.original.filename);
-            }}
-          >
-            <Trash2 size={18} />
-          </button>
-        ),
+        id: "actions",
+        cell: ({ row }) => {
+          const screenshot = row.original;
+          return (
+            <Dialog>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <span className="sr-only">Open menu</span>
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DialogTrigger asChild>
+                    <DropdownMenuItem
+                      onClick={() => setSelectedScreenshot(screenshot.filename)}
+                    >
+                      <Eye className="mr-2 h-4 w-4" />
+                      View
+                    </DropdownMenuItem>
+                  </DialogTrigger>
+                  <DropdownMenuItem
+                    onClick={() => handleDelete(screenshot.filename)}
+                    className="text-destructive"
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <DialogContent className="h-9/10 w-9/10">
+                <DialogTitle className="text-lg font-semibold">
+                  Screenshot: {screenshot.filename}
+                </DialogTitle>
+                {modalSrc ? (
+                  <img
+                    src={modalSrc}
+                    alt="Screenshot"
+                    className="max-w-full max-h-full rounded"
+                  />
+                ) : (
+                  <p>Loading...</p>
+                )}
+              </DialogContent>
+            </Dialog>
+          );
+        },
       },
     ],
     [modalSrc],
