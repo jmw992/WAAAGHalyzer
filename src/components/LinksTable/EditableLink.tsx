@@ -1,8 +1,8 @@
-import { Input } from "@/components/ui/input";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
-import { openUrl } from "@tauri-apps/plugin-opener";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface EditableLinkProps {
   url: string;
@@ -24,7 +24,7 @@ export function EditableLink({ url, onUrlChange }: EditableLinkProps) {
   const handleLinkClick = () => {
     console.log("jmw handleLinkClick", url, isValidUrl);
     if (isValidUrl) {
-      openUrl(url).catch((err) => {
+      openUrl(url).catch((err: unknown) => {
         console.error("Error opening link:", err);
       });
     }
@@ -38,8 +38,12 @@ export function EditableLink({ url, onUrlChange }: EditableLinkProps) {
       <Input
         type="url"
         value={url}
-        onChange={(e) => onUrlChange(e.target.value)}
-        onBlur={() => setIsEditing(false)}
+        onChange={(e) => {
+          onUrlChange(e.target.value);
+        }}
+        onBlur={() => {
+          setIsEditing(false);
+        }}
         autoFocus
       />
     );
@@ -57,7 +61,9 @@ export function EditableLink({ url, onUrlChange }: EditableLinkProps) {
       </Button>
       <Button
         type="button"
-        onClick={() => setIsEditing(true)}
+        onClick={() => {
+          setIsEditing(true);
+        }}
         className="ml-2 p-1 hover:text-primary"
         variant="ghost"
       >

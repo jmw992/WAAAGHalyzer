@@ -53,9 +53,9 @@ export function LinksTableGeneric({
         cell: ({ row }) => (
           <EditableLink
             url={row.original.url}
-            onUrlChange={(newUrl) =>
-              updateLink(row.index, { ...row.original, url: newUrl })
-            }
+            onUrlChange={(newUrl) => {
+              updateLink(row.index, { ...row.original, url: newUrl });
+            }}
           />
         ),
       },
@@ -78,7 +78,6 @@ export function LinksTableGeneric({
     ],
     [updateLink, deleteLink],
   );
-
 
   const table = useReactTable({
     data: links,
