@@ -9,11 +9,7 @@ import { Eye, MoreHorizontal, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import ComboBoxScreenshotType from "@/components/ComboBoxScreenshotType";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -125,14 +121,14 @@ export function ScreenshotsTableGeneric({
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
                   <DialogTrigger asChild>
                     <DropdownMenuItem
-                      onClick={() => setSelectedScreenshot(screenshot.filename)}
+                      onClick={() => { setSelectedScreenshot(screenshot.filename); }}
                     >
                       <Eye className="mr-2 h-4 w-4" />
                       View
                     </DropdownMenuItem>
                   </DialogTrigger>
                   <DropdownMenuItem
-                    onClick={() => handleDelete(screenshot.filename)}
+                    onClick={() => { handleDelete(screenshot.filename); }}
                     className="text-destructive"
                   >
                     <Trash2 className="mr-2 h-4 w-4" />
