@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Link } from "@/lib/types";
+import { EditableLink } from "./EditableLink";
 
 interface LinksTableProps {
   links: Link[];
@@ -50,14 +51,10 @@ export function LinksTableGeneric({
         accessorKey: "url",
         header: "Link",
         cell: ({ row }) => (
-          <Input
-            type="url"
-            value={row.original.url}
-            onChange={(e) => {
-              updateLink(row.index, {
-                ...row.original,
-                url: e.target.value,
-              });
+          <EditableLink
+            url={row.original.url}
+            onUrlChange={(newUrl) => {
+              updateLink(row.index, { ...row.original, url: newUrl });
             }}
           />
         ),

@@ -5,6 +5,15 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const getIsValidUrl = (string: string) => {
+  try {
+    new URL(string);
+    return true;
+  } catch (_) {
+    return false;
+  }
+};
+
 export const safeParseJson = <T>(jsonString: string | null, defaut: T): T => {
   if (!jsonString) return defaut;
   try {
