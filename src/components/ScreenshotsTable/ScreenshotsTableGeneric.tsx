@@ -18,7 +18,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { deleteSreenshotFile, getScreenshotSrc } from "@/lib/fileHandling";
-import type { Action, RecordingState } from "@/lib/useZustandStore";
+import type { Action, RecordingState } from "@/lib/types";
 
 interface ScreenshotsTableProps {
   screenshots: RecordingState["screenshots"];

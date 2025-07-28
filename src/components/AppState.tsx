@@ -10,18 +10,8 @@ import {
   DEFAULT_SCREENSHOTS_DIRECTORY,
 } from "@/constants";
 import { getStorePersistedSettings } from "@/lib/persistStorage";
-import {
-  useZustandStore,
-  type ZustandStateAction,
-} from "@/lib/useZustandStore";
-
-// /** These state items get persisted between app close & open */
-// export type PersistedState = {
-//   game: SupportedGames;
-//   mod: string;
-//   gameDirectory: string;
-//   screenshotsDirectory: string;
-// };
+import type { ZustandStateAction } from "@/lib/types";
+import { useZustandStore } from "@/lib/useZustandStore";
 
 const asyncDirsUpdate = async ({
   gameDirectory,
@@ -69,10 +59,6 @@ export default function RootPage({
   const setPersistedState = useZustandStore((state) => state.setPersistedState);
   const setMatchType = useZustandStore((state) => state.setMatchType);
   const setDb = useZustandStore((state) => state.setDb);
-  const db = useZustandStore((state) => state.db);
-  const setLatestRecordingNumberDb = useZustandStore(
-    (state) => state.setLatestRecordingNumberDb,
-  );
 
   useEffect(() => {
     // Set default from localStorage on first load
@@ -101,12 +87,6 @@ export default function RootPage({
         console.error("Failed to load database:", err);
       });
   }, [setPersistedState, setMatchType, setDb]);
-
-  useEffect(() => {
-    if (db) {
-      void setLatestRecordingNumberDb();
-    }
-  }, [db, setLatestRecordingNumberDb]);
 
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

@@ -13,7 +13,8 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { MATCH_TYPES, SUPPORTED_GAMES } from "@/constants";
 import { setStorePersistedSettings } from "@/lib/persistStorage";
-import { type PersistedState, useZustandStore } from "@/lib/useZustandStore";
+import type { PersistedState } from "@/lib/types";
+import { useZustandStore } from "@/lib/useZustandStore";
 import { FolderInput } from "./FolderInputDialog";
 
 export const SettingsForm = ({

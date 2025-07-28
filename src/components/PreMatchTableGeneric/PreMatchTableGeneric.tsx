@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import ComboBoxMaps from "@/components/ComboBoxMaps";
 import ComboBoxMatchType from "@/components/ComboBoxMatchType";
 import { Input } from "@/components/ui/input";
-import type { Action, RecordingState } from "@/lib/useZustandStore";
+import type { Action, RecordingState } from "@/lib/types";
 
 declare module "@tanstack/react-table" {
   // biome-ignore lint/correctness/noUnusedVariables: skip

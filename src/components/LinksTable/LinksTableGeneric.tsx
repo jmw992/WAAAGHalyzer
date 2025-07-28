@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { Link } from "@/lib/useZustandStore";
+import type { Link } from "@/lib/types";
 
 interface LinksTableProps {
   links: Link[];

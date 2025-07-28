@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { RecordedMatch } from "@/lib/useZustandStore";
+import type { RecordedMatch } from "@/lib/types";
 
 interface MatchesTableProps {
   matches: RecordedMatch[];
@@ -27,8 +27,8 @@ interface MatchesTableProps {
 export function MatchesTable({ matches, onView, onDelete }: MatchesTableProps) {
   const columns: ColumnDef<RecordedMatch>[] = [
     {
-      accessorKey: "index",
-      header: "Index",
+      accessorKey: "recordingNumber",
+      header: "",
       cell: ({ getValue }) => (
         <div className="font-medium">{getValue() as number}</div>
       ),

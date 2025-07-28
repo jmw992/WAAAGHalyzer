@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/select";
 import { SUPPORTED_GAMES } from "@/constants";
 
-import type { Action, RecordingState } from "@/lib/useZustandStore";
+import type { Action, RecordingState } from "@/lib/types";
 
 interface GameModSectionGenericProps {
   recordingGame: RecordingState["recordingGame"];
