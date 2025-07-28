@@ -109,48 +109,30 @@ export function ScreenshotsTableGeneric({
         cell: ({ row }) => {
           const screenshot = row.original;
           return (
-            <Dialog>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-8 w-8 p-0">
-                    <span className="sr-only">Open menu</span>
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                  <DialogTrigger asChild>
-                    <DropdownMenuItem
-                      onClick={() => { setSelectedScreenshot(screenshot.filename); }}
-                    >
-                      <Eye className="mr-2 h-4 w-4" />
-                      View
-                    </DropdownMenuItem>
-                  </DialogTrigger>
-                  <DropdownMenuItem
-                    onClick={() => { handleDelete(screenshot.filename); }}
-                    className="text-destructive"
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <DialogContent className="h-9/10 w-9/10">
-                <DialogTitle className="text-lg font-semibold">
-                  Screenshot: {screenshot.filename}
-                </DialogTitle>
-                {modalSrc ? (
-                  <img
-                    src={modalSrc}
-                    alt="Screenshot"
-                    className="max-w-full max-h-full rounded"
-                  />
-                ) : (
-                  <p>Loading...</p>
-                )}
-              </DialogContent>
-            </Dialog>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuItem
+                  onClick={() => setSelectedScreenshot(screenshot.filename)}
+                >
+                  <Eye className="mr-2 h-4 w-4" />
+                  View
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleDelete(screenshot.filename)}
+                  className="text-destructive"
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           );
         },
       },
@@ -165,42 +147,68 @@ export function ScreenshotsTableGeneric({
   });
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
+    <>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+                  </TableHead>
                 ))}
               </TableRow>
-            ))
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="text-center">
+                  No screenshots found.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <Dialog
+        open={!!selectedScreenshot}
+        onOpenChange={(open) => {
+          if (!open) setSelectedScreenshot(null);
+        }}
+      >
+        <DialogContent className="h-9/10 w-9/10">
+          <DialogTitle className="text-lg font-semibold">
+            Screenshot: {selectedScreenshot}
+          </DialogTitle>
+          {modalSrc ? (
+            <img
+              src={modalSrc}
+              alt="Screenshot"
+              className="max-w-full max-h-full rounded"
+            />
           ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="text-center">
-                No screenshots found.
-              </TableCell>
-            </TableRow>
+            <p>Loading...</p>
           )}
-        </TableBody>
-      </Table>
-    </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
