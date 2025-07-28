@@ -1,8 +1,9 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { Pencil } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getIsValidUrl } from "@/lib/utils";
 
 interface EditableLinkProps {
   url: string;
@@ -12,26 +13,15 @@ interface EditableLinkProps {
 export function EditableLink({ url, onUrlChange }: EditableLinkProps) {
   const [isEditing, setIsEditing] = useState(false);
 
-  const getIsValidUrl = (string: string) => {
-    try {
-      new URL(string);
-      return true;
-    } catch (_) {
-      return false;
-    }
-  };
-  const isValidUrl = getIsValidUrl(url);
-  const handleLinkClick = () => {
-    console.log("jmw handleLinkClick", url, isValidUrl);
+  const isValidUrl = useMemo(() => getIsValidUrl(url), [url]);
+
+  const handleLinkClick = useCallback(() => {
     if (isValidUrl) {
       openUrl(url).catch((err: unknown) => {
         console.error("Error opening link:", err);
       });
     }
-  };
-
-  console.log("jmw url", url);
-  console.log("jmw isValidUrl", isValidUrl);
+  }, [isValidUrl, url]);
 
   if (isEditing || !isValidUrl) {
     return (
