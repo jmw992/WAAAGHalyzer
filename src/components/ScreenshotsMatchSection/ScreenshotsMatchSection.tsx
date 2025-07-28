@@ -4,8 +4,8 @@ import { PlusIcon } from "lucide-react";
 import { MATCHES } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
 import { copyScreenshot } from "@/lib/watchNewScreenshot";
-import { ScreenshotsTable } from "../ScreenshotsTable/ScreenshotsTable";
-import { Button } from "../ui/button";
+import { ScreenshotsTable } from "@/components/ScreenshotsTable/ScreenshotsTable";
+import { Button } from "@/components/ui/button";
 
 export const ScreenshotsMatchSection = () => {
   const recordingUlid = useZustandStore((state) => state.recordingUlid);

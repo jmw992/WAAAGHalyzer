@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { Button } from "@/components/ui/button";
 
 interface EditableLinkProps {
   url: string;
@@ -46,20 +47,22 @@ export function EditableLink({ url, onUrlChange }: EditableLinkProps) {
 
   return (
     <div className="flex items-center w-full">
-      <button
+      <Button
         type="button"
         onClick={handleLinkClick}
         className="text-blue-500 hover:underline"
+        variant="link"
       >
         {url}
-      </button>
-      <button
+      </Button>
+      <Button
         type="button"
         onClick={() => setIsEditing(true)}
         className="ml-2 p-1 hover:text-primary"
+        variant="ghost"
       >
         <Pencil size={16} />
-      </button>
+      </Button>
     </div>
   );
 }
