@@ -1,7 +1,8 @@
 "use client";
 
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-
+import { STACKED_LABEL_CLASSNAME } from "@/constants/styles";
 export default function NotesGeneric({
   notes,
   setNotes,
@@ -10,8 +11,10 @@ export default function NotesGeneric({
   setNotes: (notes: string) => void;
 }) {
   return (
-    <>
-      <label htmlFor="notesInput">Notes</label>
+    <div className={STACKED_LABEL_CLASSNAME}>
+      <Label className="pl-0.5" htmlFor="notesInput">
+        Notes
+      </Label>
       <Textarea
         id="notesInput"
         placeholder="Type your message here."
@@ -20,6 +23,6 @@ export default function NotesGeneric({
           setNotes(event.target.value);
         }}
       />
-    </>
+    </div>
   );
 }

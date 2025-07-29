@@ -109,7 +109,7 @@ export default function MatchTable({
   );
 
   return (
-    <div className="container mx-auto py-5">
+    <div className="container mx-auto mt-2">
       <DataTable columns={columns} data={data} />
     </div>
   );

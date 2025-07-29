@@ -63,7 +63,6 @@ export const copyScreenshotDebug = async () => {
 };
 
 export const copyAutoSaveDebug = async () => {
-  // const targetFile = `${DEBUG_GAME_ROOT}/mockTww3/replays/Auto-save.replay`;
   const targetFile = await join(
     DEBUG_GAME_ROOT,
     "mockTww3",
@@ -74,14 +73,12 @@ export const copyAutoSaveDebug = async () => {
 };
 
 export const copyArmySetupDebug = async () => {
-  // const sourceFile = `${DEBUG_GAME_ROOT}/mockTww3/army_setups/mock.army_setup`;
   const sourceFile = await join(
     DEBUG_GAME_ROOT,
     "mockTww3",
     "army_setups",
     "mock.army_setup",
   );
-  // const targetFile = `${DEBUG_GAME_ROOT}/mockTww3/army_setups/${ulid()}.army_setup`;
   const targetFile = await join(
     DEBUG_GAME_ROOT,
     "mockTww3",

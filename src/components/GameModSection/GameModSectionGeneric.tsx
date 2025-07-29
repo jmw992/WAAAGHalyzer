@@ -1,5 +1,6 @@
 "use client";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -8,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SUPPORTED_GAMES } from "@/constants";
+import { STACKED_LABEL_CLASSNAME } from "@/constants/styles";
 
 import type { Action, RecordingState } from "@/lib/types";
 
@@ -28,8 +30,10 @@ export default function GameModSectionGeneric({
 }: GameModSectionGenericProps) {
   return (
     <div className="flex flex-row pb-4 gap-2">
-      <div>
-        <label htmlFor="recording-game">Game</label>
+      <div className={STACKED_LABEL_CLASSNAME}>
+        <Label className="pl-0.5" htmlFor="recording-game">
+          Game
+        </Label>
         <Select
           value={recordingGame ?? undefined}
           onValueChange={(value) => {
@@ -49,8 +53,10 @@ export default function GameModSectionGeneric({
         </Select>
       </div>
 
-      <div>
-        <label htmlFor="recording-mod">Mod</label>
+      <div className={STACKED_LABEL_CLASSNAME}>
+        <Label className="pl-0.5" htmlFor="recording-mod">
+          Mod
+        </Label>
         <Input
           id="recording-mod"
           type="email"
@@ -61,8 +67,10 @@ export default function GameModSectionGeneric({
         />
       </div>
 
-      <div>
-        <label htmlFor="recording-version">Version</label>
+      <div className={STACKED_LABEL_CLASSNAME}>
+        <Label className="pl-0.5" htmlFor="recording-version">
+          Version
+        </Label>
         <Input
           id="recording-version"
           type="email"

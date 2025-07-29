@@ -75,7 +75,7 @@ export const watchNewAutoSave = async ({
       seenFiles.add(event.paths[0]);
       void copyAutoSaveBase({
         gameDirectory: event.paths[0],
-        fileNameRoot: destinationDir,
+        fileNameRoot: "Auto-save",
         destinationDir: matchDir,
         onCopy,
       });
