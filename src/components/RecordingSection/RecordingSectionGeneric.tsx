@@ -1,11 +1,11 @@
 "use client";
+import { open } from "@tauri-apps/plugin-dialog";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import type { Action } from "@/lib/types";
 import { splitFilePath } from "@/lib/fileHandling";
+import type { Action } from "@/lib/types";
 import { copyAutoSaveBase } from "@/lib/watchNewAutoSave";
-import { open } from "@tauri-apps/plugin-dialog";
 
 const onClick = async ({
   setAutoSaveFile,
@@ -59,7 +59,7 @@ export default function RecordingSectionGeneric({
             variant={"ghost"}
             size="icon"
             onClick={() =>
-              onClick({
+              void onClick({
                 recordingUlid,
                 autoSaveFile,
                 setAutoSaveFile,
