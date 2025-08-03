@@ -12,7 +12,7 @@ import { ARMY_SETUPS, MATCHES } from "@/constants";
 import { splitFilePath } from "./fileHandling";
 import type { WatchGameDirProps } from "./watchNewAutoSave";
 
-export const copyAutoSaveToMatchDir = async ({
+export const copyArmySetupToMatchDir = async ({
   sourceFile,
   matchId,
   onCopy,

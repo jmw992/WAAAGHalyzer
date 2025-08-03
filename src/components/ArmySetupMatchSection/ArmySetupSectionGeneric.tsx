@@ -1,7 +1,7 @@
 import { open } from "@tauri-apps/plugin-dialog";
 import { PlusIcon } from "lucide-react";
 import { splitFilePath } from "@/lib/fileHandling";
-import { copyAutoSaveToMatchDir } from "@/lib/watchNewArmySetup";
+import { copyArmySetupToMatchDir } from "@/lib/watchNewArmySetup";
 // import { ArmySetupTable } from "../ArmySetupTable/ArmySetupTable";
 import { Button } from "../ui/button";
 
@@ -23,7 +23,7 @@ export const ArmySetupSectionGeneric = ({
     });
     if (typeof file === "string") {
       const originalFile = splitFilePath(file).filename;
-      await copyAutoSaveToMatchDir({
+      await copyArmySetupToMatchDir({
         sourceFile: file,
         matchId: recordingUlid ?? "",
         onCopy: (ulid, origFilename) => {
