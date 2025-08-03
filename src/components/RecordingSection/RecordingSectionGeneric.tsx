@@ -12,7 +12,6 @@ const onClick = async ({
   recordingUlid,
 }: {
   recordingUlid: string | null;
-  autoSaveFile: string | null;
   setAutoSaveFile: Action["setAutoSaveFile"];
 }) => {
   const file = await open({
@@ -61,7 +60,6 @@ export default function RecordingSectionGeneric({
             onClick={() =>
               void onClick({
                 recordingUlid,
-                autoSaveFile,
                 setAutoSaveFile,
               })
             }
