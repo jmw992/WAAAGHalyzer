@@ -57,7 +57,7 @@ const copyArmySetupBase = async ({
   });
 
   if (onCopy) {
-    onCopy(fileNameRoot, origFilename);
+    onCopy(origFilename);
   }
 };
 
