@@ -7,8 +7,8 @@ import {
   type UnwatchFn,
   watch,
 } from "@tauri-apps/plugin-fs";
-import { splitFilePath } from "./fileHandling";
 import { MATCHES } from "@/constants";
+import { splitFilePath } from "./fileHandling";
 
 interface WatchNewScreenshotProps {
   // The source file path to copy from the root
@@ -16,7 +16,7 @@ interface WatchNewScreenshotProps {
   // The destination file path to copy to, relative to the app's local data directory
   destinationDir: string;
   // Callback function to execute after the copy operation
-  onCopy?: (ulid: string) => void;
+  onCopy?: (filename: string) => void;
 }
 
 export const copyScreenshot = async ({
