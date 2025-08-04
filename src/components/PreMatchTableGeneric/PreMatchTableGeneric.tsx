@@ -157,7 +157,7 @@ export default function PreMatchTable({
   );
 
   return (
-    <div className="container mx-auto py-5">
+    <div className="container mx-auto mt-1">
       <DataTable columns={columns} data={data} />
     </div>
   );

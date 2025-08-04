@@ -15,16 +15,17 @@ export interface WatchGameDirProps {
   /**  The destination file path to copy to, relative to the app's local data directory.  Will be ulid of recording */
   destinationDir: string;
   /**  Callback function to execute after the copy operation*/
-  onCopy?: (ulid: string, origFilename?: string) => void;
+  onCopy?: (origFilename: string) => void;
 }
 
-const copyAutoSaveBase = async ({
-  gameDirectory: screenshotFile,
+export const copyAutoSaveBase = async ({
+  srcAutoSave,
   fileNameRoot,
   destinationDir,
   onCopy,
-}: WatchGameDirProps & {
+}: Omit<WatchGameDirProps, "gameDirectory"> & {
   fileNameRoot: string;
+  srcAutoSave: string;
 }): Promise<void> => {
   if (
     !(await exists(destinationDir, {
@@ -40,7 +41,7 @@ const copyAutoSaveBase = async ({
 
   const newFile = await join(destinationDir, `${fileNameRoot}.replay`);
   // Perform the copy operation
-  await copyFile(screenshotFile, newFile, {
+  await copyFile(srcAutoSave, newFile, {
     toPathBaseDir: BaseDirectory.AppLocalData,
   });
 
@@ -74,8 +75,8 @@ export const watchNewAutoSave = async ({
     ) {
       seenFiles.add(event.paths[0]);
       void copyAutoSaveBase({
-        gameDirectory: event.paths[0],
-        fileNameRoot: destinationDir,
+        srcAutoSave: event.paths[0],
+        fileNameRoot: "Auto-save",
         destinationDir: matchDir,
         onCopy,
       });

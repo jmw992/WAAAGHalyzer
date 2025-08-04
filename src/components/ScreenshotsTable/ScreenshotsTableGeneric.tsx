@@ -152,7 +152,7 @@ export function ScreenshotsTableGeneric({
 
   return (
     <>
-      <div className="rounded-md border">
+      <div className="rounded-md border mt-2">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

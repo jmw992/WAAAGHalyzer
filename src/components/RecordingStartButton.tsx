@@ -44,8 +44,8 @@ const asyncWatch = async ({
       watchNewArmySetup({
         gameDirectory,
         destinationDir: newRecordingUlid,
-        onCopy: (file, origFilename) => {
-          addArmySetup(file, origFilename ?? "");
+        onCopy: (filename) => {
+          addArmySetup(filename);
         },
       }),
     ]);

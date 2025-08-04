@@ -1,4 +1,5 @@
 import { open } from "@tauri-apps/plugin-dialog";
+import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,7 +43,7 @@ export const FolderInput: React.FC<FolderInputProps> = ({
       }}
     >
       <Button variant={"secondary"} size="sm" onClick={onClick}>
-        Select
+        <MoreHorizontal className="h-4 w-4" />
       </Button>
       <Input
         type="text"

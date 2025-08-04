@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { MATCH_TYPES, SUPPORTED_GAMES } from "@/constants";
+import { STACKED_LABEL_CLASSNAME } from "@/constants/styles";
 import { setStorePersistedSettings } from "@/lib/persistStorage";
 import type { PersistedState } from "@/lib/types";
 import { useZustandStore } from "@/lib/useZustandStore";
@@ -49,8 +50,10 @@ export const SettingsForm = ({
         // maxWidth: 500,
       }}
     >
-      <div>
-        <label htmlFor="settings-game">Game</label>
+      <div className={STACKED_LABEL_CLASSNAME}>
+        <Label className="pl-0.5" htmlFor="settings-game">
+          Game
+        </Label>
         <Select
           value={form.game}
           onValueChange={(value) => {
@@ -71,8 +74,10 @@ export const SettingsForm = ({
         </Select>
       </div>
 
-      <div>
-        <label htmlFor="settings-mod">Mod</label>
+      <div className={STACKED_LABEL_CLASSNAME}>
+        <Label className="pl-0.5" htmlFor="settings-mod">
+          Mod
+        </Label>
         <Input
           id="settings-mod"
           type="email"
@@ -84,8 +89,10 @@ export const SettingsForm = ({
         />
       </div>
 
-      <div>
-        <label htmlFor="settings-version">Version</label>
+      <div className={STACKED_LABEL_CLASSNAME}>
+        <Label className="pl-0.5" htmlFor="settings-version">
+          Version
+        </Label>
         <Input
           id="settings-version"
           type="email"
@@ -96,8 +103,10 @@ export const SettingsForm = ({
         />
       </div>
 
-      <div>
-        <label htmlFor="settings-playerId">Player ID</label>
+      <div className={STACKED_LABEL_CLASSNAME}>
+        <Label className="pl-0.5" htmlFor="settings-playerId">
+          Player ID
+        </Label>
         <Input
           id="settings-playerId"
           type="email"
@@ -109,8 +118,10 @@ export const SettingsForm = ({
         />
       </div>
 
-      <div>
-        <label htmlFor="settings-defaultMatchType">Default Match Type</label>
+      <div className={STACKED_LABEL_CLASSNAME}>
+        <Label className="pl-0.5" htmlFor="settings-defaultMatchType">
+          Default Match Type
+        </Label>
         <Select
           value={form.defaultMatchType}
           onValueChange={(value) => {
@@ -134,8 +145,10 @@ export const SettingsForm = ({
         </Select>
       </div>
 
-      <div>
-        <label htmlFor="settings-game-dir">Game Directory</label>
+      <div className={STACKED_LABEL_CLASSNAME}>
+        <Label className="pl-0.5" htmlFor="settings-game-dir">
+          Game Directory
+        </Label>
         <FolderInput
           initialValue={form.gameDirectory}
           onChange={(val) => {
@@ -144,8 +157,10 @@ export const SettingsForm = ({
         />
       </div>
 
-      <div>
-        <label htmlFor="settings-screenshots-dir">Screenshots Directory</label>
+      <div className={STACKED_LABEL_CLASSNAME}>
+        <Label className="pl-0.5" htmlFor="settings-screenshots-dir">
+          Screenshots Directory
+        </Label>
         <FolderInput
           initialValue={form.screenshotsDirectory}
           onChange={(val) => {
@@ -162,7 +177,9 @@ export const SettingsForm = ({
             handleChange("demoMode", checked);
           }}
         />
-        <Label htmlFor="demo-mode">Demo Mode</Label>
+        <Label className="pl-0.5" htmlFor="demo-mode">
+          Demo Mode
+        </Label>
       </div>
 
       <Button

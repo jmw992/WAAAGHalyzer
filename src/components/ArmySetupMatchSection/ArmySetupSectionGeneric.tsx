@@ -1,12 +1,11 @@
 import { open } from "@tauri-apps/plugin-dialog";
 import { PlusIcon } from "lucide-react";
-import { splitFilePath } from "@/lib/fileHandling";
-import { copyAutoSaveToMatchDir } from "@/lib/watchNewArmySetup";
-// import { ArmySetupTable } from "../ArmySetupTable/ArmySetupTable";
+import type { Action } from "@/lib/types";
+import { copyArmySetupToMatchDir } from "@/lib/watchNewArmySetup";
 import { Button } from "../ui/button";
 
 interface ArmySetupMatchSectionGenericProps {
-  addArmySetup: (id: string, filename: string) => void;
+  addArmySetup: Action["addArmySetup"];
   recordingUlid: string | null;
   ArmySetupTable: React.ReactNode;
 }
@@ -22,12 +21,11 @@ export const ArmySetupSectionGeneric = ({
       directory: false,
     });
     if (typeof file === "string") {
-      const originalFile = splitFilePath(file).filename;
-      await copyAutoSaveToMatchDir({
+      await copyArmySetupToMatchDir({
         sourceFile: file,
         matchId: recordingUlid ?? "",
-        onCopy: (ulid, origFilename) => {
-          addArmySetup(ulid, origFilename ?? originalFile);
+        onCopy: (file) => {
+          addArmySetup(file);
         },
       });
     }
