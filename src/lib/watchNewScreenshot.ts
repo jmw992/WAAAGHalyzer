@@ -7,8 +7,8 @@ import {
   type UnwatchFn,
   watch,
 } from "@tauri-apps/plugin-fs";
-import { ulid } from "ulid";
 import { MATCHES } from "@/constants";
+import { splitFilePath } from "./fileHandling";
 
 interface WatchNewScreenshotProps {
   // The source file path to copy from the root
@@ -16,28 +16,28 @@ interface WatchNewScreenshotProps {
   // The destination file path to copy to, relative to the app's local data directory
   destinationDir: string;
   // Callback function to execute after the copy operation
-  onCopy?: (ulid: string) => void;
+  onCopy?: (filename: string) => void;
 }
 
 export const copyScreenshot = async ({
-  screenshotsDir: screenshotFile,
+  screenshotFile,
   destinationDir,
   onCopy,
-}: WatchNewScreenshotProps): Promise<void> => {
+}: Omit<WatchNewScreenshotProps, "screenshotsDir"> & {
+  screenshotFile: string;
+}): Promise<void> => {
   if (
     !(await exists(destinationDir, {
       baseDir: BaseDirectory.AppLocalData,
     }))
   ) {
-    console.log(`making ${destinationDir}`);
     await mkdir(destinationDir, {
       baseDir: BaseDirectory.AppLocalData,
       recursive: true,
     });
   }
-
-  const newScreenshotUlid = ulid();
-  const newFile = await join(destinationDir, `${newScreenshotUlid}.png`);
+  const { filename, extension } = splitFilePath(screenshotFile);
+  const newFile = await join(destinationDir, `${filename}.${extension}`);
 
   // Perform the copy operation
   await copyFile(screenshotFile, newFile, {
@@ -45,7 +45,7 @@ export const copyScreenshot = async ({
   });
 
   if (onCopy) {
-    onCopy(newScreenshotUlid);
+    onCopy(filename);
   }
 };
 
@@ -62,7 +62,7 @@ export const watchNewScreenshot = async ({
     if (isCreateEvent && !createdFiles.has(event.paths[0])) {
       createdFiles.add(event.paths[0]);
       void copyScreenshot({
-        screenshotsDir: event.paths[0],
+        screenshotFile: event.paths[0],
         destinationDir: matchDir,
         onCopy,
       });

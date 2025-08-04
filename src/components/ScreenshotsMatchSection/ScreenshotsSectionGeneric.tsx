@@ -25,7 +25,7 @@ export const ScreenshotsSectionGeneric = ({
     if (typeof file === "string") {
       const destinationDir = await join(MATCHES, recordingUlid ?? "");
       await copyScreenshot({
-        screenshotsDir: file,
+        screenshotFile: file,
         destinationDir,
         onCopy: (ulid) => {
           addScreenshot(ulid);
