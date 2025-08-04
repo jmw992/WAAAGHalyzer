@@ -218,7 +218,7 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       };
     });
   },
-  addArmySetup: (filename: string, origFilename: string) => {
+  addArmySetup: (filename: string) => {
     set((state) => {
       const type =
         state.armySetups.length === 0
@@ -230,7 +230,6 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
         armySetups: [
           ...state.armySetups,
           {
-            origFilename,
             filename,
             type,
           },

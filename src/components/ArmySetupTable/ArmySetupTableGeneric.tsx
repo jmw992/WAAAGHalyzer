@@ -50,7 +50,7 @@ export function ArmySetupTableGeneric({
       {
         accessorKey: "armySetup",
         header: "Army Setup",
-        cell: ({ row }) => row.original.origFilename,
+        cell: ({ row }) => row.original.filename,
       },
       {
         accessorKey: "type",
@@ -63,7 +63,6 @@ export function ArmySetupTableGeneric({
                 updateArmySetup(row.index, {
                   filename: row.original.filename,
                   type: armySetupType,
-                  origFilename: row.original.origFilename,
                 });
               }}
             />

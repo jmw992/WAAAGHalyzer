@@ -56,7 +56,6 @@ export interface Screenshot {
 export interface ArmySetup {
   /** Filename without extension */
   filename: string;
-  origFilename: string;
   type: ArmySetupType;
 }
 
@@ -151,7 +150,7 @@ export interface Action {
   updateScreenshot: (index: number, screenshot: Screenshot) => void;
   addScreenshot: (filename: string) => void;
   deleteScreenshot: (file: string) => void;
-  addArmySetup: (filename: string, origFilename: string) => void;
+  addArmySetup: (filename: string) => void;
   deleteArmySetup: (file: string) => void;
   updateArmySetup: (index: number, armySetup: ArmySetup) => void;
   addRecordedMatch: (match: RecordedMatch) => void;
