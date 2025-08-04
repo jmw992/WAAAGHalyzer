@@ -7,7 +7,6 @@ import {
   type UnwatchFn,
   watch,
 } from "@tauri-apps/plugin-fs";
-import { ulid } from "ulid";
 import { ARMY_SETUPS, MATCHES } from "@/constants";
 import { splitFilePath } from "./fileHandling";
 import type { WatchGameDirProps } from "./watchNewAutoSave";
@@ -19,45 +18,42 @@ export const copyArmySetupToMatchDir = async ({
 }: {
   sourceFile: string;
   matchId: string;
-  onCopy?: (ulid: string, origFilename?: string) => void;
+  onCopy?: (origFilename: string) => void;
 }): Promise<void> => {
   const matchDir = await join(MATCHES, matchId);
   await copyArmySetupBase({
-    gameDirectory: sourceFile,
-    fileNameRoot: ulid(),
+    armySetupFile: sourceFile,
     destinationDir: matchDir,
     onCopy,
   });
 };
 
 const copyArmySetupBase = async ({
-  gameDirectory: armySetupFile,
-  fileNameRoot,
   destinationDir,
   onCopy,
-}: WatchGameDirProps & {
-  fileNameRoot: string;
+  armySetupFile,
+}: Omit<WatchGameDirProps, "gameDirectory"> & {
+  armySetupFile: string;
 }): Promise<void> => {
   if (
     !(await exists(destinationDir, {
       baseDir: BaseDirectory.AppLocalData,
     }))
   ) {
-    console.log(`making ${destinationDir}`);
     await mkdir(destinationDir, {
       baseDir: BaseDirectory.AppLocalData,
       recursive: true,
     });
   }
-  const origFilename = splitFilePath(armySetupFile).filename;
-  const newFile = await join(destinationDir, `${fileNameRoot}.army_setup`);
+  const { filename, extension } = splitFilePath(armySetupFile);
+  const newFile = await join(destinationDir, `${filename}.${extension}`);
   // Perform the copy operation
   await copyFile(armySetupFile, newFile, {
     toPathBaseDir: BaseDirectory.AppLocalData,
   });
 
   if (onCopy) {
-    onCopy(origFilename);
+    onCopy(filename);
   }
 };
 
@@ -82,8 +78,7 @@ export const watchNewArmySetup = async ({
     ) {
       seenFiles.add(event.paths[0]);
       void copyArmySetupBase({
-        gameDirectory: event.paths[0],
-        fileNameRoot: ulid(),
+        armySetupFile: event.paths[0],
         destinationDir: matchDir,
         onCopy,
       });

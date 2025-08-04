@@ -41,8 +41,6 @@ export default function RecordingSectionGeneric({
   autoSaveFile: string | null;
   setAutoSaveFile: Action["setAutoSaveFile"];
 }) {
-  console.log("setAutoSaveFile", setAutoSaveFile);
-
   return (
     <div className="flex flex-row gap-2 pb-4">
       <div className="border rounded-md p-2 flex flex-col gap-1">
@@ -55,6 +53,7 @@ export default function RecordingSectionGeneric({
         <Label htmlFor="autosave">Autosave</Label>
         <div className="flex items-center gap-0.5">
           <Button
+            disabled={recordingUlid === null}
             variant={"ghost"}
             size="icon"
             onClick={() =>

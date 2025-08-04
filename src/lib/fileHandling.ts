@@ -123,7 +123,8 @@ export const splitFilePath = (
 
   if (lastDotIndex !== -1) {
     filename = fullFilename.substring(0, lastDotIndex);
-    extension = fullFilename.substring(lastDotIndex);
+    // Extract the extension excluding the dot
+    extension = fullFilename.substring(lastDotIndex + 1);
   }
 
   return { directory, filename, extension };
