@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -17,6 +18,7 @@ import NotesGeneric from "./Notes/NotesGeneric";
 import PreMatchTable from "./PreMatchTableGeneric/PreMatchTableGeneric";
 import { ScreenshotsSectionGeneric } from "./ScreenshotsMatchSection/ScreenshotsSectionGeneric";
 import { ScreenshotsTableGeneric } from "./ScreenshotsTable/ScreenshotsTableGeneric";
+import { Button } from "./ui/button";
 
 interface MatchDetailsDialogProps {
   match: RecordedMatch | null;
@@ -25,15 +27,25 @@ interface MatchDetailsDialogProps {
 }
 
 export function MatchDetailsDialog({
-  match,
+  match: initialMatch,
   isOpen,
   onClose,
 }: MatchDetailsDialogProps) {
   const updateMatch = useZustandStore((state) => state.updateMatch);
+  const [match, setMatch] = useState<RecordedMatch | null>(initialMatch);
+
+  useEffect(() => {
+    setMatch(initialMatch);
+  }, [initialMatch]);
 
   if (!match) {
     return null;
   }
+
+  const handleSubmit = () => {
+    updateMatch(match);
+    onClose();
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -49,19 +61,19 @@ export function MatchDetailsDialog({
             player1Id={match.player1Id ?? ""}
             player2Id={match.player2Id ?? ""}
             setMap={(map) => {
-              updateMatch({ ...match, map });
+              setMatch({ ...match, map });
             }}
             setMatchType={(matchType) => {
-              updateMatch({
+              setMatch({
                 ...match,
                 matchType: matchType ?? DOMINATION,
               });
             }}
             setPlayer1Id={(player1Id) => {
-              updateMatch({ ...match, player1Id });
+              setMatch({ ...match, player1Id });
             }}
             setPlayer2Id={(player2Id) => {
-              updateMatch({ ...match, player2Id });
+              setMatch({ ...match, player2Id });
             }}
           />
           <MatchTable
@@ -69,18 +81,18 @@ export function MatchDetailsDialog({
             player2Faction={match.player2Faction}
             recordingWin={match.win}
             setPlayer1Faction={(player1Faction) => {
-              updateMatch({ ...match, player1Faction });
+              setMatch({ ...match, player1Faction });
             }}
             setPlayer2Faction={(player2Faction) => {
-              updateMatch({ ...match, player2Faction });
+              setMatch({ ...match, player2Faction });
             }}
             setRecordingWin={(win) => {
-              updateMatch({ ...match, win: win ?? false });
+              setMatch({ ...match, win: win ?? false });
             }}
           />
           <ScreenshotsSectionGeneric
             addScreenshot={(screenshot) => {
-              updateMatch({
+              setMatch({
                 ...match,
                 screenshots: [
                   ...match.screenshots,
@@ -93,7 +105,7 @@ export function MatchDetailsDialog({
               <ScreenshotsTableGeneric
                 screenshots={match.screenshots}
                 deleteScreenshot={(screenshot) => {
-                  updateMatch({
+                  setMatch({
                     ...match,
                     screenshots: match.screenshots.filter(
                       (s) => s.filename !== screenshot,
@@ -102,7 +114,7 @@ export function MatchDetailsDialog({
                 }}
                 recordingUlid={match.recordingUlid}
                 updateScreenshot={(index, screenshot) => {
-                  updateMatch({
+                  setMatch({
                     ...match,
                     screenshots: match.screenshots.map((s, i) =>
                       i === index ? screenshot : s,
@@ -114,7 +126,7 @@ export function MatchDetailsDialog({
           />
           <ArmySetupSectionGeneric
             addArmySetup={(armySetup) => {
-              updateMatch({
+              setMatch({
                 ...match,
                 armySetups: [
                   ...match.armySetups,
@@ -127,7 +139,7 @@ export function MatchDetailsDialog({
               <ArmySetupTableGeneric
                 armySetups={match.armySetups}
                 deleteArmySetup={(armySetup) => {
-                  updateMatch({
+                  setMatch({
                     ...match,
                     armySetups: match.armySetups.filter(
                       (a) => a.filename !== armySetup,
@@ -136,7 +148,7 @@ export function MatchDetailsDialog({
                 }}
                 recordingUlid={match.recordingUlid}
                 updateArmySetup={(index, armySetup) => {
-                  updateMatch({
+                  setMatch({
                     ...match,
                     armySetups: match.armySetups.map((a, i) =>
                       i === index ? armySetup : a,
@@ -149,13 +161,13 @@ export function MatchDetailsDialog({
           <LinksTableGeneric
             links={match.links}
             deleteLink={(index) => {
-              updateMatch({
+              setMatch({
                 ...match,
                 links: match.links.filter((_, i) => i !== index),
               });
             }}
             updateLink={(index, link) => {
-              updateMatch({
+              setMatch({
                 ...match,
                 links: match.links.map((l, i) => (i === index ? link : l)),
               });
@@ -166,19 +178,20 @@ export function MatchDetailsDialog({
             recordingMod={match.mod}
             recordingVersion={match.version}
             setRecordingMod={(mod) => {
-              updateMatch({ ...match, mod: mod ?? DEFAULT });
+              setMatch({ ...match, mod: mod ?? DEFAULT });
             }}
             setRecordingVersion={(version) => {
-              updateMatch({ ...match, version });
+              setMatch({ ...match, version });
             }}
           />
           <NotesGeneric
             notes={match.notes}
             setNotes={(notes) => {
-              updateMatch({ ...match, notes });
+              setMatch({ ...match, notes });
             }}
           />
         </div>
+        <Button onClick={handleSubmit}>Submit</Button>
       </DialogContent>
     </Dialog>
   );
