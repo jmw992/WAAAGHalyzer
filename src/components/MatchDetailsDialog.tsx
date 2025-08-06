@@ -1,6 +1,7 @@
 "use client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -40,8 +41,13 @@ export function MatchDetailsDialog({
     mutationFn: (match: RecordedMatch) =>
       updateMatchDb(match.recordingUlid, match),
     onSuccess: () => {
+      toast.success("Match updated successfully!");
       void queryClient.invalidateQueries({ queryKey: ["matches"] });
       onClose();
+    },
+    onError: (error) => {
+      console.error("Error updating match:", error);
+      toast.error("Failed to update match.");
     },
   });
 
