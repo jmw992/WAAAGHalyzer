@@ -378,12 +378,12 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
     }
     try {
       await db.execute(
-        "INSERT INTO matches (match_type, " +
-          "player1_id, player2_id, player1_faction, player2_faction, " +
-          "win, map, game, mod, recording_ulid, auto_save_file, " +
-          "recording_start_time, recording_end_time, notes, " +
-          "links, army_setups, screenshots, vrsn) " +
-          "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)",
+        `INSERT INTO matches (match_type, player1_id, 
+        player2_id, player1_faction, player2_faction, win, 
+        map, game, mod, recording_ulid, auto_save_file, recording_start_time, 
+        recording_end_time, notes, links, army_setups, screenshots, vrsn) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 
+        $15, $16, $17, $18)`,
         [
           matchType,
           player1Id,
@@ -483,12 +483,11 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
         version,
       } = match;
       await db.execute(
-        "UPDATE matches SET match_type = $1, player1_id = $2, player2_id = $3, " +
-          "player1_faction = $4, player2_faction = $5, win = $6, map = $7, " +
-          "game = $8, mod = $9, auto_save_file = $10, " +
-          "recording_start_time = $11, recording_end_time = $12, " +
-          "notes = $13, links = $14, army_setups = $15, screenshots = $16, " +
-          "vrsn = $17 WHERE recording_ulid = $18",
+        `UPDATE matches SET match_type = $1, player1_id = $2, player2_id = $3, 
+        player1_faction = $4, player2_faction = $5, win = $6, map = $7, game = $8, 
+        mod = $9, auto_save_file = $10, recording_start_time = $11, recording_end_time = $12, 
+        notes = $13, links = $14, army_setups = $15, screenshots = $16, vrsn = $17 
+        WHERE recording_ulid = $18`,
         [
           matchType,
           player1Id,
