@@ -29,7 +29,7 @@ export function MatchDetailsDialog({
   isOpen,
   onClose,
 }: MatchDetailsDialogProps) {
-  const state = useZustandStore((state) => state);
+  const updateMatch = useZustandStore((state) => state.updateMatch);
 
   if (!match) {
     return null;
@@ -49,19 +49,19 @@ export function MatchDetailsDialog({
             player1Id={match.player1Id ?? ""}
             player2Id={match.player2Id ?? ""}
             setMap={(map) => {
-              state.updateMatch({ ...match, map });
+              updateMatch({ ...match, map });
             }}
             setMatchType={(matchType) => {
-              state.updateMatch({
+              updateMatch({
                 ...match,
                 matchType: matchType ?? DOMINATION,
               });
             }}
             setPlayer1Id={(player1Id) => {
-              state.updateMatch({ ...match, player1Id });
+              updateMatch({ ...match, player1Id });
             }}
             setPlayer2Id={(player2Id) => {
-              state.updateMatch({ ...match, player2Id });
+              updateMatch({ ...match, player2Id });
             }}
           />
           <MatchTable
@@ -69,18 +69,18 @@ export function MatchDetailsDialog({
             player2Faction={match.player2Faction}
             recordingWin={match.win}
             setPlayer1Faction={(player1Faction) => {
-              state.updateMatch({ ...match, player1Faction });
+              updateMatch({ ...match, player1Faction });
             }}
             setPlayer2Faction={(player2Faction) => {
-              state.updateMatch({ ...match, player2Faction });
+              updateMatch({ ...match, player2Faction });
             }}
             setRecordingWin={(win) => {
-              state.updateMatch({ ...match, win: win ?? false });
+              updateMatch({ ...match, win: win ?? false });
             }}
           />
           <ScreenshotsSectionGeneric
             addScreenshot={(screenshot) => {
-              state.updateMatch({
+              updateMatch({
                 ...match,
                 screenshots: [
                   ...match.screenshots,
@@ -93,7 +93,7 @@ export function MatchDetailsDialog({
               <ScreenshotsTableGeneric
                 screenshots={match.screenshots}
                 deleteScreenshot={(screenshot) => {
-                  state.updateMatch({
+                  updateMatch({
                     ...match,
                     screenshots: match.screenshots.filter(
                       (s) => s.filename !== screenshot,
@@ -102,7 +102,7 @@ export function MatchDetailsDialog({
                 }}
                 recordingUlid={match.recordingUlid}
                 updateScreenshot={(index, screenshot) => {
-                  state.updateMatch({
+                  updateMatch({
                     ...match,
                     screenshots: match.screenshots.map((s, i) =>
                       i === index ? screenshot : s,
@@ -114,7 +114,7 @@ export function MatchDetailsDialog({
           />
           <ArmySetupSectionGeneric
             addArmySetup={(armySetup) => {
-              state.updateMatch({
+              updateMatch({
                 ...match,
                 armySetups: [
                   ...match.armySetups,
@@ -127,7 +127,7 @@ export function MatchDetailsDialog({
               <ArmySetupTableGeneric
                 armySetups={match.armySetups}
                 deleteArmySetup={(armySetup) => {
-                  state.updateMatch({
+                  updateMatch({
                     ...match,
                     armySetups: match.armySetups.filter(
                       (a) => a.filename !== armySetup,
@@ -136,7 +136,7 @@ export function MatchDetailsDialog({
                 }}
                 recordingUlid={match.recordingUlid}
                 updateArmySetup={(index, armySetup) => {
-                  state.updateMatch({
+                  updateMatch({
                     ...match,
                     armySetups: match.armySetups.map((a, i) =>
                       i === index ? armySetup : a,
@@ -149,13 +149,13 @@ export function MatchDetailsDialog({
           <LinksTableGeneric
             links={match.links}
             deleteLink={(index) => {
-              state.updateMatch({
+              updateMatch({
                 ...match,
                 links: match.links.filter((_, i) => i !== index),
               });
             }}
             updateLink={(index, link) => {
-              state.updateMatch({
+              updateMatch({
                 ...match,
                 links: match.links.map((l, i) => (i === index ? link : l)),
               });
@@ -166,16 +166,16 @@ export function MatchDetailsDialog({
             recordingMod={match.mod}
             recordingVersion={match.version}
             setRecordingMod={(mod) => {
-              state.updateMatch({ ...match, mod: mod ?? DEFAULT });
+              updateMatch({ ...match, mod: mod ?? DEFAULT });
             }}
             setRecordingVersion={(version) => {
-              state.updateMatch({ ...match, version });
+              updateMatch({ ...match, version });
             }}
           />
           <NotesGeneric
             notes={match.notes}
             setNotes={(notes) => {
-              state.updateMatch({ ...match, notes });
+              updateMatch({ ...match, notes });
             }}
           />
         </div>
