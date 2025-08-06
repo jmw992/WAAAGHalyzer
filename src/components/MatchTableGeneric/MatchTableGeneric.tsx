@@ -28,7 +28,7 @@ type MatchTableProps = MatchColumns & {
   setRecordingWin: ZustandStateAction["setRecordingWin"];
 };
 
-export default function MatchTable({
+export default function MatchTableGeneric({
   player1Faction,
   player2Faction,
   recordingWin,

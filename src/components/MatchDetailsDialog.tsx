@@ -15,7 +15,7 @@ import { ArmySetupSectionGeneric } from "./ArmySetupMatchSection/ArmySetupSectio
 import { ArmySetupTableGeneric } from "./ArmySetupTable/ArmySetupTableGeneric";
 import GameModSectionGeneric from "./GameModSection/GameModSectionGeneric";
 import { LinksTableGeneric } from "./LinksTable/LinksTableGeneric";
-import MatchTable from "./MatchTableGeneric/MatchTableGeneric";
+import MatchTableGeneric from "./MatchTableGeneric/MatchTableGeneric";
 import NotesGeneric from "./Notes/NotesGeneric";
 import PreMatchTable from "./PreMatchTableGeneric/PreMatchTableGeneric";
 import { ScreenshotsSectionGeneric } from "./ScreenshotsMatchSection/ScreenshotsSectionGeneric";
@@ -92,7 +92,7 @@ export function MatchDetailsDialog({
               setMatch({ ...match, player2Id });
             }}
           />
-          <MatchTable
+          <MatchTableGeneric
             player1Faction={match.player1Faction}
             player2Faction={match.player2Faction}
             recordingWin={match.win}
