@@ -32,6 +32,7 @@ export function MatchDetailsDialog({
   onClose,
 }: MatchDetailsDialogProps) {
   const updateMatch = useZustandStore((state) => state.updateMatch);
+  const updateMatchDb = useZustandStore((state) => state.updateMatchDb);
   const [match, setMatch] = useState<RecordedMatch | null>(initialMatch);
 
   useEffect(() => {
@@ -42,8 +43,9 @@ export function MatchDetailsDialog({
     return null;
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     updateMatch(match);
+    await updateMatchDb(match.recordingUlid, match);
     onClose();
   };
 
@@ -191,7 +193,13 @@ export function MatchDetailsDialog({
             }}
           />
         </div>
-        <Button onClick={handleSubmit}>Submit</Button>
+        <Button
+          onClick={() => {
+            void handleSubmit();
+          }}
+        >
+          Submit
+        </Button>
       </DialogContent>
     </Dialog>
   );

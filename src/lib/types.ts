@@ -188,6 +188,7 @@ export interface DbActions {
   addMatchDb: (match: Omit<RecordedMatch, "recordingNumber">) => Promise<void>;
   addRecordingMatchDb: () => Promise<void>;
   getMatchesDb: () => Promise<RecordedMatch[] | null>;
+  updateMatchDb: (recordingUlid: string, match: RecordedMatch) => Promise<void>;
 }
 
 export type ZustandStateAction = State & Action & AppMeta & DbActions;
