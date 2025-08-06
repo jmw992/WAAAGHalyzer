@@ -37,7 +37,7 @@ export function MatchDetailsDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl">
+      <DialogContent className="w-[95vw] h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Match Details</DialogTitle>
         </DialogHeader>
