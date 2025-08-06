@@ -1,4 +1,5 @@
 "use client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import {
   Dialog,
@@ -31,9 +32,18 @@ export function MatchDetailsDialog({
   isOpen,
   onClose,
 }: MatchDetailsDialogProps) {
-  const updateMatch = useZustandStore((state) => state.updateMatch);
+  const queryClient = useQueryClient();
   const updateMatchDb = useZustandStore((state) => state.updateMatchDb);
   const [match, setMatch] = useState<RecordedMatch | null>(initialMatch);
+
+  const mutation = useMutation({
+    mutationFn: (match: RecordedMatch) =>
+      updateMatchDb(match.recordingUlid, match),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["matches"] });
+      onClose();
+    },
+  });
 
   useEffect(() => {
     setMatch(initialMatch);
@@ -43,10 +53,8 @@ export function MatchDetailsDialog({
     return null;
   }
 
-  const handleSubmit = async () => {
-    updateMatch(match);
-    await updateMatchDb(match.recordingUlid, match);
-    onClose();
+  const handleSubmit = () => {
+    mutation.mutate(match);
   };
 
   return (
@@ -193,13 +201,7 @@ export function MatchDetailsDialog({
             }}
           />
         </div>
-        <Button
-          onClick={() => {
-            void handleSubmit();
-          }}
-        >
-          Submit
-        </Button>
+        <Button onClick={handleSubmit}>Submit</Button>
       </DialogContent>
     </Dialog>
   );
