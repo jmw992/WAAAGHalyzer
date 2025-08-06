@@ -156,6 +156,7 @@ export interface Action {
   addRecordedMatch: (match: RecordedMatch) => void;
   addRecordingToMatches: (recordingEndTime: Date) => void;
   setMatch: (ii: number, match: RecordedMatch) => void;
+  updateMatch: (match: RecordedMatch) => void;
   setMatches: (matches: RecordedMatch[]) => void;
   setPlayer1Id: (player1Id: string | null) => void;
   setPlayer2Id: (player2Id: string | null) => void;

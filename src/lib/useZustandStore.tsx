@@ -300,6 +300,14 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       return { matches };
     });
   },
+  updateMatch: (match: RecordedMatch) => {
+    set((state) => {
+      const matches = state.matches.map((m) =>
+        m.recordingUlid === match.recordingUlid ? match : m,
+      );
+      return { matches };
+    });
+  },
   setMatches: (matches: RecordedMatch[]) => {
     set({ matches });
   },
