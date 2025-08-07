@@ -300,6 +300,14 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       return { matches };
     });
   },
+  updateMatch: (match: RecordedMatch) => {
+    set((state) => {
+      const matches = state.matches.map((m) =>
+        m.recordingUlid === match.recordingUlid ? match : m,
+      );
+      return { matches };
+    });
+  },
   setMatches: (matches: RecordedMatch[]) => {
     set({ matches });
   },
@@ -370,12 +378,12 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
     }
     try {
       await db.execute(
-        "INSERT INTO matches (match_type, " +
-          "player1_id, player2_id, player1_faction, player2_faction, " +
-          "win, map, game, mod, recording_ulid, auto_save_file, " +
-          "recording_start_time, recording_end_time, notes, " +
-          "links, army_setups, screenshots, vrsn) " +
-          "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)",
+        `INSERT INTO matches (match_type, player1_id, 
+        player2_id, player1_faction, player2_faction, win, 
+        map, game, mod, recording_ulid, auto_save_file, recording_start_time, 
+        recording_end_time, notes, links, army_setups, screenshots, vrsn) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 
+        $15, $16, $17, $18)`,
         [
           matchType,
           player1Id,
@@ -445,6 +453,64 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
     } catch (error) {
       console.error("Error fetching matches:", error);
       return null;
+    }
+  },
+
+  updateMatchDb: async (recordingUlid: string, match: RecordedMatch) => {
+    const db = get().db;
+    if (!db) {
+      console.error("Database not initialized");
+      return;
+    }
+    try {
+      const {
+        matchType,
+        player1Id,
+        player2Id,
+        player1Faction,
+        player2Faction,
+        win,
+        map,
+        game,
+        mod,
+        autoSaveFile,
+        recordingStartTime,
+        recordingEndTime,
+        notes,
+        links,
+        armySetups,
+        screenshots,
+        version,
+      } = match;
+      await db.execute(
+        `UPDATE matches SET match_type = $1, player1_id = $2, player2_id = $3, 
+        player1_faction = $4, player2_faction = $5, win = $6, map = $7, game = $8, 
+        mod = $9, auto_save_file = $10, recording_start_time = $11, recording_end_time = $12, 
+        notes = $13, links = $14, army_setups = $15, screenshots = $16, vrsn = $17 
+        WHERE recording_ulid = $18`,
+        [
+          matchType,
+          player1Id,
+          player2Id,
+          player1Faction,
+          player2Faction,
+          win,
+          map,
+          game,
+          mod,
+          autoSaveFile,
+          recordingStartTime.toISOString(),
+          recordingEndTime.toISOString(),
+          notes,
+          links.length ? JSON.stringify(links) : null,
+          armySetups.length ? JSON.stringify(armySetups) : null,
+          screenshots.length ? JSON.stringify(screenshots) : null,
+          version,
+          recordingUlid,
+        ],
+      );
+    } catch (error) {
+      console.error("Error updating match:", error);
     }
   },
 }));

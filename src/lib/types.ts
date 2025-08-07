@@ -156,6 +156,7 @@ export interface Action {
   addRecordedMatch: (match: RecordedMatch) => void;
   addRecordingToMatches: (recordingEndTime: Date) => void;
   setMatch: (ii: number, match: RecordedMatch) => void;
+  updateMatch: (match: RecordedMatch) => void;
   setMatches: (matches: RecordedMatch[]) => void;
   setPlayer1Id: (player1Id: string | null) => void;
   setPlayer2Id: (player2Id: string | null) => void;
@@ -187,6 +188,7 @@ export interface DbActions {
   addMatchDb: (match: Omit<RecordedMatch, "recordingNumber">) => Promise<void>;
   addRecordingMatchDb: () => Promise<void>;
   getMatchesDb: () => Promise<RecordedMatch[] | null>;
+  updateMatchDb: (recordingUlid: string, match: RecordedMatch) => Promise<void>;
 }
 
 export type ZustandStateAction = State & Action & AppMeta & DbActions;
