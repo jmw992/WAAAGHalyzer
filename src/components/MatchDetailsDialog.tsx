@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { DEFAULT, DOMINATION } from "@/constants";
+import { DEFAULT, DOMINATION, OTHER } from "@/constants";
 import type { RecordedMatch } from "@/lib/types";
 import { useZustandStore } from "@/lib/useZustandStore";
 import { ArmySetupSectionGeneric } from "./ArmySetupMatchSection/ArmySetupSectionGeneric";
@@ -112,7 +112,7 @@ export function MatchDetailsDialog({
                 ...match,
                 screenshots: [
                   ...match.screenshots,
-                  { filename: screenshot, type: "Other" },
+                  { filename: screenshot, type: OTHER },
                 ],
               });
             }}
@@ -146,7 +146,7 @@ export function MatchDetailsDialog({
                 ...match,
                 armySetups: [
                   ...match.armySetups,
-                  { filename: armySetup, type: "Other" },
+                  { filename: armySetup, type: OTHER },
                 ],
               });
             }}
