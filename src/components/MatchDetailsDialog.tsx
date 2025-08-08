@@ -192,12 +192,20 @@ export function MatchDetailsDialog({
           <GameModSectionGeneric
             recordingGame={match.game}
             recordingMod={match.mod}
-            recordingVersion={match.version}
+            version_major={match.version_major}
+            version_minor={match.version_minor}
+            version_patch={match.version_patch}
             setRecordingMod={(mod) => {
               setMatch({ ...match, mod: mod ?? DEFAULT });
             }}
-            setRecordingVersion={(version) => {
-              setMatch({ ...match, version });
+            setVersionMajor={(version_major) => {
+              setMatch({ ...match, version_major });
+            }}
+            setVersionMinor={(version_minor) => {
+              setMatch({ ...match, version_minor });
+            }}
+            setVersionPatch={(version_patch) => {
+              setMatch({ ...match, version_patch });
             }}
           />
           <NotesGeneric

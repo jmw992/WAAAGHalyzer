@@ -427,14 +427,17 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
         links,
         armySetups,
         screenshots,
-        version,
+        version_major,
+        version_minor,
+        version_patch,
       } = match;
       await db.execute(
         `UPDATE matches SET match_type = $1, player1_id = $2, player2_id = $3, 
         player1_faction = $4, player2_faction = $5, win = $6, map = $7, game = $8, 
         mod = $9, auto_save_file = $10, recording_start_time = $11, recording_end_time = $12, 
-        notes = $13, links = $14, army_setups = $15, screenshots = $16, vrsn = $17 
-        WHERE recording_ulid = $18`,
+        notes = $13, links = $14, army_setups = $15, screenshots = $16, version_major = $17, 
+        version_minor = $18, version_patch = $19 
+        WHERE recording_ulid = $20`,
         [
           matchType,
           player1Id,
@@ -452,7 +455,9 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
           links.length ? JSON.stringify(links) : null,
           armySetups.length ? JSON.stringify(armySetups) : null,
           screenshots.length ? JSON.stringify(screenshots) : null,
-          version,
+          version_major,
+          version_minor,
+          version_patch,
           recordingUlid,
         ],
       );

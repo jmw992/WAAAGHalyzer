@@ -89,18 +89,46 @@ export const SettingsForm = ({
         />
       </div>
 
-      <div className={STACKED_LABEL_CLASSNAME}>
-        <Label className="pl-0.5" htmlFor="settings-version">
-          Version
-        </Label>
-        <Input
-          id="settings-version"
-          type="email"
-          value={form.version}
-          onChange={(e) => {
-            handleChange("version", e.target.value);
-          }}
-        />
+      <div className="flex flex-row pb-4 gap-2">
+        <div className={STACKED_LABEL_CLASSNAME}>
+          <Label className="pl-0.5" htmlFor="settings-version-major">
+            Major
+          </Label>
+          <Input
+            id="settings-version-major"
+            type="number"
+            value={form.version_major}
+            onChange={(e) => {
+              handleChange("version_major", Number(e.target.value));
+            }}
+          />
+        </div>
+        <div className={STACKED_LABEL_CLASSNAME}>
+          <Label className="pl-0.5" htmlFor="settings-version-minor">
+            Minor
+          </Label>
+          <Input
+            id="settings-version-minor"
+            type="number"
+            value={form.version_minor}
+            onChange={(e) => {
+              handleChange("version_minor", Number(e.target.value));
+            }}
+          />
+        </div>
+        <div className={STACKED_LABEL_CLASSNAME}>
+          <Label className="pl-0.5" htmlFor="settings-version-patch">
+            Patch
+          </Label>
+          <Input
+            id="settings-version-patch"
+            type="number"
+            value={form.version_patch}
+            onChange={(e) => {
+              handleChange("version_patch", Number(e.target.value));
+            }}
+          />
+        </div>
       </div>
 
       <div className={STACKED_LABEL_CLASSNAME}>

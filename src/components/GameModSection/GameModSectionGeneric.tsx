@@ -16,17 +16,25 @@ import type { Action, RecordingState } from "@/lib/types";
 interface GameModSectionGenericProps {
   recordingGame: RecordingState["recordingGame"];
   recordingMod: string;
-  recordingVersion: string;
+  version_major: number;
+  version_minor: number;
+  version_patch: number;
   setRecordingMod: Action["setRecordingMod"];
-  setRecordingVersion: Action["setVersion"];
+  setVersionMajor: Action["setVersionMajor"];
+  setVersionMinor: Action["setVersionMinor"];
+  setVersionPatch: Action["setVersionPatch"];
 }
 
 export default function GameModSectionGeneric({
   recordingGame,
   recordingMod,
   setRecordingMod,
-  recordingVersion,
-  setRecordingVersion,
+  version_major,
+  version_minor,
+  version_patch,
+  setVersionMajor,
+  setVersionMinor,
+  setVersionPatch,
 }: GameModSectionGenericProps) {
   return (
     <div className="flex flex-row pb-4 gap-2">
@@ -68,15 +76,41 @@ export default function GameModSectionGeneric({
       </div>
 
       <div className={STACKED_LABEL_CLASSNAME}>
-        <Label className="pl-0.5" htmlFor="recording-version">
-          Version
+        <Label className="pl-0.5" htmlFor="recording-version-major">
+          Major
         </Label>
         <Input
-          id="recording-version"
-          type="email"
-          value={recordingVersion}
+          id="recording-version-major"
+          type="number"
+          value={version_major}
           onChange={(e) => {
-            setRecordingVersion(e.target.value);
+            setVersionMajor(Number(e.target.value));
+          }}
+        />
+      </div>
+      <div className={STACKED_LABEL_CLASSNAME}>
+        <Label className="pl-0.5" htmlFor="recording-version-minor">
+          Minor
+        </Label>
+        <Input
+          id="recording-version-minor"
+          type="number"
+          value={version_minor}
+          onChange={(e) => {
+            setVersionMinor(Number(e.target.value));
+          }}
+        />
+      </div>
+      <div className={STACKED_LABEL_CLASSNAME}>
+        <Label className="pl-0.5" htmlFor="recording-version-patch">
+          Patch
+        </Label>
+        <Input
+          id="recording-version-patch"
+          type="number"
+          value={version_patch}
+          onChange={(e) => {
+            setVersionPatch(Number(e.target.value));
           }}
         />
       </div>
