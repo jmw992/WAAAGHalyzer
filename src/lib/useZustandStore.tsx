@@ -258,59 +258,6 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   setPersistedState(value) {
     set(value);
   },
-  addRecordedMatch: (match: RecordedMatch) => {
-    set((state) => ({
-      matches: [...state.matches, match],
-    }));
-  },
-  addRecordingToMatches: (recordingEndTime: Date) => {
-    set((state) => {
-      return {
-        matches: [
-          ...state.matches,
-          {
-            recordingNumber: state.recordingNumber ?? 0,
-            game: state.recordingGame ?? TOTAL_WAR_WARHAMMER_3,
-            mod: state.recordingMod ?? DEFAULT,
-            recordingUlid: state.recordingUlid ?? "",
-            autoSaveFile: state.autoSaveFile,
-            recordingStartTime: state.recordingStartTime ?? recordingEndTime,
-            recordingEndTime: recordingEndTime,
-            win: state.recordingWin ?? false,
-            player1Id: state.player1Id,
-            player2Id: state.player2Id,
-            player1Faction: state.player1Faction,
-            player2Faction: state.player2Faction,
-            notes: state.notes,
-            map: state.map,
-            links: state.links,
-            screenshots: state.screenshots,
-            armySetups: state.armySetups,
-            matchType: state.matchType ?? DOMINATION,
-            version: state.recordingVersion,
-          },
-        ],
-      };
-    });
-  },
-  setMatch: (ii: number, match: RecordedMatch) => {
-    set((state) => {
-      const matches = [...state.matches];
-      matches[ii] = match;
-      return { matches };
-    });
-  },
-  updateMatch: (match: RecordedMatch) => {
-    set((state) => {
-      const matches = state.matches.map((m) =>
-        m.recordingUlid === match.recordingUlid ? match : m,
-      );
-      return { matches };
-    });
-  },
-  setMatches: (matches: RecordedMatch[]) => {
-    set({ matches });
-  },
   getPersistedState: () => ({
     game: get().game,
     mod: get().mod,
