@@ -14,7 +14,6 @@ interface SaveHandlerProps {
   unwatchArmySetup: RecordingState["unwatchArmySetup"];
 
   setIsRecording: Action["setIsRecording"];
-  addRecordingToMatches: Action["addRecordingToMatches"];
   setNullRecordingStartState: Action["setNullRecordingStartState"];
   addRecordingMatchDb: DbActions["addRecordingMatchDb"];
 }
@@ -27,7 +26,6 @@ const saveHandler = async ({
   unwatchAutoSaveFn,
   unwatchArmySetup,
   setIsRecording,
-  addRecordingToMatches,
   setNullRecordingStartState,
   addRecordingMatchDb,
 }: SaveHandlerProps) => {
@@ -43,7 +41,6 @@ const saveHandler = async ({
       console.error("stopHandler error:", err);
     }
 
-    addRecordingToMatches(new Date());
     await addRecordingMatchDbPromise;
     setNullRecordingStartState();
     setIsRecording(false);
@@ -73,9 +70,6 @@ export default function MatchSaveButtonBase({
     (state) => state.unwatchScreenshotFn,
   );
   const unwatchArmySetup = useZustandStore((state) => state.unwatchArmySetup);
-  const addRecordingToMatches = useZustandStore(
-    (state) => state.addRecordingToMatches,
-  );
   const setIsRecording = useZustandStore((state) => state.setIsRecording);
   const setNullRecordingStartState = useZustandStore(
     (state) => state.setNullRecordingStartState,
@@ -103,7 +97,6 @@ export default function MatchSaveButtonBase({
           unwatchScreenshotFn,
           unwatchAutoSaveFn,
           unwatchArmySetup,
-          addRecordingToMatches,
           setIsRecording,
           setNullRecordingStartState,
           addRecordingMatchDb,

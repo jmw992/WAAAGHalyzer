@@ -121,7 +121,6 @@ export type RecordingState = StartRecordingProps & {
 /** Transient state items that get reset between app close & open */
 export type TransientState = RecordingState & {
   page: Page;
-  matches: RecordedMatch[];
 };
 
 /** Full application state */
@@ -153,11 +152,6 @@ export interface Action {
   addArmySetup: (filename: string) => void;
   deleteArmySetup: (file: string) => void;
   updateArmySetup: (index: number, armySetup: ArmySetup) => void;
-  addRecordedMatch: (match: RecordedMatch) => void;
-  addRecordingToMatches: (recordingEndTime: Date) => void;
-  setMatch: (ii: number, match: RecordedMatch) => void;
-  updateMatch: (match: RecordedMatch) => void;
-  setMatches: (matches: RecordedMatch[]) => void;
   setPlayer1Id: (player1Id: string | null) => void;
   setPlayer2Id: (player2Id: string | null) => void;
 
