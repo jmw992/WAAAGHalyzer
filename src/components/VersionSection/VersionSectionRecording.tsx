@@ -23,6 +23,7 @@ export function VersionSectionRecording() {
       versionMinor={recordingVersionMinor}
       versionPatch={recordingVersionPatch}
       setVersion={setRecordingVersion}
+      idPrefix="recording-version"
     />
   );
 }

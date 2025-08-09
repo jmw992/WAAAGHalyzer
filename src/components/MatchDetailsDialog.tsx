@@ -204,6 +204,7 @@ export function MatchDetailsDialog({
             setVersion={(versionMajor, versionMinor, versionPatch) => {
               setMatch({ ...match, versionMajor, versionMinor, versionPatch });
             }}
+            idPrefix="match-details"
           />
           <NotesGeneric
             notes={match.notes}

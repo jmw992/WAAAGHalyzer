@@ -97,6 +97,7 @@ export const SettingsForm = ({
           handleChange("versionMinor", versionMinor);
           handleChange("versionPatch", versionPatch);
         }}
+        idPrefix="settings"
       />
 
       <div className={STACKED_LABEL_CLASSNAME}>

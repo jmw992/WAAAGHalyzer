@@ -10,6 +10,7 @@ interface VersionSectionGenericProps {
   versionMinor: number;
   versionPatch: number;
   setVersion: Action["setVersion"];
+  idPrefix?: string;
 }
 
 export default function VersionSectionGeneric({
@@ -17,19 +18,18 @@ export default function VersionSectionGeneric({
   versionMinor,
   versionPatch,
   setVersion,
+  idPrefix,
 }: VersionSectionGenericProps) {
   return (
     <div className={STACKED_LABEL_CLASSNAME}>
-      <Label className="pl-0.5" htmlFor="recording-version-major">
-        Version
-      </Label>
+      <Label className="pl-0.5">Version</Label>
       <div className="flex flex-row pb-4 gap-2">
         <div className={STACKED_LABEL_CLASSNAME}>
-          <Label className="pl-0.5" htmlFor="recording-version-major">
+          <Label className="pl-0.5" htmlFor={`${idPrefix}-version-major`}>
             Major
           </Label>
           <Input
-            id="recording-version-major"
+            id={`${idPrefix}-version-major`}
             type="number"
             value={versionMajor}
             onChange={(e) => {
@@ -38,11 +38,11 @@ export default function VersionSectionGeneric({
           />
         </div>
         <div className={STACKED_LABEL_CLASSNAME}>
-          <Label className="pl-0.5" htmlFor="recording-version-minor">
+          <Label className="pl-0.5" htmlFor={`${idPrefix}-version-minor`}>
             Minor
           </Label>
           <Input
-            id="recording-version-minor"
+            id={`${idPrefix}-version-minor`}
             type="number"
             value={versionMinor}
             onChange={(e) => {
@@ -51,11 +51,11 @@ export default function VersionSectionGeneric({
           />
         </div>
         <div className={STACKED_LABEL_CLASSNAME}>
-          <Label className="pl-0.5" htmlFor="recording-version-patch">
+          <Label className="pl-0.5" htmlFor={`${idPrefix}-version-patch`}>
             Patch
           </Label>
           <Input
-            id="recording-version-patch"
+            id={`${idPrefix}-version-patch`}
             type="number"
             value={versionPatch}
             onChange={(e) => {
