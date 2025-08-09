@@ -11,6 +11,7 @@ import { PreMatchTableRecording } from "@/components/PreMatchTableGeneric/PreMat
 import RecordingSectionRecording from "@/components/RecordingSection/RecordingSectionRecording";
 import { ScreenshotsSectionRecording } from "@/components/ScreenshotsMatchSection/ScreenshotsSectionRecording";
 import { Button } from "@/components/ui/button";
+import { VersionSectionRecording } from "@/components/VersionSection/VersionSectionRecording";
 
 export default function Match() {
   return (
@@ -21,6 +22,7 @@ export default function Match() {
       <ArmySetupSectionRecording />
       <LinksTableRecording />
       <GameModSectionRecording />
+      <VersionSectionRecording />
       <RecordingSectionRecording />
       <NotesRecording />
       <div className="flex justify-between mt-4">
@@ -29,7 +31,7 @@ export default function Match() {
         <div className="flex items-start">
           <Button
             onClick={() => {
-              console.log("Copying recording to clipboard");
+              console.log("TODO Copying recording to clipboard");
             }}
             size="sm"
             type="button"
@@ -40,7 +42,7 @@ export default function Match() {
           <Button
             className="ml-1"
             onClick={() => {
-              console.log("Downloading Icon");
+              console.log("TODO Downloading Icon");
             }}
             size="sm"
             type="reset"
@@ -51,7 +53,7 @@ export default function Match() {
           <Button
             className="ml-1"
             onClick={() => {
-              console.log("Submitting recording");
+              console.log("TODO Submitting recording");
             }}
             size="sm"
             type="reset"

@@ -12,9 +12,9 @@ export const getStorePersistedSettings = (): PersistedState => {
     gameDirectory: localStorage.getItem("gameDirectory") ?? "",
     screenshotsDirectory: localStorage.getItem("screenshotsDirectory") ?? "",
     playerId: localStorage.getItem("playerId") ?? null,
-    version_major: Number(localStorage.getItem("version_major")) || 1,
-    version_minor: Number(localStorage.getItem("version_minor")) || 0,
-    version_patch: Number(localStorage.getItem("version_patch")) || 0,
+    versionMajor: Number(localStorage.getItem("versionMajor")) || 1,
+    versionMinor: Number(localStorage.getItem("versionMinor")) || 0,
+    versionPatch: Number(localStorage.getItem("versionPatch")) || 0,
     demoMode: localStorage.getItem("demoMode") === "true",
   };
 };
@@ -26,8 +26,8 @@ export const setStorePersistedSettings = (state: PersistedState) => {
   localStorage.setItem("screenshotsDirectory", state.screenshotsDirectory);
   localStorage.setItem("defaultMatchType", state.defaultMatchType);
   localStorage.setItem("playerId", state.playerId ?? "");
-  localStorage.setItem("version_major", state.version_major.toString());
-  localStorage.setItem("version_minor", state.version_minor.toString());
-  localStorage.setItem("version_patch", state.version_patch.toString());
+  localStorage.setItem("versionMajor", state.versionMajor.toString());
+  localStorage.setItem("versionMinor", state.versionMinor.toString());
+  localStorage.setItem("versionPatch", state.versionPatch.toString());
   localStorage.setItem("demoMode", state.demoMode.toString());
 };

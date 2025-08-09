@@ -21,6 +21,7 @@ import PreMatchTable from "./PreMatchTableGeneric/PreMatchTableGeneric";
 import { ScreenshotsSectionGeneric } from "./ScreenshotsMatchSection/ScreenshotsSectionGeneric";
 import { ScreenshotsTableGeneric } from "./ScreenshotsTable/ScreenshotsTableGeneric";
 import { Button } from "./ui/button";
+import VersionSectionGeneric from "./VersionSection/VersionSectionGeneric";
 
 interface MatchDetailsDialogProps {
   match: RecordedMatch | null;
@@ -192,20 +193,16 @@ export function MatchDetailsDialog({
           <GameModSectionGeneric
             recordingGame={match.game}
             recordingMod={match.mod}
-            version_major={match.version_major}
-            version_minor={match.version_minor}
-            version_patch={match.version_patch}
             setRecordingMod={(mod) => {
               setMatch({ ...match, mod: mod ?? DEFAULT });
             }}
-            setVersionMajor={(version_major) => {
-              setMatch({ ...match, version_major });
-            }}
-            setVersionMinor={(version_minor) => {
-              setMatch({ ...match, version_minor });
-            }}
-            setVersionPatch={(version_patch) => {
-              setMatch({ ...match, version_patch });
+          />
+          <VersionSectionGeneric
+            versionMajor={match.versionMajor}
+            versionMinor={match.versionMinor}
+            versionPatch={match.versionPatch}
+            setVersion={(versionMajor, versionMinor, versionPatch) => {
+              setMatch({ ...match, versionMajor, versionMinor, versionPatch });
             }}
           />
           <NotesGeneric

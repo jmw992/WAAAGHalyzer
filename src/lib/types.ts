@@ -41,9 +41,9 @@ export interface DbMatch {
 export interface PersistedState {
   game: SupportedGames;
   mod: string;
-  version_major: number;
-  version_minor: number;
-  version_patch: number;
+  versionMajor: number;
+  versionMinor: number;
+  versionPatch: number;
   gameDirectory: string;
   screenshotsDirectory: string;
   playerId: string | null;
@@ -88,9 +88,9 @@ export interface RecordedMatch {
   links: RecordingState["links"];
   armySetups: RecordingState["armySetups"];
   screenshots: RecordingState["screenshots"];
-  version_major: number;
-  version_minor: number;
-  version_patch: number;
+  versionMajor: number;
+  versionMinor: number;
+  versionPatch: number;
 }
 
 export interface StartRecordingProps {
@@ -109,9 +109,9 @@ export type RecordingState = StartRecordingProps & {
   recordingMod: string | null;
   recordingWin: boolean | null;
   matchType: MatchTypes | null;
-  version_major: number;
-  version_minor: number;
-  version_patch: number;
+  recordingVersionMajor: number;
+  recordingVersionMinor: number;
+  recordingVersionPatch: number;
   player1Id: string | null;
 
   player2Id: string | null;
@@ -142,9 +142,8 @@ export interface Action {
   setPlayer2Faction: (player2Faction: RecordingState["player2Faction"]) => void;
   setRecordingWin: (recordingWin: RecordingState["recordingWin"]) => void;
   setRecordingMod: (recordingWin: RecordingState["recordingMod"]) => void;
-  setVersionMajor: (version_major: number) => void;
-  setVersionMinor: (version_minor: number) => void;
-  setVersionPatch: (version_patch: number) => void;
+  setVersion: (major: number, minor: number, patch: number) => void;
+  setRecordingVersion: (major: number, minor: number, patch: number) => void;
   setIsRecording: (isRecording: RecordingState["isRecording"]) => void;
   setRecordingStartTime: (
     startTime: RecordingState["recordingStartTime"],

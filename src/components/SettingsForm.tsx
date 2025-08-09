@@ -17,6 +17,7 @@ import { setStorePersistedSettings } from "@/lib/persistStorage";
 import type { PersistedState } from "@/lib/types";
 import { useZustandStore } from "@/lib/useZustandStore";
 import { FolderInput } from "./FolderInputDialog";
+import VersionSectionGeneric from "./VersionSection/VersionSectionGeneric";
 
 export const SettingsForm = ({
   initialState,
@@ -42,12 +43,10 @@ export const SettingsForm = ({
 
   return (
     <div
-      // onSubmit={(e)}
       style={{
         display: "flex",
         flexDirection: "column",
         gap: "1rem",
-        // maxWidth: 500,
       }}
     >
       <div className={STACKED_LABEL_CLASSNAME}>
@@ -89,47 +88,16 @@ export const SettingsForm = ({
         />
       </div>
 
-      <div className="flex flex-row pb-4 gap-2">
-        <div className={STACKED_LABEL_CLASSNAME}>
-          <Label className="pl-0.5" htmlFor="settings-version-major">
-            Major
-          </Label>
-          <Input
-            id="settings-version-major"
-            type="number"
-            value={form.version_major}
-            onChange={(e) => {
-              handleChange("version_major", Number(e.target.value));
-            }}
-          />
-        </div>
-        <div className={STACKED_LABEL_CLASSNAME}>
-          <Label className="pl-0.5" htmlFor="settings-version-minor">
-            Minor
-          </Label>
-          <Input
-            id="settings-version-minor"
-            type="number"
-            value={form.version_minor}
-            onChange={(e) => {
-              handleChange("version_minor", Number(e.target.value));
-            }}
-          />
-        </div>
-        <div className={STACKED_LABEL_CLASSNAME}>
-          <Label className="pl-0.5" htmlFor="settings-version-patch">
-            Patch
-          </Label>
-          <Input
-            id="settings-version-patch"
-            type="number"
-            value={form.version_patch}
-            onChange={(e) => {
-              handleChange("version_patch", Number(e.target.value));
-            }}
-          />
-        </div>
-      </div>
+      <VersionSectionGeneric
+        versionMajor={form.versionMajor}
+        versionMinor={form.versionMinor}
+        versionPatch={form.versionPatch}
+        setVersion={(versionMajor, versionMinor, versionPatch) => {
+          handleChange("versionMajor", versionMajor);
+          handleChange("versionMinor", versionMinor);
+          handleChange("versionPatch", versionPatch);
+        }}
+      />
 
       <div className={STACKED_LABEL_CLASSNAME}>
         <Label className="pl-0.5" htmlFor="settings-playerId">
