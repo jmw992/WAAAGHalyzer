@@ -32,7 +32,6 @@ export const copyAutoSaveBase = async ({
       baseDir: BaseDirectory.AppLocalData,
     }))
   ) {
-    console.log(`making ${destinationDir}`);
     await mkdir(destinationDir, {
       baseDir: BaseDirectory.AppLocalData,
       recursive: true,

@@ -12,7 +12,9 @@ export const getStorePersistedSettings = (): PersistedState => {
     gameDirectory: localStorage.getItem("gameDirectory") ?? "",
     screenshotsDirectory: localStorage.getItem("screenshotsDirectory") ?? "",
     playerId: localStorage.getItem("playerId") ?? null,
-    version: localStorage.getItem("version") ?? "",
+    versionMajor: Number(localStorage.getItem("versionMajor")) || 1,
+    versionMinor: Number(localStorage.getItem("versionMinor")) || 0,
+    versionPatch: Number(localStorage.getItem("versionPatch")) || 0,
     demoMode: localStorage.getItem("demoMode") === "true",
   };
 };
@@ -24,6 +26,8 @@ export const setStorePersistedSettings = (state: PersistedState) => {
   localStorage.setItem("screenshotsDirectory", state.screenshotsDirectory);
   localStorage.setItem("defaultMatchType", state.defaultMatchType);
   localStorage.setItem("playerId", state.playerId ?? "");
-  localStorage.setItem("version", state.version);
+  localStorage.setItem("versionMajor", state.versionMajor.toString());
+  localStorage.setItem("versionMinor", state.versionMinor.toString());
+  localStorage.setItem("versionPatch", state.versionPatch.toString());
   localStorage.setItem("demoMode", state.demoMode.toString());
 };

@@ -17,7 +17,9 @@ CREATE TABLE IF NOT EXISTS matches (
     links TEXT,
     army_setups TEXT,
     screenshots TEXT,
-    vrsn TEXT NOT NULL
+    version_major INTEGER NOT NULL,
+    version_minor INTEGER NOT NULL,
+    version_patch INTEGER NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_matches_player1_id ON matches(player1_id);
@@ -29,4 +31,6 @@ CREATE INDEX IF NOT EXISTS idx_matches_win ON matches(win);
 CREATE INDEX IF NOT EXISTS idx_matches_game ON matches(game);
 CREATE INDEX IF NOT EXISTS idx_matches_mod ON matches(mod);
 CREATE INDEX IF NOT EXISTS idx_matches_map ON matches(map);
-CREATE INDEX IF NOT EXISTS idx_matches_vrsn ON matches(vrsn);
+CREATE INDEX IF NOT EXISTS idx_matches_version_major ON matches(version_major);
+CREATE INDEX IF NOT EXISTS idx_matches_version_minor ON matches(version_minor);
+CREATE INDEX IF NOT EXISTS idx_matches_version_patch ON matches(version_patch);

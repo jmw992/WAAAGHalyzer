@@ -32,14 +32,18 @@ export interface DbMatch {
   links: string | null;
   army_setups: string | null;
   screenshots: string | null;
-  vrsn: string;
+  version_major: number;
+  version_minor: number;
+  version_patch: number;
 }
 
 /** These state items get persisted between app close & open */
 export interface PersistedState {
   game: SupportedGames;
   mod: string;
-  version: string;
+  versionMajor: number;
+  versionMinor: number;
+  versionPatch: number;
   gameDirectory: string;
   screenshotsDirectory: string;
   playerId: string | null;
@@ -84,7 +88,9 @@ export interface RecordedMatch {
   links: RecordingState["links"];
   armySetups: RecordingState["armySetups"];
   screenshots: RecordingState["screenshots"];
-  version: RecordingState["recordingVersion"];
+  versionMajor: number;
+  versionMinor: number;
+  versionPatch: number;
 }
 
 export interface StartRecordingProps {
@@ -103,7 +109,9 @@ export type RecordingState = StartRecordingProps & {
   recordingMod: string | null;
   recordingWin: boolean | null;
   matchType: MatchTypes | null;
-  recordingVersion: string;
+  recordingVersionMajor: number;
+  recordingVersionMinor: number;
+  recordingVersionPatch: number;
   player1Id: string | null;
 
   player2Id: string | null;
@@ -134,9 +142,8 @@ export interface Action {
   setPlayer2Faction: (player2Faction: RecordingState["player2Faction"]) => void;
   setRecordingWin: (recordingWin: RecordingState["recordingWin"]) => void;
   setRecordingMod: (recordingWin: RecordingState["recordingMod"]) => void;
-  setRecordingVersion: (
-    recordingVersion: RecordingState["recordingVersion"],
-  ) => void;
+  setVersion: (major: number, minor: number, patch: number) => void;
+  setRecordingVersion: (major: number, minor: number, patch: number) => void;
   setIsRecording: (isRecording: RecordingState["isRecording"]) => void;
   setRecordingStartTime: (
     startTime: RecordingState["recordingStartTime"],
@@ -160,7 +167,6 @@ export interface Action {
   updateLink: (index: number, link: Link) => void;
 
   setGame: (game: SupportedGames) => void;
-  setVersion: (version: string) => void;
   setPlayerId: (playerId: string) => void;
   setGameDirectory: (gameDirectory: State["gameDirectory"]) => void;
   setMod: (mod: State["mod"]) => void;

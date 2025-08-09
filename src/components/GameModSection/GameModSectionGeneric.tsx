@@ -15,18 +15,14 @@ import type { Action, RecordingState } from "@/lib/types";
 
 interface GameModSectionGenericProps {
   recordingGame: RecordingState["recordingGame"];
-  recordingMod: string;
-  recordingVersion: string;
+  recordingMod: RecordingState["recordingMod"];
   setRecordingMod: Action["setRecordingMod"];
-  setRecordingVersion: Action["setVersion"];
 }
 
 export default function GameModSectionGeneric({
   recordingGame,
   recordingMod,
   setRecordingMod,
-  recordingVersion,
-  setRecordingVersion,
 }: GameModSectionGenericProps) {
   return (
     <div className="flex flex-row pb-4 gap-2">
@@ -63,20 +59,6 @@ export default function GameModSectionGeneric({
           value={recordingMod}
           onChange={(e) => {
             setRecordingMod(e.target.value);
-          }}
-        />
-      </div>
-
-      <div className={STACKED_LABEL_CLASSNAME}>
-        <Label className="pl-0.5" htmlFor="recording-version">
-          Version
-        </Label>
-        <Input
-          id="recording-version"
-          type="email"
-          value={recordingVersion}
-          onChange={(e) => {
-            setRecordingVersion(e.target.value);
           }}
         />
       </div>

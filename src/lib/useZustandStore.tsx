@@ -34,7 +34,9 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   matches: [],
   defaultMatchType: DOMINATION,
   demoMode: false,
-
+  versionMajor: 1,
+  versionMinor: 0,
+  versionPatch: 0,
   setPage: (value: Page) => {
     set({ page: value });
   },
@@ -60,10 +62,6 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   setPlayerId: (playerId) => {
     set({ playerId });
   },
-  version: "1.0.0", // Default version if not set
-  setVersion: (value: string) => {
-    set({ version: value });
-  },
   gameDirectory: "",
   setGameDirectory: (value: string) => {
     set({ gameDirectory: value });
@@ -73,10 +71,6 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
     set({ screenshotsDirectory: value });
   },
   recordingStartTime: null,
-  recordingVersion: "1.0.0", // Default version if not set
-  setRecordingVersion: (value: string) => {
-    set({ recordingVersion: value });
-  },
   setRecordingStartTime: (value: Date | null) => {
     set({ recordingStartTime: value });
   },
@@ -101,6 +95,9 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   recordingGame: TOTAL_WAR_WARHAMMER_3,
   recordingMod: DEFAULT,
   recordingWin: null,
+  recordingVersionMajor: 1,
+  recordingVersionMinor: 0,
+  recordingVersionPatch: 0,
   player1Id: null,
   player2Id: null,
   player1Faction: null,
@@ -148,7 +145,6 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       isRecording: true,
       autoSaveFile: null,
       recordingWin: null,
-      recordingVersion: get().version,
       player1Id: get().playerId,
       player2Id: null,
       player1Faction: null,
@@ -158,6 +154,9 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       links: [],
       screenshots: [],
       armySetups: [],
+      recordingVersionMajor: get().versionMajor,
+      recordingVersionMinor: get().versionMinor,
+      recordingVersionPatch: get().versionPatch,
     });
   },
   setNullRecordingStartState: () => {
@@ -178,7 +177,6 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       links: [],
       screenshots: [],
       armySetups: [],
-      recordingVersion: get().recordingVersion,
     });
   },
   // setNullRecordingStartState
@@ -265,11 +263,29 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
     gameDirectory: get().gameDirectory,
     screenshotsDirectory: get().screenshotsDirectory,
     playerId: get().playerId,
-    version: get().version || "1.0.0", // Default version if not set
+    versionMajor: get().versionMajor,
+    versionMinor: get().versionMinor,
+    versionPatch: get().versionPatch,
     demoMode: get().demoMode,
   }),
   setDemoMode: (demoMode) => {
     set({ demoMode });
+  },
+
+  setVersion: (major: number, minor: number, patch: number) => {
+    set({
+      versionMajor: major,
+      versionMinor: minor,
+      versionPatch: patch,
+    });
+  },
+
+  setRecordingVersion: (major: number, minor: number, patch: number) => {
+    set({
+      recordingVersionMajor: major,
+      recordingVersionMinor: minor,
+      recordingVersionPatch: patch,
+    });
   },
 
   getLatestRecordingNumberDb: async () => {
@@ -282,7 +298,6 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       const result: Record<string, number | null>[] = await db.select(
         "SELECT MAX(id) FROM matches",
       );
-      console.log("Latest match result:", result);
       const latestMatchId = result[0]["MAX(id)"] ?? 0;
       return latestMatchId;
     } catch (error) {
@@ -293,7 +308,6 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
   setLatestRecordingNumberDb: async () => {
     const latestRecordingNumber =
       ((await get().getLatestRecordingNumberDb()) ?? 0) + 1;
-    console.log("Setting latest recording number to:", latestRecordingNumber);
     // Update the Zustand state with the latest
     set({ recordingNumber: latestRecordingNumber });
   },
@@ -316,7 +330,9 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
       links,
       armySetups,
       screenshots,
-      version,
+      versionMajor,
+      versionMinor,
+      versionPatch,
     } = match;
     const db = get().db;
     if (!db) {
@@ -328,9 +344,10 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
         `INSERT INTO matches (match_type, player1_id, 
         player2_id, player1_faction, player2_faction, win, 
         map, game, mod, recording_ulid, auto_save_file, recording_start_time, 
-        recording_end_time, notes, links, army_setups, screenshots, vrsn) 
+        recording_end_time, notes, links, army_setups, screenshots, version_major,
+        version_minor, version_patch) 
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 
-        $15, $16, $17, $18)`,
+        $15, $16, $17, $18, $19, $20)`,
         [
           matchType,
           player1Id,
@@ -349,7 +366,9 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
           links.length ? JSON.stringify(links) : null,
           armySetups.length ? JSON.stringify(armySetups) : null,
           screenshots.length ? JSON.stringify(screenshots) : null,
-          version,
+          versionMajor,
+          versionMinor,
+          versionPatch,
         ],
       );
     } catch (error) {
@@ -381,7 +400,9 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
         links: get().links,
         armySetups: get().armySetups,
         screenshots: get().screenshots,
-        version: get().recordingVersion,
+        versionMajor: get().recordingVersionMajor,
+        versionMinor: get().recordingVersionMinor,
+        versionPatch: get().recordingVersionPatch,
       });
     } catch (error) {
       console.error("Error adding recording:", error);
@@ -427,14 +448,17 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
         links,
         armySetups,
         screenshots,
-        version,
+        versionMajor,
+        versionMinor,
+        versionPatch,
       } = match;
       await db.execute(
         `UPDATE matches SET match_type = $1, player1_id = $2, player2_id = $3, 
         player1_faction = $4, player2_faction = $5, win = $6, map = $7, game = $8, 
         mod = $9, auto_save_file = $10, recording_start_time = $11, recording_end_time = $12, 
-        notes = $13, links = $14, army_setups = $15, screenshots = $16, vrsn = $17 
-        WHERE recording_ulid = $18`,
+        notes = $13, links = $14, army_setups = $15, screenshots = $16, version_major = $17, 
+        version_minor = $18, version_patch = $19 
+        WHERE recording_ulid = $20`,
         [
           matchType,
           player1Id,
@@ -452,7 +476,9 @@ export const useZustandStore = create<ZustandStateAction>((set, get) => ({
           links.length ? JSON.stringify(links) : null,
           armySetups.length ? JSON.stringify(armySetups) : null,
           screenshots.length ? JSON.stringify(screenshots) : null,
-          version,
+          versionMajor,
+          versionMinor,
+          versionPatch,
           recordingUlid,
         ],
       );

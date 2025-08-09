@@ -9,7 +9,11 @@ const __dirname = path.dirname(__filename);
 async function convertSvgToPng(inputPath, outputDirectory, outputs) {
   try {
     const absoluteInputPath = path.resolve(__dirname, "..", inputPath);
-    const absoluteOutputDirectory = path.resolve(__dirname, "..", outputDirectory);
+    const absoluteOutputDirectory = path.resolve(
+      __dirname,
+      "..",
+      outputDirectory,
+    );
 
     for (const output of outputs) {
       const { size, name } = output;
@@ -20,7 +24,7 @@ async function convertSvgToPng(inputPath, outputDirectory, outputs) {
         .png()
         .toFile(absoluteOutputPath);
 
-      console.log(
+      console.info(
         `Successfully converted ${inputPath} to ${absoluteOutputPath} at ${size}x${size}`,
       );
     }

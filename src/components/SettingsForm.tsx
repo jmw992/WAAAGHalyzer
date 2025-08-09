@@ -17,6 +17,7 @@ import { setStorePersistedSettings } from "@/lib/persistStorage";
 import type { PersistedState } from "@/lib/types";
 import { useZustandStore } from "@/lib/useZustandStore";
 import { FolderInput } from "./FolderInputDialog";
+import VersionSectionGeneric from "./VersionSection/VersionSectionGeneric";
 
 export const SettingsForm = ({
   initialState,
@@ -42,12 +43,10 @@ export const SettingsForm = ({
 
   return (
     <div
-      // onSubmit={(e)}
       style={{
         display: "flex",
         flexDirection: "column",
         gap: "1rem",
-        // maxWidth: 500,
       }}
     >
       <div className={STACKED_LABEL_CLASSNAME}>
@@ -89,19 +88,17 @@ export const SettingsForm = ({
         />
       </div>
 
-      <div className={STACKED_LABEL_CLASSNAME}>
-        <Label className="pl-0.5" htmlFor="settings-version">
-          Version
-        </Label>
-        <Input
-          id="settings-version"
-          type="email"
-          value={form.version}
-          onChange={(e) => {
-            handleChange("version", e.target.value);
-          }}
-        />
-      </div>
+      <VersionSectionGeneric
+        versionMajor={form.versionMajor}
+        versionMinor={form.versionMinor}
+        versionPatch={form.versionPatch}
+        setVersion={(versionMajor, versionMinor, versionPatch) => {
+          handleChange("versionMajor", versionMajor);
+          handleChange("versionMinor", versionMinor);
+          handleChange("versionPatch", versionPatch);
+        }}
+        idPrefix="settings"
+      />
 
       <div className={STACKED_LABEL_CLASSNAME}>
         <Label className="pl-0.5" htmlFor="settings-playerId">
