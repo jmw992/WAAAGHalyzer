@@ -4,10 +4,18 @@ import VersionSectionGeneric from "@/components/VersionSection/VersionSectionGen
 import { useZustandStore } from "@/lib/useZustandStore";
 
 export function VersionSectionRecording() {
-  const recordingVersionMajor = useZustandStore((state) => state.recordingVersionMajor);
-  const recordingVersionMinor = useZustandStore((state) => state.recordingVersionMinor);
-  const recordingVersionPatch = useZustandStore((state) => state.recordingVersionPatch);
-  const setRecordingVersion = useZustandStore((state) => state.setRecordingVersion);
+  const recordingVersionMajor = useZustandStore(
+    (state) => state.recordingVersionMajor,
+  );
+  const recordingVersionMinor = useZustandStore(
+    (state) => state.recordingVersionMinor,
+  );
+  const recordingVersionPatch = useZustandStore(
+    (state) => state.recordingVersionPatch,
+  );
+  const setRecordingVersion = useZustandStore(
+    (state) => state.setRecordingVersion,
+  );
 
   return (
     <VersionSectionGeneric
