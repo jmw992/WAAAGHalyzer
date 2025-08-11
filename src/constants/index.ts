@@ -2,6 +2,7 @@ export const HISTORY = "History";
 export const SETTINGS = "Settings";
 export const MATCH = "Match";
 export const HOME = "Home";
+export const MATCH_GENERATE = "Match Generate";
 
 /**  Appdate directory of default game Total War warhammer 3, relative to user config directory
  * https://v2.tauri.app/reference/javascript/api/namespacepath/#configdir

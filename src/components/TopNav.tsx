@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { HISTORY, HOME, MATCH, SETTINGS } from "@/constants";
+import { HISTORY, HOME, MATCH, MATCH_GENERATE, SETTINGS } from "@/constants";
 import {
   copyArmySetupDebug,
   copyAutoSaveDebug,
@@ -101,6 +101,13 @@ export default function TopNav() {
                           }}
                         >
                           Copy Army Setup
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            setPage(MATCH_GENERATE);
+                          }}
+                        >
+                          Match Generate
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

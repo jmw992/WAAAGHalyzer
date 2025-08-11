@@ -21,6 +21,7 @@ import type {
   LIZARDMEN,
   LOADING,
   MATCH,
+  MATCH_GENERATE,
   NORSCA,
   NURGLE,
   OGRE_KINGDOMS,
@@ -44,7 +45,8 @@ export type Page =
   | typeof HISTORY
   | typeof SETTINGS
   | typeof HOME
-  | typeof MATCH;
+  | typeof MATCH
+  | typeof MATCH_GENERATE;
 
 export type SupportedGames = typeof TOTAL_WAR_WARHAMMER_3;
 

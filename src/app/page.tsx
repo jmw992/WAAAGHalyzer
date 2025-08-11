@@ -3,8 +3,9 @@ import type React from "react";
 import History from "@/components/pages/History";
 import Home from "@/components/pages/Home";
 import Match from "@/components/pages/Match";
+import MatchGenerate from "@/components/pages/MatchGenerate";
 import Settings from "@/components/pages/Settings";
-import { HISTORY, HOME, MATCH, SETTINGS } from "@/constants";
+import { HISTORY, HOME, MATCH, MATCH_GENERATE, SETTINGS } from "@/constants";
 import { useZustandStore } from "@/lib/useZustandStore";
 import type { Page } from "@/types";
 
@@ -13,6 +14,7 @@ const PageMap: Record<Page, React.FC> = {
   [HISTORY]: History,
   [SETTINGS]: Settings,
   [MATCH]: Match,
+  [MATCH_GENERATE]: MatchGenerate,
 };
 
 export default function RootPage() {
